@@ -1,7 +1,42 @@
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+.noUi-target {
+  @apply h-1 bg-gray-200 rounded-full border-none shadow-none;
 }
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+
+.noUi-connect {
+  @apply bg-blue-600;
+}
+
+.noUi-handle {
+  @apply bg-white border-2 border-blue-600 rounded-full cursor-pointer;
+  width: 16px;
+  height: 16px;
+  top: -6px;
+  @apply shadow-sm;
+}
+
+.noUi-handle:focus {
+  @apply outline-none ring-2 ring-blue-200;
+}
+
+/* Tooltip styles for handles */
+.noUi-handle::after {
+  @apply hidden;
+}
+
+/* Horizontal layout adjustments */
+.filter-container {
+  @apply flex items-center;
+}
+
+.slider-container {
+  @apply w-64 ml-8;
+}
+
+/* Value display styles */
+.price-values {
+  @apply flex justify-between text-sm font-medium mb-2;
+}
+
+.price-label {
+  @apply text-xs text-gray-600 mb-1;
 }
