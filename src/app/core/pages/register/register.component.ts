@@ -16,53 +16,53 @@ export class RegisterComponent {
   registerForm: FormGroup = new FormGroup({
     userName: new FormControl('', [
       Validators.required,
-      Validators.minLength(5)  // حد أدنى 5 أحرف لاسم المستخدم
+      Validators.minLength(5)  
     ]),
     password: new FormControl('', [
       Validators.required,
-      Validators.minLength(8),  // حد أدنى 8 أحرف
-    //   Validators.pattern('(?=.*[0-9])(?=.*[a-zA-Z])')  // يجب أن تحتوي على أرقام وحروف
+      Validators.minLength(8),  
+    //   Validators.pattern('(?=.*[0-9])(?=.*[a-zA-Z])') 
     ]),
     email: new FormControl('', [
       Validators.required,
-      Validators.email  // يجب أن يكون البريد الإلكتروني صالحًا
+      Validators.email 
     ]),
     firstName: new FormControl('', [
       Validators.required,
-      Validators.maxLength(40)  // الحد الأقصى 40 حرفًا
+      Validators.maxLength(40) 
     ]),
     lastName: new FormControl('', [
       Validators.required,
-      Validators.maxLength(40)  // الحد الأقصى 40 حرفًا
+      Validators.maxLength(40)  
     ]),
     dateOfBirth: new FormControl('', [
       Validators.required,
-      Validators.pattern('\\d{4}-\\d{2}-\\d{2}')  // تاريخ الميلاد بتنسيق YYYY-MM-DD
+      Validators.pattern('\\d{4}-\\d{2}-\\d{2}') 
     ]),
     address: new FormControl('', [
       Validators.required,
-      Validators.maxLength(255)  // الحد الأقصى 255 حرفًا
+      Validators.maxLength(255) 
     ]),
     phoneNumber: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[0-9]{11}$')  // رقم الهاتف يجب أن يتكون من 11 رقمًا
+      Validators.pattern('^[0-9]{11}$') 
     ]),
     nationalId: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[0-9]{14}$')  // الرقم القومي يجب أن يتكون من 14 رقمًا
+      Validators.pattern('^[0-9]{14}$')
     ]),
     isAgreed: new FormControl(false, [
-      Validators.requiredTrue  // يجب تحديد الـ checkbox
+      Validators.requiredTrue 
     ])
   });
 
 //   _authService = inject(AccountService);
 
   register() {
-    if (this.registerForm.valid) { // تأكد من صحة الفورم قبل الإرسال
+    if (this.registerForm.valid) {
       const formData = this.registerForm.value;
       
-      // تحويل قيمة isAgreed من boolean إلى string
+     
       const body = {
         userName: formData.userName,
         password: formData.password,
@@ -89,7 +89,7 @@ export class RegisterComponent {
       });
     } else {
       console.log('Form is invalid');
-      this.registerForm.markAllAsTouched();  // لتفعيل جميع رسائل الخطأ
+      this.registerForm.markAllAsTouched(); 
     }
   }
 }
