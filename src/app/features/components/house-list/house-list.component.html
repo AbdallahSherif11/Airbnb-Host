@@ -1,21 +1,56 @@
-@if (houses.length === 0) {
-    <div class="text-center py-8">No houses found</div>
-  }
-
-  @if (false) {
-    <div class="text-center py-8">Loading...</div>
-  } @else {
-    <!-- Your grid here -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-        @for (house of houses; track house.title) {
-          <app-house-card
-            [images]="house.images"
-            [title]="house.title"
-            [hostType]="house.hostType"
-            [dateRange]="house.dateRange"
-            [price]="house.price"
-            [rating]="house.rating"
-          ></app-house-card>
-        }
+@if (isLoading) {
+    <!-- Loading State -->
+    <div class="flex justify-center items-center py-12">
+      <div class="flex flex-col items-center gap-4">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+        <p class="text-gray-600">Loading homes...</p>
       </div>
+    </div>
+  } @else if (error) {
+    <!-- Error State -->
+    <div class="text-center py-8">
+      <div class="inline-flex items-center justify-center bg-red-50 px-4 py-2 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+        <span class="text-red-600 font-medium">{{ error }}</span>
+      </div>
+      <button 
+        (click)="loadHouses()"
+        class="mt-4 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+      >
+        Try Again
+      </button>
+    </div>
+  } @else if (houses.length === 0) {
+    <!-- Empty State -->
+    <div class="text-center py-12">
+      <div class="mx-auto max-w-md">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">No homes available</h3>
+        <p class="mt-2 text-gray-500">We couldn't find any homes matching your criteria.</p>
+        <button 
+          (click)="loadHouses()"
+          class="mt-4 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+        >
+          Refresh
+        </button>
+      </div>
+    </div>
+  } @else {
+    <!-- Success State - Grid of Houses -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+      @for (house of houses; track house.houseId) {
+        <app-house-card
+          [images]="house.images"
+          [title]="house.title"
+          [hostType]="house.hostName || 'Host'"
+          [dateRange]="'Available now'"
+          [price]="house.pricePerNight"
+          
+        ></app-house-card>
+      }
+    </div>
   }
