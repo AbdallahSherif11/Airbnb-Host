@@ -1,0 +1,41 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+
+export interface House {
+    houseId: number;
+    title: string;
+    description: string;
+    pricePerNight: number;
+    country: string;
+    city: string;
+    street: string;
+    images: string[];
+    // TO DO : Add other properties you need from ReadHouseDTO
+}
+
+@Injectable({ providedIn: 'root' })
+export class HouseService {
+    private apiUrl = 'https://localhost:7015/api/House';
+
+    constructor(private http: HttpClient) { }
+
+    getAllHouses(): Observable<any[]> {
+        return this.http.get<any[]>(this.apiUrl).pipe(
+          catchError(this.handleError<any[]>('getAllHouses', []))
+        );
+      }
+
+      private handleError<T>(operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+          console.error(`${operation} failed: ${error.message}`);
+          return of(result as T);
+        };
+      }
+
+
+}
+
+
