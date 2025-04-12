@@ -1,0 +1,109 @@
+<footer class="bg-[#f7f7f7] border-t border-gray-200 mt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Main footer columns -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
+
+      <!-- Support Column -->
+      <div>
+        <h3 class="text-sm font-semibold text-black tracking-wider mb-4">Support</h3>
+        <ul class="space-y-3">
+          <li><a routerLink="/help-center" class="text-sm text-black hover:underline">Help Center</a></li>
+          <li><a routerLink="/aircover" class="text-sm text-black hover:underline">AirCover</a></li>
+          <li><a routerLink="/anti-discrimination" class="text-sm text-black hover:underline">Anti-discrimination</a></li>
+          <li><a routerLink="/disability-support" class="text-sm text-black hover:underline">Disability support</a></li>
+          <li><a routerLink="/cancellation-options" class="text-sm text-black hover:underline">Cancellation options</a></li>
+          <li><a routerLink="/neighborhood-concern" class="text-sm text-black hover:underline">Report neighborhood concern</a></li>
+        </ul>
+      </div>
+
+      <!-- Hosting Column -->
+      <div>
+        <h3 class="text-sm font-semibold text-black tracking-wider mb-4">Hosting</h3>
+        <ul class="space-y-3">
+          <li><a routerLink="/host-your-home" class="text-sm text-black hover:underline">Airbnb your home</a></li>
+          <li><a routerLink="/host-aircover" class="text-sm text-black hover:underline">AirCover for Hosts</a></li>
+          <li><a routerLink="/hosting-resources" class="text-sm text-black hover:underline">Hosting resources</a></li>
+          <li><a routerLink="/community-forum" class="text-sm text-black hover:underline">Community forum</a></li>
+          <li><a routerLink="/hosting-responsibly" class="text-sm text-black hover:underline">Hosting responsibly</a></li>
+          <li><a routerLink="/airbnb-apartments" class="text-sm text-black hover:underline">Airbnb-friendly apartments</a></li>
+          <li><a routerLink="/hosting-class" class="text-sm text-black hover:underline">Join a free Hosting class</a></li>
+          <li><a routerLink="/find-cohost" class="text-sm text-black hover:underline">Find a co-host</a></li>
+        </ul>
+      </div>
+
+      <!-- Airbnb Column -->
+      <div>
+        <h3 class="text-sm font-semibold text-black tracking-wider mb-4">Airbnb</h3>
+        <ul class="space-y-3">
+          <li><a routerLink="/newsroom" class="text-sm text-black hover:underline">Newsroom</a></li>
+          <li><a routerLink="/new-features" class="text-sm text-black hover:underline">New features</a></li>
+          <li><a routerLink="/careers" class="text-sm text-black hover:underline">Careers</a></li>
+          <li><a routerLink="/investors" class="text-sm text-black hover:underline">Investors</a></li>
+          <li><a routerLink="/gift-cards" class="text-sm text-black hover:underline">Gift cards</a></li>
+          <li><a routerLink="/emergency-stays" class="text-sm text-black hover:underline">Airbnb.org emergency stays</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer bottom bar -->
+    <div class="border-t border-gray-200 py-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <!-- Left side - Copyright and links -->
+        <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0">
+          <span class="text-sm text-black">© 2025 Airbnb, Inc.</span>
+          <a routerLink="/terms" class="text-sm text-black hover:underline">Terms</a>
+          <a routerLink="/sitemap" class="text-sm text-black hover:underline">Sitemap</a>
+          <a routerLink="/privacy" class="text-sm text-black hover:underline">Privacy</a>
+          <a routerLink="/privacy-choices" class="text-sm text-black hover:underline">Your Privacy Choices</a>
+        </div>
+
+        <!-- Right side - Language, currency and social media -->
+        <div class="flex items-center gap-6">
+          <!-- Language & Currency -->
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <button (click)="toggleLanguageDropdown()" class="flex items-center gap-2 hover:underline">
+                <i class="fas fa-globe text-black"></i>
+                <span class="text-sm text-black">{{ selectedLanguage }}</span>
+                <i class="fas fa-chevron-down text-xs text-black"></i>
+              </button>
+              <div *ngIf="showLanguageDropdown" class="absolute z-10 mt-2 w-40 bg-white shadow-lg rounded-md py-1 border border-gray-200">
+                <ul>
+                  <li (click)="selectLanguage('English (US)')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-black hover:underline">English (US)</li>
+                  <li (click)="selectLanguage('العربية')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-black hover:underline">العربية</li>
+                  <li (click)="selectLanguage('Español')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-black hover:underline">Español</li>
+                </ul>
+              </div>
+            </div>
+            <div class="relative">
+              <button (click)="toggleCurrencyDropdown()" class="flex items-center gap-2 hover:underline">
+                <span class="text-sm text-black">{{ selectedCurrency }}</span>
+                <i class="fas fa-chevron-down text-xs text-black"></i>
+              </button>
+              <div *ngIf="showCurrencyDropdown" class="absolute z-10 mt-2 w-24 bg-white shadow-lg rounded-md py-1 border border-gray-200">
+                <ul>
+                  <li (click)="selectCurrency('USD')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-black hover:underline">USD</li>
+                  <li (click)="selectCurrency('EGP')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-black hover:underline">EGP</li>
+                  <li (click)="selectCurrency('EUR')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-black hover:underline">EUR</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Media -->
+          <div class="flex items-center gap-4">
+            <a href="https://www.facebook.com/airbnb" target="_blank" rel="noopener noreferrer" class="text-black hover:underline">
+              <i class="fab fa-facebook text-lg"></i>
+            </a>
+            <a href="https://x.com/airbnb" target="_blank" rel="noopener noreferrer" class="text-black hover:underline">
+              <i class="fab fa-x-twitter text-lg"></i>
+            </a>
+            <a href="https://www.instagram.com/airbnb/" target="_blank" rel="noopener noreferrer" class="text-black hover:underline">
+              <i class="fab fa-instagram text-lg"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
