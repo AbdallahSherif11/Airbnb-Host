@@ -1,0 +1,21 @@
+@if (houses.length === 0) {
+    <div class="text-center py-8">No houses found</div>
+  }
+
+  @if (false) {
+    <div class="text-center py-8">Loading...</div>
+  } @else {
+    <!-- Your grid here -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+        @for (house of houses; track house.title) {
+          <app-house-card
+            [images]="house.images"
+            [title]="house.title"
+            [hostType]="house.hostType"
+            [dateRange]="house.dateRange"
+            [price]="house.price"
+            [rating]="house.rating"
+          ></app-house-card>
+        }
+      </div>
+  }
