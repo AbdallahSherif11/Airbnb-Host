@@ -1,8 +1,7 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-
+import { Component, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-// import * as noUiSlider from 'nouislider';
+
 @Component({
   selector: 'app-filter',
   imports: [NgFor,CommonModule,FormsModule],
@@ -22,13 +21,46 @@ export class FilterComponent implements AfterViewInit{
     { name: 'Barns', icon: 'fas fa-warehouse' },
     { name: 'Towers', icon: 'fas fa-building' },
     { name: 'Domes', icon: 'fas fa-circle' },
-    { name: 'Treehouses', icon: 'fas fa-tree' },
-    { name: 'Yurts', icon: 'fas fa-campground' },
-    { name: 'Barns', icon: 'fas fa-warehouse' },
-    { name: 'Towers', icon: 'fas fa-building' },
-    { name: 'Domes', icon: 'fas fa-circle' },
+    { name: 'ahmed', icon: 'fas fa-tree' },
+    { name: 'ayman', icon: 'fas fa-campground' },
+    { name: 'saif', icon: 'fas fa-warehouse' },
+    { name: 'nada', icon: 'fas fa-building' },
+    { name: 'abdallah', icon: 'fas fa-circle' },
   ];
-  
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
+  isScrolledToStart = true;
+  isScrolledToEnd = false;
+  scrollAmount = 300;
+
+  ngAfterViewInint() {
+    this.checkScrollPosition();
+    // Add a small timeout to ensure DOM is fully rendered
+    setTimeout(() => this.checkScrollPosition(), 100);
+  }
+
+  scrollLeft() {
+    this.scrollContainer.nativeElement.scrollBy({
+      left: -this.scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  scrollRight() {
+    this.scrollContainer.nativeElement.scrollBy({
+      left: this.scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  checkScrollPosition() {
+    const element = this.scrollContainer.nativeElement;
+    const threshold = 5; // Small threshold to account for rounding
+    
+    this.isScrolledToStart = element.scrollLeft <= threshold;
+    this.isScrolledToEnd = element.scrollLeft + element.clientWidth >= element.scrollWidth - threshold;
+  }
+
   @ViewChild('rangeSlider', { static: false }) slider!: ElementRef;
   async ngAfterViewInit() {
     if (typeof window !== 'undefined') {
