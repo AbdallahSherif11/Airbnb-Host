@@ -14,19 +14,56 @@ export class FooterComponent {
   selectedCurrency = 'USD';
   showLanguageDropdown = false;
   showCurrencyDropdown = false;
+  languageDropdownClasses = 'bottom-full mb-2';
+  currencyDropdownClasses = 'bottom-full mb-2';
 
-  toggleLanguageDropdown() {
+  toggleLanguageDropdown(event?: MouseEvent) {
     this.showLanguageDropdown = !this.showLanguageDropdown;
+    
     if (this.showLanguageDropdown) {
       this.showCurrencyDropdown = false;
+      this.calculateDropdownPosition(event, 'language');
     }
   }
 
-  toggleCurrencyDropdown() {
+  toggleCurrencyDropdown(event?: MouseEvent) {
     this.showCurrencyDropdown = !this.showCurrencyDropdown;
+    
     if (this.showCurrencyDropdown) {
       this.showLanguageDropdown = false;
+      this.calculateDropdownPosition(event, 'currency');
     }
+  }
+
+  private calculateDropdownPosition(event: MouseEvent | undefined, type: 'language' | 'currency') {
+    setTimeout(() => {
+      if (!event) return;
+      
+      const button = event.target as HTMLElement;
+      const dropdown = button.closest('.relative')?.querySelector('.absolute') as HTMLElement;
+      if (!dropdown) return;
+      
+      const buttonRect = button.getBoundingClientRect();
+      const dropdownHeight = dropdown.offsetHeight;
+      const spaceBelow = window.innerHeight - buttonRect.bottom;
+      const spaceAbove = buttonRect.top;
+      
+      if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+        // Open upwards
+        if (type === 'language') {
+          this.languageDropdownClasses = 'bottom-full mb-2';
+        } else {
+          this.currencyDropdownClasses = 'bottom-full mb-2';
+        }
+      } else {
+        // Open downwards
+        if (type === 'language') {
+          this.languageDropdownClasses = 'top-full mt-2';
+        } else {
+          this.currencyDropdownClasses = 'top-full mt-2';
+        }
+      }
+    }, 0);
   }
 
   selectLanguage(language: string) {
