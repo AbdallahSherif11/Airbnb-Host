@@ -1,47 +1,52 @@
-<div class="flex items-center w-full border-b border-gray-200 shadow-sm px-4 py-4">
-  <!-- Categories Filter -->
-  <div #scrollContainer class="relative flex-1 min-w-0 overflow-x-hidden px-10">
-    <!-- Left Arrow (hidden when scrolled to start) -->
-    <button 
-        (click)="scrollLeft()" 
-        [class.hidden]="isScrolledToStart" 
-        class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition">
-      <i class="fas fa-chevron-left text-gray-600"></i>
-    </button>
+<!-- filter.component.html -->
+<div class="w-full border-b border-gray-200 shadow-sm">
+  <div class="max-w-screen-xl mx-auto px-4">
+    <div class="flex items-center w-full py-4">
+      <!-- Categories Filter -->
+      <div class="relative flex-1 min-w-0 overflow-x-hidden">
+        <!-- Left Arrow (hidden when scrolled to start) -->
+        <button 
+            (click)="scrollLeft()" 
+            [class.hidden]="isScrolledToStart" 
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition">
+          <i class="fas fa-chevron-left text-gray-600"></i>
+        </button>
 
-    <!-- Scrollable Category List -->
-    <div 
-    #scrollContainer
-    class="overflow-x-auto scroll-smooth no-scrollbar px-12"
-    (scroll)="checkScrollPosition()">
-      <div  class="flex gap-5 whitespace-nowrap py-2">
-        <div *ngFor="let category of categories"
-          class="flex flex-col items-center min-w-[80px] text-center text-lg text-gray-700 hover:text-black cursor-pointer transition">
-          <i [class]="category.icon + ' text-xl mb-1'"></i>
-          <span class="text-xs">{{ category.name }}</span>
+        <!-- Scrollable Category List -->
+        <div 
+        #scrollContainer
+        class="overflow-x-auto scroll-smooth no-scrollbar"
+        (scroll)="checkScrollPosition()">
+          <div class="flex gap-5 whitespace-nowrap py-2 pl-4 pr-12">
+            <div *ngFor="let category of categories"
+              class="flex flex-col items-center min-w-[80px] text-center text-lg text-gray-700 hover:text-black cursor-pointer transition">
+              <i [class]="category.icon + ' text-xl mb-1'"></i>
+              <span class="text-xs">{{ category.name }}</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Right Arrow (hidden when scrolled to end) -->
+        <button 
+            (click)="scrollRight()" 
+            [class.hidden]="isScrolledToEnd" 
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition">
+          <i class="fas fa-chevron-right text-gray-600"></i>
+        </button>
+      </div>
+
+      <!-- Price Range Slider -->
+      <div class="w-64 ml-8 px-4">
+        <div class="flex justify-between text-xs text-gray-600 mb-1">
+          <span>Minimum</span>
+          <span>Maximum</span>
+        </div>
+        <div class="flex justify-between text-sm font-medium mb-2">
+          <span id="min-value">$1,142</span>
+          <span id="max-value">$28,000</span>
+        </div>
+        <div #rangeSlider class="w-full"></div>
       </div>
     </div>
-
-    <!-- Right Arrow (hidden when scrolled to end) -->
-    <button 
-        (click)="scrollRight()" 
-        [class.hidden]="isScrolledToEnd" 
-        class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition">
-      <i class="fas fa-chevron-right text-gray-600"></i>
-    </button>
-</div>
-
-  <!-- Price Range Slider -->
-  <div class="w-64 ml-8 px-4">
-    <div class="flex justify-between text-xs text-gray-600 mb-1">
-      <span>Minimum</span>
-      <span>Maximum</span>
-    </div>
-    <div class="flex justify-between text-sm font-medium mb-2">
-      <span id="min-value">$1,142</span>
-      <span id="max-value">$28,000</span>
-    </div>
-    <div #rangeSlider class="w-full"></div>
   </div>
 </div>
