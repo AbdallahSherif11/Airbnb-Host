@@ -20,6 +20,10 @@ export class HouseCardComponent {
 
   currentSlide = 0;
   isInWishlist = false;
+  imageLoaded = false;
+  onImageLoad() {
+    this.imageLoaded = true;
+  }
 
   nextSlide(): void {
     this.currentSlide = (this.currentSlide + 1) % this.images.length;

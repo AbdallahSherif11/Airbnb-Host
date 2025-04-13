@@ -34,4 +34,10 @@ export class HouseListComponent implements OnInit {
       }
     });
   }
+  
+  calculateRating(reviews: any[] | undefined): number {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return parseFloat((sum / reviews.length).toFixed(1));
+  }
 }
