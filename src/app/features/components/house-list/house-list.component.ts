@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { afterNextRender, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HouseCardComponent } from '../house-card/house-card.component';
 import { HouseService } from '../../services/house-services/house.service';
@@ -15,10 +15,14 @@ export class HouseListComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
 
-  constructor(private houseService: HouseService) {}
+  constructor(private houseService: HouseService) {
+    afterNextRender(()=> {
+        this.loadHouses();
+    })
+  }
 
   ngOnInit(): void {
-    this.loadHouses();
+    // this.loadHouses();
   }
 
   loadHouses(): void {

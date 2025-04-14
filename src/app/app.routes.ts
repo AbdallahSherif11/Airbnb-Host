@@ -10,10 +10,12 @@ export const routes: Routes = [
         canActivate: [noAuthGuard],
         children: [
             {
-                path: "register", loadComponent: () => import('../app/core/pages/register/register.component').then(c => c.RegisterComponent)
+                path: "register", loadComponent: () => import('../app/core/pages/register/register.component').then(c => c.RegisterComponent),
+                canActivate: [noAuthGuard],
             },
             {
-                path: "login", loadComponent: () => import('../app/core/pages/login/login.component').then(c => c.LoginComponent)
+                path: "login", loadComponent: () => import('../app/core/pages/login/login.component').then(c => c.LoginComponent),
+                canActivate: [noAuthGuard],
             },
         ]
     },
