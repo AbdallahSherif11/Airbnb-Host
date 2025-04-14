@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { afterNextRender, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HouseCardComponent } from '../house-card/house-card.component';
 import { HouseService } from '../../services/house-services/house.service';
 
@@ -14,11 +14,15 @@ export class HouseListComponent implements OnInit {
   houses: any[] = [];
   isLoading = true;
   error: string | null = null;
+  _PLATFORM_ID = inject(PLATFORM_ID);
 
   constructor(private houseService: HouseService) {}
 
   ngOnInit(): void {
-    this.loadHouses();
+    if(isPlatformBrowser(this._PLATFORM_ID)){
+      this.loadHouses();
+    }
+    // this.loadHouses();
   }
 
   loadHouses(): void {
