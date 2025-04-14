@@ -1,6 +1,7 @@
 // house-card.component.ts
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-house-card',
@@ -17,7 +18,8 @@ export class HouseCardComponent {
   @Input() price: number = 0;
   @Input() rating: number = 0;
   @Input() isGuestFavorite: boolean = false;
-
+  @Input() houseId: number = 0;
+    private router = inject(Router);
   currentSlide = 0;
   isInWishlist = false;
   imageLoaded = false;
@@ -35,5 +37,10 @@ export class HouseCardComponent {
 
   toggleWishlist(): void {
     this.isInWishlist = !this.isInWishlist;
+  }
+
+  navigateToDetails(): void {
+    // You'll need to pass the houseId to your card component
+    this.router.navigate(['/houses', this.houseId]);
   }
 }

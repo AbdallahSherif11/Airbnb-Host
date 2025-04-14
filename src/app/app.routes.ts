@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.component';
 import { noAuthGuard } from './core/guards/no-auth-guard/no-auth.guard';
 import { authGuard } from './core/guards/auth-guard/auth.guard';
+import { HouseDetailsComponent } from './features/pages/house-details/house-details.component';
 
 export const routes: Routes = [
     {
@@ -27,7 +28,11 @@ export const routes: Routes = [
     },
     {
         path: "addhouse", loadComponent: () => import('./features/pages/listing-create/listing-create.component').then(c => c.ListingCreateComponent),
-        canActivate: [authGuard], 
+        canActivate: [authGuard],
+    },
+    {
+        path: 'houses/:id',
+        component: HouseDetailsComponent
     },
 
 
