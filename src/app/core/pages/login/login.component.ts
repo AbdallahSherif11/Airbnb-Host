@@ -1,9 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account/account.service';
 import { LoginUser } from '../../interfaces/account/login-user';
 import { NgIf } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +14,10 @@ import { NgIf } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  loginForm: FormGroup = new FormGroup({
+export class LoginComponent implements OnDestroy {
+  errorMessage: string | null = null;
+
+  loginForm = new FormGroup({
     email: new FormControl('', [
       Validators.required,
       Validators.email
@@ -25,39 +29,53 @@ export class LoginComponent {
   });
 
   isLoading = false;
-  errorMessage: string | null = null;
+  private loginSubscription: Subscription | null = null;
 
-  private _authService = inject(AccountService);
-  private _router = inject(Router);
+  private authService = inject(AccountService);
+  private router = inject(Router);
 
   login() {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = null;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
-      const userInfo: LoginUser = {
-        email: this.loginForm.value.email,
-        password: this.loginForm.value.password
-      };
+    if (this.isLoading) return;
 
-      this._authService.loginUser(userInfo).subscribe({
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    if (this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
+    }
+
+    const userInfo: LoginUser = {
+      email: this.loginForm.value.email!,
+      password: this.loginForm.value.password!
+    };
+
+    this.loginSubscription = this.authService.loginUser(userInfo)
+      .subscribe({
         next: (response) => {
-          // Store token 
           localStorage.setItem('authToken', response.token);
-          
-          // Redirect to home
-          this._router.navigate(['/']);
-        },
-        error: (error) => {
+          this.router.navigate(['/']);
           this.isLoading = false;
-          this.errorMessage = error.error?.message || 'Login failed. Please try again.';
         },
-        complete: () => {
+        error: (error: HttpErrorResponse) => {
           this.isLoading = false;
+          if (error.status === 401) {
+            this.errorMessage = 'Invalid credentials. Please try again.';
+          } else {
+            this.errorMessage = 'An error occurred. Please try again later.';
+          }
+          console.error('Login error:', error);
         }
       });
-    } else {
-      this.loginForm.markAllAsTouched();
+  }
+
+  ngOnDestroy() {
+    if (this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
     }
   }
 }
