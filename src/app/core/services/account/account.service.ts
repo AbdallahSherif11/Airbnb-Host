@@ -1,24 +1,46 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable,inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 import { AuthUser } from '../../interfaces/account/auth-user';
 import { LoginUser } from '../../interfaces/account/login-user';
-
+import { clearAuthToken, getAuthToken, setAuthToken } from '../../utils/auth.utils';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router
+  ) { }
 
-    _httpClient = inject(HttpClient)
-    constructor() { }
-    registerUser(userInfo:AuthUser):Observable<any>{
-      return this._httpClient.post('https://localhost:7015/api/Account/register',userInfo)
-    }
-    
-    loginUser(userInfo:LoginUser):Observable<any>{
-      return this._httpClient.post('https://localhost:7015/api/Account/login',userInfo)
-    }
-    
-    
+  registerUser(userInfo: AuthUser): Observable<any> {
+    return this.httpClient.post('https://localhost:7015/api/Account/register', userInfo).pipe(
+      tap((response: any) => {
+        if (response?.token) {
+          setAuthToken(response.token);
+        }
+      })
+    );
   }
+  
+  loginUser(userInfo: LoginUser): Observable<any> {
+    return this.httpClient.post('https://localhost:7015/api/Account/login', userInfo).pipe(
+      tap((response: any) => {
+        if (response?.token) {
+          setAuthToken(response.token);
+        }
+      })
+    );
+  }
+
+  signOut(): void {
+    clearAuthToken();
+    this.router.navigate(['/home']);
+  }
+
+  isLoggedIn(): boolean {
+    return !!getAuthToken();
+  }
+}
