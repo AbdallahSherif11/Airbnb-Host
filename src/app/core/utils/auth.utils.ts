@@ -1,34 +1,39 @@
 import { isPlatformBrowser } from '@angular/common';
-import { inject, PLATFORM_ID } from '@angular/core';
 
-/**
- * Safely checks if authToken exists with all possible protections:
- * 1. SSR safety (isPlatformBrowser)
- * 2. Window undefined check
- * 3. localStorage existence check
- * 4. Read/write capability test
- * 5. Private browsing protection
- */
+// Remove the inject(PLATFORM_ID) approach and use direct platform checks
 export const getAuthToken = (): string | null => {
   try {
-    // 1. Angular SSR platform check
-    const platformId = inject(PLATFORM_ID);
-    if (!isPlatformBrowser(platformId)) return null;
-
-    // 2. Window and localStorage existence check
+    // 1. Basic browser environment checks
     if (typeof window === 'undefined' || !window.localStorage) return null;
 
-    // 3. Read/write capability test
+    // 2. Read/write capability test
     const testKey = '__auth_test__';
     window.localStorage.setItem(testKey, testKey);
     window.localStorage.removeItem(testKey);
 
-    // 4. Only read if storage has items
-    return window.localStorage.length > 0 
-      ? window.localStorage.getItem('authToken')
-      : null;
+    // 3. Get the token directly
+    return window.localStorage.getItem('authToken');
   } catch {
-    // 5. Fail gracefully for all exceptions (private browsing, security restrictions)
+    // 4. Fail gracefully for all exceptions
     return null;
+  }
+};
+
+export const clearAuthToken = (): void => {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    window.localStorage.removeItem('authToken');
+  } catch {
+    // Silently fail
+  }
+};
+
+// Add this new function to set the token
+export const setAuthToken = (token: string): void => {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    window.localStorage.setItem('authToken', token);
+  } catch {
+    // Silently fail
   }
 };
