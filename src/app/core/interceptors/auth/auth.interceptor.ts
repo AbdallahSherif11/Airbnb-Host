@@ -1,13 +1,13 @@
-// src/app/interceptors/auth.interceptor.ts
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // 1. First check if localStorage is available
+  // 1. Check if localStorage is available
   const isLocalStorageAvailable = (): boolean => {
     try {
+      if (typeof window === 'undefined' || !window.localStorage) return false;
       const testKey = '__test__';
-      localStorage.setItem(testKey, testKey);
-      localStorage.removeItem(testKey);
+      window.localStorage.setItem(testKey, testKey);
+      window.localStorage.removeItem(testKey);
       return true;
     } catch (e) {
       return false;
@@ -15,8 +15,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   };
 
   // 2. Only proceed if localStorage is available and has items
-  if (isLocalStorageAvailable() && localStorage.length > 0) {
-    const token = localStorage.getItem('authToken');
+  if (isLocalStorageAvailable() && window.localStorage.length > 0) {
+    const token = window.localStorage.getItem('authToken');
     
     // 3. If token exists, add it to the request
     if (token) {
