@@ -28,6 +28,26 @@
         <app-house-images [images]="house.images"></app-house-images>
 
         <!-- Rest of the components will go here -->
+
+        <div class="mt-8">
+            <h2 class="text-xl font-semibold mb-4">Location</h2>
+            <!-- For Leaflet -->
+            <app-house-map 
+              [latitude]="house.latitude" 
+              [longitude]="house.longitude"
+              [title]="house.title">
+            </app-house-map>
+            
+            <!-- OR for Google Maps -->
+            <!--
+            <app-google-house-map
+              [latitude]="house.latitude" 
+              [longitude]="house.longitude"
+              [title]="house.title">
+            </app-google-house-map>
+            -->
+          </div>
+         
       <app-amenities [houseId]="houseId"></app-amenities>
       </div>
     }

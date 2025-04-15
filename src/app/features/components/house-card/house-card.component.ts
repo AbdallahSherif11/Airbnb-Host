@@ -19,7 +19,9 @@ export class HouseCardComponent {
   @Input() rating: number = 0;
   @Input() isGuestFavorite: boolean = false;
   @Input() houseId: number = 0;
-    private router = inject(Router);
+  @Input() latitude: number = 0;
+  @Input() longitude: number = 0;
+  private router = inject(Router);
   currentSlide = 0;
   isInWishlist = false;
   imageLoaded = false;

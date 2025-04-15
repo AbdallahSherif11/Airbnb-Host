@@ -8,6 +8,7 @@ import { FooterComponent } from "../../../core/layout/footer/footer.component";
 import { AuthLayoutComponent } from "../../../core/layout/auth-layout/auth-layout.component";
 import { BookingComponent } from "../../components/booking/booking.component";
 import { AmenitiesComponent } from "../../components/amenities/amenities.component";
+import { HouseMapComponent } from '../../components/house-map/house-map.component';
 
 @Component({
   selector: 'app-house-details',
