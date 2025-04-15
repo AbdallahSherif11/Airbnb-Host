@@ -13,8 +13,7 @@ import { HouseMapComponent } from '../../components/house-map/house-map.componen
 @Component({
   selector: 'app-house-details',
   standalone: true,
-  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, AuthLayoutComponent, BookingComponent],
-  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, AmenitiesComponent],
+  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, AuthLayoutComponent, BookingComponent, HouseMapComponent],
   templateUrl: './house-details.component.html',
   styleUrls: ['./house-details.component.css']
 })

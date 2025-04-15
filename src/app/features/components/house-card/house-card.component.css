@@ -1,0 +1,17 @@
+h3:hover{
+    cursor: pointer;
+    text-decoration: underline;
+    color: --main;
+}
+
+img:hover{
+    cursor: pointer;
+    transform: scale(1.02);
+    transition: transform 0.2s;
+}
+
+p:hover,span:hover{
+    cursor: pointer;
+    /* text-decoration: underline; */
+    /* color: --main; */
+}
