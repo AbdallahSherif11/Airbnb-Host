@@ -1,0 +1,117 @@
+<app-navbar></app-navbar>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+  <!-- Header -->
+  <header class="mb-12 text-center">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Sitemap</h1>
+    <p class="text-gray-600 max-w-2xl mx-auto">
+      Explore all sections and pages available on our platform
+    </p>
+  </header>
+
+  <!-- Main Content -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Travel Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-globe-americas text-blue-500 text-xl mr-3"></i>
+        <h2 class="text-xl font-semibold">Travel</h2>
+      </div>
+      <ul class="space-y-3">
+        <li><a routerLink="/search" class="text-blue-600 hover:underline">Search Listings</a></li>
+        <li><a routerLink="/categories" class="text-blue-600 hover:underline">Browse Categories</a></li>
+        <li><a routerLink="/experiences" class="text-blue-600 hover:underline">Experiences</a></li>
+        <li><a routerLink="/destinations" class="text-blue-600 hover:underline">Popular Destinations</a></li>
+        <li><a routerLink="/gift-cards" class="text-blue-600 hover:underline">Gift Cards</a></li>
+      </ul>
+    </div>
+
+    <!-- Hosting Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-home text-green-500 text-xl mr-3"></i>
+        <h2 class="text-xl font-semibold">Hosting</h2>
+      </div>
+      <ul class="space-y-3">
+        <li><a routerLink="/host" class="text-blue-600 hover:underline">Become a Host</a></li>
+        <li><a routerLink="/host/resources" class="text-blue-600 hover:underline">Hosting Resources</a></li>
+        <li><a routerLink="/host/insurance" class="text-blue-600 hover:underline">Host Protection</a></li>
+        <li><a routerLink="/community" class="text-blue-600 hover:underline">Host Community</a></li>
+        <li><a routerLink="/host/standards" class="text-blue-600 hover:underline">Hosting Standards</a></li>
+      </ul>
+    </div>
+
+    <!-- About Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-info-circle text-purple-500 text-xl mr-3"></i>
+        <h2 class="text-xl font-semibold">About</h2>
+      </div>
+      <ul class="space-y-3">
+        <li><a routerLink="/about" class="text-blue-600 hover:underline">About Us</a></li>
+        <li><a routerLink="/newsroom" class="text-blue-600 hover:underline">Newsroom</a></li>
+        <li><a routerLink="/careers" class="text-blue-600 hover:underline">Careers</a></li>
+        <li><a routerLink="/investors" class="text-blue-600 hover:underline">Investors</a></li>
+      </ul>
+    </div>
+
+    <!-- Support Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-headset text-yellow-500 text-xl mr-3"></i>
+        <h2 class="text-xl font-semibold">Support</h2>
+      </div>
+      <ul class="space-y-3">
+        <li><a routerLink="/help" class="text-blue-600 hover:underline">Help Center</a></li>
+        <li><a routerLink="/safety" class="text-blue-600 hover:underline">Safety Information</a></li>
+        <li><a routerLink="/cancellation" class="text-blue-600 hover:underline">Cancellation Options</a></li>
+        <li><a routerLink="/covid" class="text-blue-600 hover:underline">COVID-19 Resources</a></li>
+      </ul>
+    </div>
+
+    <!-- Legal Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-balance-scale text-red-500 text-xl mr-3"></i>
+        <h2 class="text-xl font-semibold">Legal</h2>
+      </div>
+      <ul class="space-y-3">
+        <li><a routerLink="/terms" class="text-blue-600 hover:underline">Terms of Service</a></li>
+        <li><a routerLink="/privacy" class="text-blue-600 hover:underline">Privacy Policy</a></li>
+        <li><a routerLink="/privacy-choices" class="text-blue-600 hover:underline">Privacy Choices</a></li>
+        <li><a routerLink="/cookie-policy" class="text-blue-600 hover:underline">Cookie Policy</a></li>
+        <li><a routerLink="/accessibility" class="text-blue-600 hover:underline">Accessibility</a></li>
+      </ul>
+    </div>
+
+    <!-- Country Selection -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <div class="flex items-center mb-4">
+        <i class="fas fa-globe text-teal-500 text-xl mr-3"></i>
+        <h2 class="text-xl font-semibold">Countries</h2>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <a routerLink="/country/us" class="text-blue-600 hover:underline">United States</a>
+        <a routerLink="/country/uk" class="text-blue-600 hover:underline">United Kingdom</a>
+        <a routerLink="/country/fr" class="text-blue-600 hover:underline">France</a>
+        <a routerLink="/country/de" class="text-blue-600 hover:underline">Germany</a>
+        <a routerLink="/country/jp" class="text-blue-600 hover:underline">Japan</a>
+        <a routerLink="/country/eg" class="text-blue-600 hover:underline">Egypt</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links Footer -->
+  <div class="mt-16 pt-8 border-t border-gray-200">
+    <h3 class="text-lg font-semibold text-center mb-6">Quick Links</h3>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a routerLink="/" class="text-gray-600 hover:text-gray-900 hover:underline">Home</a>
+      <a routerLink="/sitemap" class="text-gray-600 hover:text-gray-900 hover:underline">Sitemap</a>
+      <a routerLink="/contact" class="text-gray-600 hover:text-gray-900 hover:underline">Contact</a>
+      <a routerLink="/press" class="text-gray-600 hover:text-gray-900 hover:underline">Press</a>
+      <a routerLink="/blog" class="text-gray-600 hover:text-gray-900 hover:underline">Blog</a>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
