@@ -1,0 +1,233 @@
+<div class="sticky top-4 w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+  <!-- Price per night -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <span class="text-2xl font-semibold">{{ pricePerNight | number }}ρ.Θ</span>
+      <span class="text-gray-600 ml-1">night</span>
+    </div>
+  </div>
+
+  <!-- Calendar Section -->
+  <div *ngIf="showCalendar" class="mb-6 bg-white rounded-xl shadow border border-gray-200 p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-semibold text-lg">{{ nights }} nights</h3>
+      <button (click)="closeCalendar()" class="text-gray-500 hover:text-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="mb-4 text-center">
+      {{ checkInDate | date:'MMM d, y' }} - {{ checkOutDate | date:'MMM d, y' }}
+    </div>
+
+    <div class="grid grid-cols-7 gap-1 mb-2">
+      <div *ngFor="let day of ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']"
+           class="text-xs text-center py-1">
+        {{ day }}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-7 gap-1">
+      <div *ngFor="let day of generateCalendarDays()"
+           class="text-center p-2 rounded-full text-sm"
+           [class.bg-rose-100]="isSelectedDate(day)"
+           [class.text-rose-600]="isSelectedDate(day)"
+           [class.font-bold]="isSelectedDate(day)"
+           [class.cursor-pointer]="day"
+           (click)="day && selectDate(day)">
+        {{ day?.getDate() || '' }}
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-4">
+      <button class="text-gray-600 underline text-sm" (click)="clearDates()">
+        Clear dates
+      </button>
+      <button class="text-rose-500 font-medium text-sm" (click)="closeCalendar()">
+        Done
+      </button>
+    </div>
+  </div>
+
+  <!-- Date Selection -->
+  <div class="border border-gray-300 rounded-t-lg mb-6">
+    <div class="grid grid-cols-2 divide-x divide-gray-300">
+      <!-- Check-in -->
+      <div class="p-3 cursor-pointer" (click)="toggleCalendar('checkin')">
+        <label class="block text-xs font-medium text-gray-700 uppercase mb-1">CHECK-IN</label>
+        <div class="text-sm">{{ checkInDate | date:'M/d/yyyy' }}</div>
+      </div>
+
+      <!-- Check-out -->
+      <div class="p-3 cursor-pointer" (click)="toggleCalendar('checkout')">
+        <label class="block text-xs font-medium text-gray-700 uppercase mb-1">CHECKOUT</label>
+        <div class="text-sm">{{ checkOutDate | date:'M/d/yyyy' }}</div>
+      </div>
+    </div>
+
+    <!-- Guests Section -->
+    <div *ngIf="showGuestPopup" class="border-t border-gray-300 p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-lg">Guests</h3>
+        <button (click)="toggleGuestPopup()" class="text-gray-500 hover:text-gray-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Adults -->
+        <div class="flex justify-between items-center">
+          <div>
+            <div class="font-medium">Adults</div>
+            <div class="text-gray-500 text-sm">Age 18+</div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button
+              class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
+              [class.text-gray-300]="adults <= 1"
+              [class.cursor-not-allowed]="adults <= 1"
+              (click)="changeGuests('adults', -1)"
+            >
+              -
+            </button>
+            <span>{{ adults }}</span>
+            <button
+              class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
+              [class.text-gray-300]="totalGuests >= 15"
+              [class.cursor-not-allowed]="totalGuests >= 15"
+              (click)="changeGuests('adults', 1)"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Children -->
+        <div class="flex justify-between items-center">
+          <div>
+            <div class="font-medium">Children</div>
+            <div class="text-gray-500 text-sm">Ages 2–17</div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button
+              class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
+              [class.text-gray-300]="children <= 0"
+              [class.cursor-not-allowed]="children <= 0"
+              (click)="changeGuests('children', -1)"
+            >
+              -
+            </button>
+            <span>{{ children }}</span>
+            <button
+              class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
+              [class.text-gray-300]="totalGuests >= 15"
+              [class.cursor-not-allowed]="totalGuests >= 15"
+              (click)="changeGuests('children', 1)"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Infants -->
+        <div class="flex justify-between items-center">
+          <div>
+            <div class="font-medium">Infants</div>
+            <div class="text-gray-500 text-sm">Under 2</div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button
+              class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
+              [class.text-gray-300]="infants <= 0"
+              [class.cursor-not-allowed]="infants <= 0"
+              (click)="changeGuests('infants', -1)"
+            >
+              -
+            </button>
+            <span>{{ infants }}</span>
+            <button
+              class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
+              (click)="changeGuests('infants', 1)"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Pets -->
+        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+          <div>
+            <div class="font-medium">Pets</div>
+            <div class="text-gray-500 text-sm">Bringing a service animal?</div>
+          </div>
+          <div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                class="sr-only peer"
+                [checked]="hasServiceAnimal"
+                (change)="hasServiceAnimal = !hasServiceAnimal"
+              >
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500"></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="text-gray-500 text-sm">
+          This place has a maximum of 15 guests, not including infants. Pets aren't allowed.
+        </div>
+
+        <button
+          class="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium py-2 px-4 rounded-lg transition duration-150"
+          (click)="toggleGuestPopup()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Guests Toggle -->
+    <div class="border-t border-gray-300 p-3 relative">
+      <label class="block text-xs font-medium text-gray-700 uppercase mb-1">GUESTS</label>
+      <div class="text-sm cursor-pointer" (click)="toggleGuestPopup()">
+        {{ totalGuests }} guest{{ totalGuests !== 1 ? 's' : '' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Reserve Button -->
+  <button
+    class="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium py-3 px-4 rounded-lg transition duration-150"
+    (click)="reserve()"
+  >
+    Reserve
+  </button>
+
+  <div class="text-center text-gray-500 text-sm mt-2">You won't be charged yet</div>
+
+  <!-- Price Breakdown -->
+  <div class="mt-6 space-y-3">
+    <div class="flex justify-between">
+      <span class="text-gray-600 underline">{{ pricePerNight | number }}ρ.Θ x {{ nights }} nights</span>
+      <span class="font-medium">{{ subtotal | number }}ρ.Θ</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-gray-600 underline">Airbnb service fee</span>
+      <span class="font-medium">{{ serviceFee | number }}ρ.Θ</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-gray-600 underline">Taxes</span>
+      <span class="font-medium">{{ taxes | number }}ρ.Θ</span>
+    </div>
+  </div>
+
+  <!-- Total -->
+  <div class="flex justify-between border-t border-gray-300 mt-4 pt-4">
+    <span class="font-semibold">Total</span>
+    <span class="font-semibold">{{ total | number }}ρ.Θ</span>
+  </div>
+</div>
