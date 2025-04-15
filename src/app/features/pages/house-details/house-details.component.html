@@ -1,51 +1,73 @@
 <app-navbar></app-navbar>
 <div class="mx-auto w-full max-w-screen-xl px-4 sm:px-6 py-7">
-    @if (isLoading) {
-      <div class="flex justify-center items-center py-12">
-        <div class="flex flex-col items-center gap-4">
-          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
-          <p class="text-gray-600">Loading home details...</p>
-        </div>
-      </div>
-    }
-    @else if (error) {
-      <div class="text-center py-8">
-        <div class="inline-flex items-center justify-center bg-red-50 px-4 py-2 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-          <span class="text-red-600 font-medium">{{ error }}</span>
-        </div>
-      </div>
-    }
-    @else if (house) {
-      <!-- Main content container -->
-      <div class="space-y-8">
-        <!-- House title -->
-        <h1 class="text-2xl md:text-3xl font-bold">{{ house.title }}</h1>
+  @if (isLoading) {
+  <div class="flex justify-center items-center py-12">
+    <div class="flex flex-col items-center gap-4">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"
+      ></div>
+      <p class="text-gray-600">Loading home details...</p>
+    </div>
+  </div>
+  } @else if (error) {
+  <div class="text-center py-8">
+    <div
+      class="inline-flex items-center justify-center bg-red-50 px-4 py-2 rounded-lg"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 text-red-500 mr-2"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <span class="text-red-600 font-medium">{{ error }}</span>
+    </div>
+  </div>
+  } @else if (house) {
+  <!-- Main content container -->
+  <div class="space-y-8">
+    <!-- House title -->
+    <h1 class="text-2xl md:text-3xl font-bold">{{ house.title }}</h1>
 
-        <!-- Images gallery component -->
-        <app-house-images [images]="house.images"></app-house-images>
+    <!-- Images gallery component -->
+    <app-house-images [images]="house.images"></app-house-images>
 
-        <!-- Rest of the components will go here -->
+    <!-- Rest of the components will go here -->
 
-        <div class="mt-8">
-            <h2 class="text-xl font-semibold mb-4">Location</h2>
-            <!-- For Leaflet -->
-            <app-house-map 
-              [latitude]="house.latitude" 
-              [longitude]="house.longitude"
-              [title]="house.title">
-            </app-house-map>
-            
-            <!-- OR for Google Maps -->
-            <!--
+    <div class="mt-8">
+      <h2 class="text-xl font-semibold mb-4">Location</h2>
+      <!-- For Leaflet -->
+      <app-house-map
+        [latitude]="house.latitude"
+        [longitude]="house.longitude"
+        [title]="house.title"
+      >
+      </app-house-map>
+
+      <!-- OR for Google Maps -->
+      <!--
             <app-google-house-map
               [latitude]="house.latitude" 
               [longitude]="house.longitude"
               [title]="house.title">
             </app-google-house-map>
             -->
+    </div>
+        <app-date-range-picker
+        [checkInDate]="checkInDate"
+        [checkOutDate]="checkOutDate"
+        (datesSelected)="onDatesSelected($event)"
+        ></app-date-range-picker>
+  </div>
+
+  }
+</div>
           </div>
          
       <app-amenities [houseId]="houseId"></app-amenities>
@@ -63,9 +85,6 @@
 <p>pricePerNight: {{ house.pricePerNight }}</p> -->
 <!-- <p>images: {{ house.images }}</p> -->
 
-
-
-
 <!-- <div class="w-96 sticky top-4 h-fit p-4">
   <app-booking
     [houseId]="house.id"
@@ -73,4 +92,4 @@
   </app-booking>
 </div> -->
 
-  <app-footer></app-footer>
+<app-footer></app-footer>
