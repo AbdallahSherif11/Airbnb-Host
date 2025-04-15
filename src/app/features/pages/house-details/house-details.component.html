@@ -61,6 +61,7 @@
             [title]="house.title">
           </app-house-map>
         </div>
+        
       </div>
 
       <!-- Right sidebar (booking card) -->
@@ -73,6 +74,9 @@
         </div>
       </div>
     </div>
+    <div class="mt-16">
+        <app-reviews [reviews]="house?.reviews || []"></app-reviews>
+      </div>
   }
 </div>
 <app-footer></app-footer>

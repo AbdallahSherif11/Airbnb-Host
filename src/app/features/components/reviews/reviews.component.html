@@ -1,0 +1,66 @@
+<div class="mt-12 border-t border-gray-200 pt-8">
+    <!-- Overall Rating Section -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold mb-2">
+        {{ averageRating | number:'1.1-1' }} - {{ totalReviews }} review{{ totalReviews !== 1 ? 's' : '' }}
+      </h2>
+      <div class="flex justify-center">
+        <div class="flex text-2xl">
+          @for (star of [1,2,3,4,5]; track star) {
+            <span [class.text-amber-500]="star <= getRoundedRating()" 
+                  [class.text-gray-300]="star > getRoundedRating()">
+              ★
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+  
+    <!-- Reviews List -->
+    <div class="max-w-3xl mx-auto space-y-6">
+      @for (review of showAllReviews ? reviews : reviews.slice(0, 3); track $index) {
+        <div class="border-b border-gray-100 pb-6 last:border-0">
+          <div class="flex items-start gap-4">
+            <!-- User Avatar -->
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-medium">
+                {{ review.reviewerName?.charAt(0) || 'U' }}
+              </div>
+            </div>
+            
+            <!-- Review Content -->
+            <div class="flex-1">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <!-- Reviewer Name and Stars -->
+                <div>
+                  <h4 class="font-semibold text-gray-900">{{ review.reviewerName || 'Unknown' }}</h4>
+                  <div class="flex mt-1">
+                    @for (star of [1,2,3,4,5]; track star) {
+                      <span [class.text-amber-500]="star <= (review.rating || 0)" 
+                            [class.text-gray-300]="star > (review.rating || 0)"
+                            class="text-lg">
+                        ★
+                      </span>
+                    }
+                  </div>
+                </div>
+                
+                <!-- Comment - Now aligned next to stars on larger screens -->
+                <p class="text-gray-700 sm:max-w-md">{{ review.comment || 'No comment provided' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  
+    <!-- Show More/Less Button -->
+    @if (reviews.length > 3) {
+      <div class="text-center mt-6">
+        <button (click)="showAllReviews = !showAllReviews" 
+                class="px-5 py-1.5 border border-gray-300 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors">
+          {{ showAllReviews ? 'Show less' : 'Show all ' + totalReviews + ' reviews' }}
+        </button>
+      </div>
+    }
+  </div>

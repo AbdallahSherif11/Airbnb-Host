@@ -10,11 +10,12 @@ import { BookingComponent } from "../../components/booking/booking.component";
 import { HouseMapComponent } from '../../components/house-map/house-map.component';
 import { DateRangePickerComponent } from '../../components/date-range-picker/date-range-picker.component';
 import { AmenitiesComponent } from '../../components/amenities/amenities.component';
+import { ReviewsComponent } from '../../components/reviews/reviews.component';
 
 @Component({
   selector: 'app-house-details',
   standalone: true,
-  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, AuthLayoutComponent, BookingComponent, HouseMapComponent, DateRangePickerComponent, AmenitiesComponent],
+  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, AuthLayoutComponent, BookingComponent, HouseMapComponent, DateRangePickerComponent, AmenitiesComponent, ReviewsComponent],
   templateUrl: './house-details.component.html',
   styleUrls: ['./house-details.component.css']
 })
