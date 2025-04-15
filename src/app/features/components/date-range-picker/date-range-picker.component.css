@@ -1,0 +1,31 @@
+.calendar-container {
+    max-width: 700px;
+  }
+  
+  button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .day-selected {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .day-in-range {
+    background-color: #f3f4f6;
+  }
+  
+  .day-check-in {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .day-check-out {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  
+  .day-check-in-out {
+    border-radius: 0;
+  }
