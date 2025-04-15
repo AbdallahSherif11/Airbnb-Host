@@ -1,38 +1,89 @@
-<div class="flex items-center w-full border-b border-gray-200 shadow-sm px-4 py-4">
-  <!-- Categories Filter -->
-  <div class="relative flex-1 min-w-0">
-    <!-- Left Arrow -->
-    <button class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2">
-      <i class="fas fa-chevron-left text-gray-600"></i>
-    </button>
-
-    <!-- Scrollable Category List -->
-    <div class="overflow-x-auto scroll-smooth no-scrollbar px-10">
-      <div class="flex gap-6 whitespace-nowrap">
-        <div *ngFor="let category of categories"
-          class="flex flex-col items-center min-w-[80px] text-center text-sm text-gray-700 hover:text-black cursor-pointer">
-          <i [class]="category.icon + ' text-xl mb-1'"></i>
-          <span>{{ category.name }}</span>
+<div class="w-full border-b border-gray-200 shadow-sm">
+    <div class="max-w-screen-xl mx-auto px-4">
+      <div class="flex items-center w-full py-4">
+        <!-- Categories Filter -->
+        <div class="relative flex-1 min-w-0 overflow-x-hidden">
+          <!-- Left Arrow (hidden when scrolled to start) -->
+          <button 
+              (click)="scrollLeft()" 
+              [class.hidden]="isScrolledToStart" 
+              class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition">
+            <i class="fas fa-chevron-left text-gray-600"></i>
+          </button>
+  
+          <!-- Scrollable Category List -->
+          <div 
+          #scrollContainer
+          class="overflow-x-auto scroll-smooth no-scrollbar"
+          (scroll)="checkScrollPosition()">
+            <div class="flex gap-5 whitespace-nowrap py-2 pl-4 pr-12">
+              <div *ngFor="let category of categories"
+                class="flex flex-col items-center min-w-[80px] text-center text-lg text-gray-700 hover:text-black cursor-pointer transition">
+                <i [class]="category.icon + ' text-xl mb-1'"></i>
+                <span class="text-xs">{{ category.name }}</span>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Right Arrow (hidden when scrolled to end) -->
+          <button 
+              (click)="scrollRight()" 
+              [class.hidden]="isScrolledToEnd" 
+              class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition">
+            <i class="fas fa-chevron-right text-gray-600"></i>
+          </button>
+        </div>
+  
+        <!-- Price Range Slider -->
+        <div class="w-64 ml-8 px-4">
+          <div class="flex justify-between text-xs text-gray-600 mb-1">
+            <span>Minimum</span>
+            <span>Maximum</span>
+          </div>
+          <div class="flex justify-between text-sm font-medium mb-2">
+            <span id="min-value">{{ minValue | currency:'USD':'symbol':'1.0-0' }}</span>
+            <span id="max-value">{{ maxValue | currency:'USD':'symbol':'1.0-0' }}</span>
+          </div>
+          
+          <!-- Slider Container -->
+          <div class="relative h-8" #sliderContainer>
+            <!-- Track Line -->
+            <div class="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full -translate-y-1/2"></div>
+            
+            <!-- Active Range Line -->
+            <div class="absolute top-1/2 h-1 bg-airbnb-primary rounded-full -translate-y-1/2" 
+                  [style.left]="(minValue - minRange) / (maxRange - minRange) * 100 + '%'" 
+                  [style.right]="(maxRange - maxValue) / (maxRange - minRange) * 100 + '%'"></div>
+            
+            <!-- Min Handle -->
+            <div class="absolute top-1/2 w-4 h-4 bg-white border-2 border-airbnb-primary rounded-full cursor-grab active:cursor-grabbing -translate-y-1/2 shadow-md z-10"
+                  [style.left]="(minValue - minRange) / (maxRange - minRange) * 100 + '%'"
+                  (pointerdown)="startDrag($event, 'min')"
+                  tabindex="0"
+                  (keydown.arrowleft)="moveHandle('min', -step)"
+                  (keydown.arrowright)="moveHandle('min', step)">
+              <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap transition-opacity duration-150"
+                   [class.opacity-0]="activeHandle !== 'min' && !isMinHovered"
+                   [class.opacity-100]="activeHandle === 'min' || isMinHovered">
+                {{ minValue | currency:'USD':'symbol':'1.0-0' }}
+              </div>
+            </div>
+            
+            <!-- Max Handle -->
+            <div class="absolute top-1/2 w-4 h-4 bg-white border-2 border-airbnb-primary rounded-full cursor-grab active:cursor-grabbing -translate-y-1/2 shadow-md z-10"
+                  [style.left]="(maxValue - minRange) / (maxRange - minRange) * 100 + '%'"
+                  (pointerdown)="startDrag($event, 'max')"
+                  tabindex="0"
+                  (keydown.arrowleft)="moveHandle('max', -step)"
+                  (keydown.arrowright)="moveHandle('max', step)">
+              <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap transition-opacity duration-150"
+                   [class.opacity-0]="activeHandle !== 'max' && !isMaxHovered"
+                   [class.opacity-100]="activeHandle === 'max' || isMaxHovered">
+                {{ maxValue | currency:'USD':'symbol':'1.0-0' }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Right Arrow -->
-    <button class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2">
-      <i class="fas fa-chevron-right text-gray-600"></i>
-    </button>
   </div>
-
-  <!-- Price Range Slider -->
-  <div class="w-64 ml-8 px-4">
-    <div class="flex justify-between text-xs text-gray-600 mb-1">
-      <span>Minimum</span>
-      <span>Maximum</span>
-    </div>
-    <div class="flex justify-between text-sm font-medium mb-2">
-      <span id="min-value">$1,142</span>
-      <span id="max-value">$28,000</span>
-    </div>
-    <div #rangeSlider class="w-full"></div>
-  </div>
-</div>

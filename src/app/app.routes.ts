@@ -1,17 +1,45 @@
 import { Routes } from '@angular/router';
 import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.component';
+import { noAuthGuard } from './core/guards/no-auth-guard/no-auth.guard';
+import { authGuard } from './core/guards/auth-guard/auth.guard';
+import { HouseDetailsComponent } from './features/pages/house-details/house-details.component';
 
 export const routes: Routes = [
-  {path:"auth",component:AuthLayoutComponent,children:[
-    {path:"",loadComponent:()=>import('../app/core/pages/register/register.component').then(c=>c.RegisterComponent)},
-    {path:"login",loadComponent:()=>import('../app/core/pages/login/login.component').then(c=>c.LoginComponent)},
-  ]},
-  {path:"",loadComponent:()=>import('../app/core/pages/login/login.component').then(c=>c.LoginComponent)},
-  {path:"home",loadComponent:()=>import('./features/pages/home/home.component').then(c=>c.HomeComponent)},
+    {
+        path: "auth",
+        component: AuthLayoutComponent,
+        canActivate: [noAuthGuard],
+        children: [
+            {
+                path: "register", loadComponent: () => import('../app/core/pages/register/register.component').then(c => c.RegisterComponent),
+                canActivate: [noAuthGuard],
+            },
+            {
+                path: "login", loadComponent: () => import('../app/core/pages/login/login.component').then(c => c.LoginComponent),
+                canActivate: [noAuthGuard],
+            },
+        ]
+    },
+    {
+        path: "", loadComponent: () => import('./features/pages/home/home.component').then(c => c.HomeComponent)
+    },
+    {
+        path: "home", loadComponent: () => import('./features/pages/home/home.component').then(c => c.HomeComponent)
+    },
+    {
+        path: "addhouse", loadComponent: () => import('./features/pages/listing-create/listing-create.component').then(c => c.ListingCreateComponent),
+        canActivate: [authGuard],
+    },
+    {
+        path: 'houses/:id',
+        component: HouseDetailsComponent
+    },
 
 
 
 
-  {path:"**",loadComponent:()=>import('./core/pages/not-found/not-found.component').then(c=>c.NotFoundComponent )}
+    {
+        path: "**", loadComponent: () => import('./core/pages/not-found/not-found.component').then(c => c.NotFoundComponent)
+    }
 
 ];
