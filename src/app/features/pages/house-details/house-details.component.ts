@@ -7,14 +7,14 @@ import { NavbarComponent } from "../../../core/layout/navbar/navbar.component";
 import { FooterComponent } from "../../../core/layout/footer/footer.component";
 import { AuthLayoutComponent } from "../../../core/layout/auth-layout/auth-layout.component";
 import { BookingComponent } from "../../components/booking/booking.component";
-import { AmenitiesComponent } from "../../components/amenities/amenities.component";
 import { HouseMapComponent } from '../../components/house-map/house-map.component';
 import { DateRangePickerComponent } from '../../components/date-range-picker/date-range-picker.component';
+import { AmenitiesComponent } from '../../components/amenities/amenities.component';
 
 @Component({
   selector: 'app-house-details',
   standalone: true,
-  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, AuthLayoutComponent, BookingComponent, HouseMapComponent, DateRangePickerComponent],
+  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, AuthLayoutComponent, BookingComponent, HouseMapComponent, DateRangePickerComponent, AmenitiesComponent],
   templateUrl: './house-details.component.html',
   styleUrls: ['./house-details.component.css']
 })

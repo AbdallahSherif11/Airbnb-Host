@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
 import { FooterComponent } from '../../../core/layout/footer/footer.component';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-privacy-choices',
-  imports: [NavbarComponent, FooterComponent],
+  imports: [NavbarComponent, FooterComponent, NgIf, CommonModule],
   templateUrl: './privacy-choices.component.html',
   styleUrls: ['./privacy-choices.component.css']
 })
