@@ -22,6 +22,7 @@ export class HouseDetailsComponent {
   private houseService = inject(HouseService);
 
 
+
   houseId: number = 0;
   house: any;
   isLoading = true;
@@ -48,4 +49,5 @@ export class HouseDetailsComponent {
     });
   }
 }
+
 
