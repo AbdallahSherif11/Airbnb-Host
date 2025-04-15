@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HouseService } from '../../services/house-services/house.service';
 import { HouseImagesComponent } from '../../components/house-images/house-images.component';
@@ -24,24 +24,31 @@ export class HouseDetailsComponent {
 
 
 
-  houseId: number = 0;
+  houseId: number = 0;  
   house: any;
   isLoading = true;
   error: string | null = null;
   checkInDate: Date | null = null;
   checkOutDate: Date | null = null;
+  pricePerNight: number = 0;
 
   onDatesSelected(event: {checkIn: Date | null, checkOut: Date | null}): void {
     this.checkInDate = event.checkIn;
     this.checkOutDate = event.checkOut;
 }
+_PLATFORM_ID = inject(PLATFORM_ID);
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.houseId = +params['id'];
-      this.loadHouseDetails();
-    });
+    if(isPlatformBrowser(this._PLATFORM_ID)){
+        this.route.params.subscribe(params => {
+            this.houseId = +params['id'];
+            this.loadHouseDetails();
+          });
+      }
+    
   }
+
+
 
   loadHouseDetails(): void {
     this.houseService.getHouseById(this.houseId).subscribe({

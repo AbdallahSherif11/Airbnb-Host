@@ -64,7 +64,12 @@
         [checkOutDate]="checkOutDate"
         (datesSelected)="onDatesSelected($event)"
         ></app-date-range-picker>
+        <app-booking
+        [houseId]="houseId"
+        [pricePerNight]="house?.pricePerNight"
+          ></app-booking>
   </div>
+  
 
   }
 </div>
@@ -77,10 +82,7 @@
 
 <!-- <app-booking></app-booking> -->
 
-<app-booking
-  [houseId]="houseId"
-  [pricePerNight]="house.pricePerNight"
-></app-booking>
+
 <!-- <p>House ID: {{ houseId }}</p>
 <p>pricePerNight: {{ house.pricePerNight }}</p> -->
 <!-- <p>images: {{ house.images }}</p> -->

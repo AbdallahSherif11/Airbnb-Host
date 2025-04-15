@@ -15,7 +15,7 @@ export class HouseCardComponent {
   @Input() title: string = '';
   @Input() hostType: string = '';
   @Input() dateRange: string = '';
-  @Input() price: number = 0;
+  @Input() pricePerNight: number = 0;
   @Input() rating: number = 0;
   @Input() isGuestFavorite: boolean = false;
   @Input() houseId: number = 0;
