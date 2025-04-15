@@ -13,6 +13,7 @@ export interface House {
     city: string;
     street: string;
     images: string[];
+    amenities: string[];
     // TO DO : Add other properties you need from ReadHouseDTO
 }
 

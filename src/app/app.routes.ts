@@ -34,8 +34,26 @@ export const routes: Routes = [
         path: 'houses/:id',
         component: HouseDetailsComponent
     },
-
-
+    {
+      path: 'terms',
+      loadComponent: () => import('./features/pages/static-pages/terms.component').then(c => c.TermsComponent),
+      title: 'Terms - Airbnb'
+  },
+  {
+      path: 'sitemap',
+      loadComponent: () => import('./features/pages/static-pages/sitemap.component').then(c => c.SitemapComponent),
+      title: 'Sitemap - Airbnb'
+  },
+  {
+      path: 'privacy',
+      loadComponent: () => import('./features/pages/static-pages/privacy.component').then(c => c.PrivacyComponent),
+      title: 'Privacy Policy - Airbnb'
+  },
+  {
+      path: 'privacy-choices',
+      loadComponent: () => import('./features/pages/static-pages/privacy-choices.component').then(c => c.PrivacyChoicesComponent),
+      title: 'Privacy Choices - Airbnb'
+  },
 
 
     {
