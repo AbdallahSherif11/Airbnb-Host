@@ -89,4 +89,10 @@ export class HouseService {
     };
   }
 
+
+      getHousesByView(view: string): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/view/${view}`);
+      }
 }
+
+
