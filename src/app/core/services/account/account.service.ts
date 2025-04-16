@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AuthUser } from '../../interfaces/account/auth-user';
 import { LoginUser } from '../../interfaces/account/login-user';
-import { clearAuthToken, getAuthToken, setAuthToken } from '../../utils/auth.utils';
+import { clearAuthToken, getAuthToken, setAuthToken, getAuthEmail } from '../../utils/auth.utils';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -24,12 +24,12 @@ export class AccountService {
       })
     );
   }
-  
+
   loginUser(userInfo: LoginUser): Observable<any> {
     return this.httpClient.post('https://localhost:7015/api/Account/login', userInfo).pipe(
       tap((response: any) => {
         if (response?.token) {
-          setAuthToken(response.token);
+          setAuthToken(response.token, response.email); 
         }
       })
     );
@@ -42,5 +42,9 @@ export class AccountService {
 
   isLoggedIn(): boolean {
     return !!getAuthToken();
+  }
+
+  currentUserEmail(): string | null {
+    return getAuthEmail();
   }
 }

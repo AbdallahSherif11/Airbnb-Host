@@ -1,38 +1,60 @@
-import { isPlatformBrowser } from '@angular/common';
+// src/app/utils/auth.utils.ts
 
-// Remove the inject(PLATFORM_ID) approach and use direct platform checks
+const TOKEN_KEY = 'auth_token';
+const EMAIL_KEY = 'auth_email';
+
+// Helper function to check if we are in a browser environment
+const isBrowser = (): boolean => {
+  return typeof window !== 'undefined' && !!window.localStorage;
+};
+
+export const setAuthToken = (token: string, email?: string): void => {
+  try {
+    if (!isBrowser()) return;
+
+    // Test read/write capability
+    const testKey = '__auth_test__';
+    localStorage.setItem(testKey, testKey);
+    localStorage.removeItem(testKey);
+
+    localStorage.setItem(TOKEN_KEY, token);
+    if (email) {
+      localStorage.setItem(EMAIL_KEY, email);
+    }
+  } catch {
+    // Silently fail
+  }
+};
+
 export const getAuthToken = (): string | null => {
   try {
-    // 1. Basic browser environment checks
-    if (typeof window === 'undefined' || !window.localStorage) return null;
+    if (!isBrowser()) return null;
 
-    // 2. Read/write capability test
+    // Optional: test localStorage read access
     const testKey = '__auth_test__';
-    window.localStorage.setItem(testKey, testKey);
-    window.localStorage.removeItem(testKey);
+    localStorage.setItem(testKey, testKey);
+    localStorage.removeItem(testKey);
 
-    // 3. Get the token directly
-    return window.localStorage.getItem('authToken');
+    return localStorage.getItem(TOKEN_KEY);
   } catch {
-    // 4. Fail gracefully for all exceptions
+    return null;
+  }
+};
+
+export const getAuthEmail = (): string | null => {
+  try {
+    if (!isBrowser()) return null;
+    return localStorage.getItem(EMAIL_KEY);
+  } catch {
     return null;
   }
 };
 
 export const clearAuthToken = (): void => {
   try {
-    if (typeof window === 'undefined' || !window.localStorage) return;
-    window.localStorage.removeItem('authToken');
-  } catch {
-    // Silently fail
-  }
-};
-
-// Add this new function to set the token
-export const setAuthToken = (token: string): void => {
-  try {
-    if (typeof window === 'undefined' || !window.localStorage) return;
-    window.localStorage.setItem('authToken', token);
+    if (!isBrowser()) return;
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(EMAIL_KEY);
   } catch {
     // Silently fail
   }
