@@ -1,7 +1,9 @@
-import { afterNextRender, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { afterNextRender, Component, inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HouseCardComponent } from '../house-card/house-card.component';
 import { HouseService } from '../../services/house-services/house.service';
+import { Subject, takeUntil } from 'rxjs';
+import { SharedFilterService } from '../../../shared/services/shared-filter/shared-filter.service';
 
 @Component({
   selector: 'app-house-list',
@@ -10,13 +12,32 @@ import { HouseService } from '../../services/house-services/house.service';
   templateUrl: './house-list.component.html',
   styleUrls: ['./house-list.component.css']
 })
-export class HouseListComponent implements OnInit {
+export class HouseListComponent implements OnInit, OnDestroy {
   houses: any[] = [];
   isLoading = true;
   error: string | null = null;
   _PLATFORM_ID = inject(PLATFORM_ID);
 
-  constructor(private houseService: HouseService) {}
+
+
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private houseService: HouseService,
+    private sharedFilterService: SharedFilterService
+  ) {
+    this.sharedFilterService.viewSelected$
+      .pipe(takeUntil(this.destroy$)) // Angular 16+ or use takeUntil(this.destroy$)
+      .subscribe(view => {
+        this.loadHouseByView(view);
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 
   ngOnInit(): void {
     if(isPlatformBrowser(this._PLATFORM_ID)){
@@ -29,6 +50,20 @@ export class HouseListComponent implements OnInit {
     this.houseService.getAllHouses().subscribe({
       next: (houses) => {
         this.houses = houses;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load houses. Please try again later.';
+        this.isLoading = false;
+        console.error('Error loading houses:', err);
+      }
+    });
+  }
+
+  loadHouseByView(view :string):void{
+    this.houseService.getHousesByView(view).subscribe({
+      next: (data) => {
+        this.houses = data;
         this.isLoading = false;
       },
       error: (err) => {

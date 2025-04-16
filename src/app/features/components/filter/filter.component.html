@@ -17,11 +17,11 @@
           class="overflow-x-auto scroll-smooth no-scrollbar"
           (scroll)="checkScrollPosition()">
             <div class="flex gap-5 whitespace-nowrap py-2 pl-4 pr-12">
-              <div *ngFor="let category of categories"
-                class="flex flex-col items-center min-w-[80px] text-center text-lg text-gray-700 hover:text-black cursor-pointer transition">
+              <button *ngFor="let category of categories"
+                class="flex flex-col items-center min-w-[70px] text-center rounded-md text-lg p-2 text-gray-700 focus:bg-gray-100 transition-colors cursor-pointer" (click)="loadHouseByView(category.name)">
                 <i [class]="category.icon + ' text-xl mb-1'"></i>
                 <span class="text-xs">{{ category.name }}</span>
-              </div>
+              </button>
             </div>
           </div>
   
