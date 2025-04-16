@@ -89,11 +89,6 @@ export class HouseService {
     };
   }
 
-      getHouseById(id: number): Observable<House> {
-        return this.http.get<House>(`${this.apiUrl}/${id}`).pipe(
-          catchError(this.handleError<House>('getHouseById'))
-        );
-      }
 
       getHousesByView(view: string): Observable<any[]> {
         return this.http.get<any[]>(`${this.apiUrl}/view/${view}`);
