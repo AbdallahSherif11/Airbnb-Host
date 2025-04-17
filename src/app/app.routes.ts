@@ -35,6 +35,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
     },
     {
+        path: "myhouses",
+        loadComponent: () => import('./features/pages/my-houses/my-houses.component').then(c => c.MyHousesComponent),
+        canActivate: [authGuard],
+    },
+    {
         path: 'houses/:id',
         loadComponent: () => import('./features/pages/house-details/house-details.component').then(c => c.HouseDetailsComponent)
     },

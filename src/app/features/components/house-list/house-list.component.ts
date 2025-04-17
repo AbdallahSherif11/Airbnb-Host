@@ -1,14 +1,15 @@
-import { afterNextRender, Component, inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { afterNextRender, Component, inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HouseCardComponent } from '../house-card/house-card.component';
 import { HouseService } from '../../services/house-services/house.service';
 import { Subject, takeUntil } from 'rxjs';
 import { SharedFilterService } from '../../../shared/services/shared-filter/shared-filter.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-house-list',
   standalone: true,
-  imports: [CommonModule, HouseCardComponent],
+  imports: [CommonModule, HouseCardComponent,RouterLink],
   templateUrl: './house-list.component.html',
   styleUrls: ['./house-list.component.css']
 })
@@ -17,7 +18,7 @@ export class HouseListComponent implements OnInit, OnDestroy {
   isLoading = true;
   error: string | null = null;
   _PLATFORM_ID = inject(PLATFORM_ID);
-
+  @Input() isMyHousesView = false;
 
 
   private destroy$ = new Subject<void>();
@@ -41,7 +42,11 @@ export class HouseListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if(isPlatformBrowser(this._PLATFORM_ID)){
-      this.loadHouses();
+      if (this.isMyHousesView) {
+        this.loadMyHouses();
+      } else {
+        this.loadHouses();
+      }
     }
     // this.loadHouses();
   }
@@ -60,7 +65,22 @@ export class HouseListComponent implements OnInit, OnDestroy {
     });
   }
 
+  loadMyHouses(): void {
+    this.houseService.getMyHouses().subscribe({
+      next: (houses) => {
+        this.houses = houses;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load houses. Please try again later.';
+        this.isLoading = false;
+        console.error('Error loading houses:', err);
+      }
+    });
+  }
+
   loadHouseByView(view :string):void{
+    if (this.isMyHousesView) return;
     this.houseService.getHousesByView(view).subscribe({
       next: (data) => {
         this.houses = data;
@@ -78,5 +98,13 @@ export class HouseListComponent implements OnInit, OnDestroy {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
     return parseFloat((sum / reviews.length).toFixed(1));
+  }
+
+  refresh(): void {
+    if (this.isMyHousesView) {
+      this.loadMyHouses();
+    } else {
+      this.loadHouses();
+    }
   }
 }

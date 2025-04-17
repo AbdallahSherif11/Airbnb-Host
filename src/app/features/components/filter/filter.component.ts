@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class FilterComponent implements AfterViewInit, OnDestroy {
   categories = [
-    { name: 'Desert', icon: 'fa-solid fa-cactus' },
+    { name: 'Desert', icon: 'fa-solid fa-wind' },
     { name: 'Camping', icon: 'fa-solid fa-campground' },
     { name: 'Mountain', icon: 'fa-solid fa-mountain-sun' },
     { name: 'City', icon: 'fa-solid fa-tree-city' },
