@@ -90,9 +90,16 @@ export class HouseService {
   }
 
 
-      getHousesByView(view: string): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/view/${view}`);
-      }
+  getHousesByView(view: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/view/${view}`);
+  }
+
+  getMyHouses(): Observable<House[]> {
+  return this.http.get<House[]>(`${this.apiUrl}/my-houses`).pipe(
+    map(response => this.transformHouseData(response)),
+    catchError(this.handleError<House[]>('getMyHouses', []))
+  );
+}
 }
 
 

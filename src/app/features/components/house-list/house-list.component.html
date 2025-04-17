@@ -33,17 +33,37 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
-        <h3 class="mt-4 text-lg font-medium text-gray-900">No homes available</h3>
-        <p class="mt-2 text-gray-500">We couldn't find any homes matching your criteria.</p>
-        <button
-          (click)="loadHouses()"
-          class="mt-4 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
-        >
-          Refresh
-        </button>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">
+          @if (isMyHousesView) {
+            You haven't listed any properties yet
+          } @else {
+            No homes available
+          }
+        </h3>
+        <p class="mt-2 text-gray-500">
+          @if (isMyHousesView) {
+            Start sharing your space with travelers around the world
+          } @else {
+            We couldn't find any homes matching your criteria.
+          }
+        </p>
+        @if (isMyHousesView) {
+          <button
+              routerLink="/addhouse"
+              class="mt-4 px-4 py-2 bg-main text-white rounded-lg hover:bg-mainHover transition-colors">
+              Add House
+          </button>
+      } @else {
+          <button
+              (click)="refresh()"
+              class="mt-4 px-4 py-2 bg-main text-white rounded-lg hover:bg-mainHover transition-colors">
+              Refresh
+          </button>
+      }
       </div>
     </div>
   }
+ 
   @else {
     <!-- Responsive Scaling Grid -->
     <div class="grid grid-cols-1
