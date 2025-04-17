@@ -44,7 +44,7 @@ export class HouseDetailsComponent {
   error: string | null = null;
   checkInDate: Date | null = null;
   checkOutDate: Date | null = null;
-
+  pricePerNight: number = 0;
   ngOnInit(): void {
     if(isPlatformBrowser(this._PLATFORM_ID)){
       this.route.params.subscribe(params => {
