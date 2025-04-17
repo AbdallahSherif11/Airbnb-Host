@@ -44,7 +44,14 @@ export class AccountService {
     return !!getAuthToken();
   }
 
+
+  getToken(): string | null {
+    return getAuthToken();
+  }
   currentUserEmail(): string | null {
     return getAuthEmail();
   }
 }
+
+
+

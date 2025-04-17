@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+<div class="chat-app-container">
+  <div class="chat-app-wrapper">
+    <!-- Chat List -->
+    <div class="chat-list-container">
+      <div class="chat-list-header">
+        <h1>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+          </svg>
+          Your Messages
+        </h1>
+      </div>
+
+      <ng-container *ngIf="isLoading; else chatContent">
+        <div class="loading-container">
+          <div class="loading-spinner"></div>
+        </div>
+      </ng-container>
+
+      <ng-template #chatContent>
+        <div class="conversations-list">
+          <ng-container *ngIf="conversations.length > 0; else noConversations">
+            <div
+              *ngFor="let conversation of conversations"
+              class="conversation-item"
+              (click)="openChat(conversation.userId)"
+            >
+              <img
+                [src]="conversation.userImage"
+                (error)="conversation.userImage = 'assets/default-profile.png'"
+                class="user-avatar"
+                alt="Profile"
+              />
+              <div class="conversation-details">
+                <div class="conversation-header">
+                  <h3>{{ conversation.userName }}</h3>
+                  <span class="message-time">
+                    {{ formatTime(conversation.lastMessageTime) }}
+                  </span>
+                </div>
+                <p class="message-preview">{{ conversation.lastMessage }}</p>
+              </div>
+              <span
+                *ngIf="conversation.unreadCount > 0"
+                class="unread-badge"
+              >
+                {{ conversation.unreadCount }}
+              </span>
+            </div>
+          </ng-container>
+
+          <ng-template #noConversations>
+            <div class="empty-state">
+              <p class="empty-title">No conversations yet</p>
+              <p class="empty-subtitle">Start a conversation by messaging a host</p>
+            </div>
+          </ng-template>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Chat Component -->
+    <div class="chat-view-container">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,8 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 export interface House {
+
+//   hostId: string;
   houseId: number;
   title: string;
   description: string;
@@ -19,6 +21,7 @@ export interface House {
   hostName: string;
   isGuestFavorite: boolean;
   dateRange: string;
+
 }
 
 @Injectable({ providedIn: 'root' })

@@ -1,11 +1,11 @@
 import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HouseService } from '../../services/house-services/house.service';
+import { MessageService } from '../../services/message-services/message.service';
 import { HouseImagesComponent } from '../../components/house-images/house-images.component';
 import { NavbarComponent } from "../../../core/layout/navbar/navbar.component";
 import { FooterComponent } from "../../../core/layout/footer/footer.component";
-import { AuthLayoutComponent } from "../../../core/layout/auth-layout/auth-layout.component";
 import { BookingComponent } from "../../components/booking/booking.component";
 import { HouseMapComponent } from '../../components/house-map/house-map.component';
 import { DateRangePickerComponent } from '../../components/date-range-picker/date-range-picker.component';
@@ -15,15 +15,28 @@ import { ReviewsComponent } from '../../components/reviews/reviews.component';
 @Component({
   selector: 'app-house-details',
   standalone: true,
-  imports: [CommonModule, HouseImagesComponent, NavbarComponent, FooterComponent, BookingComponent, HouseMapComponent, DateRangePickerComponent, AmenitiesComponent, ReviewsComponent],
+
+  imports: [
+    CommonModule, 
+    HouseImagesComponent, 
+    NavbarComponent, 
+    FooterComponent, 
+    BookingComponent, 
+    HouseMapComponent, 
+    DateRangePickerComponent, 
+    AmenitiesComponent, 
+    ReviewsComponent
+  ],
+
   templateUrl: './house-details.component.html',
   styleUrls: ['./house-details.component.css']
 })
 export class HouseDetailsComponent {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private houseService = inject(HouseService);
-
-
+  private messageService = inject(MessageService);
+  private _PLATFORM_ID = inject(PLATFORM_ID);
 
   houseId: number = 0;  
   house: any;
@@ -32,24 +45,14 @@ export class HouseDetailsComponent {
   checkInDate: Date | null = null;
   checkOutDate: Date | null = null;
   pricePerNight: number = 0;
-
-  onDatesSelected(event: {checkIn: Date | null, checkOut: Date | null}): void {
-    this.checkInDate = event.checkIn;
-    this.checkOutDate = event.checkOut;
-}
-_PLATFORM_ID = inject(PLATFORM_ID);
-
   ngOnInit(): void {
     if(isPlatformBrowser(this._PLATFORM_ID)){
-        this.route.params.subscribe(params => {
-            this.houseId = +params['id'];
-            this.loadHouseDetails();
-          });
-      }
-    
+      this.route.params.subscribe(params => {
+        this.houseId = +params['id'];
+        this.loadHouseDetails();
+      });
+    }
   }
-
-
 
   loadHouseDetails(): void {
     this.houseService.getHouseById(this.houseId).subscribe({
@@ -64,6 +67,22 @@ _PLATFORM_ID = inject(PLATFORM_ID);
       }
     });
   }
+
+  startConversation(): void {
+    this.messageService.startConversation(this.houseId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.router.navigate(['/chat', response.hostId]);
+        }
+      },
+      error: (err) => {
+        console.error('Error starting conversation:', err);
+      }
+    });
+  }
+
+  onDatesSelected(event: {checkIn: Date | null, checkOut: Date | null}): void {
+    this.checkInDate = event.checkIn;
+    this.checkOutDate = event.checkOut;
+  }
 }
-
-

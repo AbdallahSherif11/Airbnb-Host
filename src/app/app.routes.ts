@@ -3,6 +3,12 @@ import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.compo
 import { noAuthGuard } from './core/guards/no-auth-guard/no-auth.guard';
 import { authGuard } from './core/guards/auth-guard/auth.guard';
 
+import { HouseDetailsComponent } from './features/pages/house-details/house-details.component';
+import { ChatListComponent } from './features/components/chat-list/chat-list.component';
+import { ChatComponent } from './features/components/chat/chat.component';
+import { NotFoundComponent } from './core/pages/not-found/not-found.component'; // Import NotFoundComponent
+
+
 export const routes: Routes = [
     {
         path: "auth",
@@ -68,6 +74,16 @@ export const routes: Routes = [
         loadComponent: () => import('./features/pages/static-pages/privacy-choices.component').then(c => c.PrivacyChoicesComponent),
         title: 'Privacy Choices - Airbnb'
     },
+      { 
+        path: 'chat', 
+        component: ChatListComponent,
+        children: [
+      {
+        path: ':userId',
+        component: ChatComponent
+      }
+      ]
+     },
     {
         path: "**",
         loadComponent: () => import('./core/pages/not-found/not-found.component').then(c => c.NotFoundComponent)
