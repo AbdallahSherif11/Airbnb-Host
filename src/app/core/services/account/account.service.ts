@@ -43,4 +43,8 @@ export class AccountService {
   isLoggedIn(): boolean {
     return !!getAuthToken();
   }
+
+  getToken(): string | null {
+    return getAuthToken();
+  }
 }
