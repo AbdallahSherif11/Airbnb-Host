@@ -15,6 +15,7 @@ import { ReviewsComponent } from '../../components/reviews/reviews.component';
 @Component({
   selector: 'app-house-details',
   standalone: true,
+
   imports: [
     CommonModule, 
     HouseImagesComponent, 
@@ -26,6 +27,7 @@ import { ReviewsComponent } from '../../components/reviews/reviews.component';
     AmenitiesComponent, 
     ReviewsComponent
   ],
+
   templateUrl: './house-details.component.html',
   styleUrls: ['./house-details.component.css']
 })
