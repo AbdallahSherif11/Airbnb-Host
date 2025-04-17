@@ -5,7 +5,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 export interface House {
 
-  hostId: string;
+//   hostId: string;
   houseId: number;
   title: string;
   description: string;

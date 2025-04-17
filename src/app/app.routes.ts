@@ -47,7 +47,6 @@ export const routes: Routes = [
     },
     {
         path: 'houses/:id',
-        component: HouseDetailsComponent
         loadComponent: () => import('./features/pages/house-details/house-details.component').then(c => c.HouseDetailsComponent)
     },
     {

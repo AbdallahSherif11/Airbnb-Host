@@ -48,10 +48,10 @@ export class AccountService {
   getToken(): string | null {
     return getAuthToken();
   }
-}
-
   currentUserEmail(): string | null {
     return getAuthEmail();
   }
 }
+
+
 
