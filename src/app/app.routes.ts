@@ -74,16 +74,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/pages/static-pages/privacy-choices.component').then(c => c.PrivacyChoicesComponent),
         title: 'Privacy Choices - Airbnb'
     },
-      { 
+    { 
         path: 'chat', 
         component: ChatListComponent,
+        canActivate: [authGuard], 
         children: [
-      {
-        path: ':userId',
-        component: ChatComponent
-      }
-      ]
-     },
+            {
+                path: ':userId',
+                component: ChatComponent,
+                canActivate: [authGuard] 
+            }
+        ]
+    },
     {
         path: "**",
         loadComponent: () => import('./core/pages/not-found/not-found.component').then(c => c.NotFoundComponent)

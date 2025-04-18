@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MessageService } from '../../services/message-services/message.service';
 import { AccountService } from '../../../core/services/account/account.service';
 import { Router, RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { NavbarComponent } from "../../../core/layout/navbar/navbar.component";
 import { FooterComponent } from "../../../core/layout/footer/footer.component";
 
 @Component({
   selector: 'app-chat-list',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent, RouterOutlet],
+  imports: [CommonModule, NavbarComponent, RouterOutlet],
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.css']
 })
@@ -25,8 +25,15 @@ export class ChatListComponent implements OnInit {
     private router: Router
   ) {}
 
+  _PLATFORM_ID = inject(PLATFORM_ID);
+
+
   ngOnInit(): void {
-    this.loadConversations();
+    if(isPlatformBrowser(this._PLATFORM_ID)){
+        
+          this.loadConversations();
+        }
+    // this.loadConversations();
   }
 
   loadConversations(): void {
