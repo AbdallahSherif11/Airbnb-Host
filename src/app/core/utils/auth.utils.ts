@@ -1,6 +1,6 @@
 // src/app/utils/auth.utils.ts
 
-const TOKEN_KEY = 'auth_token';
+const TOKEN_KEY = 'authToken';
 const EMAIL_KEY = 'auth_email';
 
 // Helper function to check if we are in a browser environment

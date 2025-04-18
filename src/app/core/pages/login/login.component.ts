@@ -6,6 +6,7 @@ import { LoginUser } from '../../interfaces/account/login-user';
 import { NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { setAuthToken } from '../../utils/auth.utils';
 
 @Component({
   selector: 'app-login',
@@ -57,7 +58,7 @@ export class LoginComponent implements OnDestroy {
     this.loginSubscription = this.authService.loginUser(userInfo)
       .subscribe({
         next: (response) => {
-          localStorage.setItem('authToken', response.token);
+          setAuthToken(response.token, response.email); // Use the utility function
           this.router.navigate(['/']);
           this.isLoading = false;
         },

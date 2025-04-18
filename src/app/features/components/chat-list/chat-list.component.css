@@ -1,5 +1,5 @@
 .chat-app-container {
-    height: calc(100vh - 64px);
+    height: calc(100vh - 72px);
     display: flex;
     justify-content: center;
     background-color: white;
@@ -9,7 +9,7 @@
   .chat-app-wrapper {
     width: 100%;
     max-width: 1200px;
-    height: 95%;
+    height: 97%;
     display: flex;
     background-color: white;
     border-radius: 8px;

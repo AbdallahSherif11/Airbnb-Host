@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { AuthUser } from '../../interfaces/account/auth-user';
 import { LoginUser } from '../../interfaces/account/login-user';
 import { clearAuthToken, getAuthToken, setAuthToken, getAuthEmail } from '../../utils/auth.utils';
@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AccountService {
+  private isLoggedInSubject = new BehaviorSubject<boolean>(!!getAuthToken()); // Initialize with current login state
+  isLoggedIn$ = this.isLoggedInSubject.asObservable(); // Expose as observable
+
   constructor(
     private httpClient: HttpClient,
     private router: Router
@@ -20,6 +23,7 @@ export class AccountService {
       tap((response: any) => {
         if (response?.token) {
           setAuthToken(response.token);
+          this.isLoggedInSubject.next(true); // Notify subscribers
         }
       })
     );
@@ -29,7 +33,8 @@ export class AccountService {
     return this.httpClient.post('https://localhost:7015/api/Account/login', userInfo).pipe(
       tap((response: any) => {
         if (response?.token) {
-          setAuthToken(response.token, response.email); 
+          setAuthToken(response.token, response.email);
+          this.isLoggedInSubject.next(true); // Notify subscribers
         }
       })
     );
@@ -37,6 +42,7 @@ export class AccountService {
 
   signOut(): void {
     clearAuthToken();
+    this.isLoggedInSubject.next(false); // Notify subscribers
     this.router.navigate(['/home']);
   }
 
@@ -44,10 +50,10 @@ export class AccountService {
     return !!getAuthToken();
   }
 
-
   getToken(): string | null {
     return getAuthToken();
   }
+
   currentUserEmail(): string | null {
     return getAuthEmail();
   }

@@ -36,8 +36,8 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
   // Price range slider variables
   minRange = 0;
   maxRange = 5000;
-  minValue = 200;
-  maxValue = 4000;
+  minValue = 0;
+  maxValue = 5000;
   step = 10;
   activeHandle: 'min' | 'max' | null = null;
   isMinHovered = false;
