@@ -1,0 +1,55 @@
+/* Add microphone animation when listening */
+@keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  .fa-microphone {
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* Ensure the search input has enough padding for the microphone icon */
+  input[type="text"] {
+    padding-right: 2.5rem !important;
+  }
+  
+  /* Dropdown styles */
+  .dropdown-container {
+    position: relative;
+  }
+  
+  #user-dropdown {
+    position: absolute;
+    right: 0;
+    z-index: 50;
+    margin-top: 0.25rem;
+    width: 12rem;
+    border-radius: 0.375rem;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  #user-dropdown ul {
+    padding: 0.25rem 0;
+  }
+  
+  #user-dropdown li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #374151;
+  }
+  
+  #user-dropdown li a:hover {
+    background-color: #f9fafb;
+  }
+  
+  .border-gray-100 {
+    border-color: #f3f4f6;
+  }
