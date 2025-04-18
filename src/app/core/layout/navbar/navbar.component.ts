@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, HostListener } from '@angular/core';
+import { Component, inject, OnInit, HostListener, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HouseService } from '../../../features/services/house-services/house.service';
 import { AccountService } from '../../services/account/account.service';
@@ -13,7 +13,7 @@ import { MessageService } from '../../../features/services/message-services/mess
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   private accountService = inject(AccountService);
   private messageService = inject(MessageService);
   private router = inject(Router);
@@ -24,6 +24,10 @@ export class NavbarComponent implements OnInit {
   showDropdown = false;
   userProfilePicture: string | null = null;
   currentUserName: string | null = null;
+  isListening = false;
+  private recognition: any;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   get isLoggedIn(): boolean {
     return this.accountService.isLoggedIn();
@@ -34,8 +38,69 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initializeSpeechRecognition();
     if (this.isLoggedIn) {
       this.fetchUserProfile();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.recognition) {
+      this.recognition.stop();
+    }
+  }
+
+  private initializeSpeechRecognition(): void {
+    // Only run in browser environment
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    // Check for browser support
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      console.warn('Speech recognition not supported in this browser');
+      return;
+    }
+
+    // @ts-ignore - TypeScript doesn't know about webkitSpeechRecognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    this.recognition = new SpeechRecognition();
+    
+    this.recognition.continuous = false;
+    this.recognition.interimResults = false;
+    this.recognition.lang = 'en-US';
+
+    this.recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      this.searchKeyword = transcript;
+      this.search();
+      this.isListening = false;
+    };
+
+    this.recognition.onerror = (event: any) => {
+      console.error('Speech recognition error', event.error);
+      this.isListening = false;
+    };
+
+    this.recognition.onend = () => {
+      if (this.isListening) {
+        this.isListening = false;
+      }
+    };
+  }
+
+  toggleSpeechRecognition(): void {
+    if (!this.recognition) {
+      alert('Speech recognition is not supported in your browser');
+      return;
+    }
+
+    if (this.isListening) {
+      this.recognition.stop();
+      this.isListening = false;
+    } else {
+      this.recognition.start();
+      this.isListening = true;
     }
   }
 
