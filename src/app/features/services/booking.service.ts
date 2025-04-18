@@ -22,4 +22,18 @@ export class BookingService {
       return of(result as T);
     };
   }
+
+  getBookingsAsGuest(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/AsGuest`)
+      .pipe(catchError(this.handleError<any[]>('getBookingsAsGuest', [])));
+  }
+
+
+  getBookingsAsHost(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/AsHost`)
+      .pipe(catchError(this.handleError<any[]>('getBookingsAsHost', [])));
+  }
+
+ 
+  
 }

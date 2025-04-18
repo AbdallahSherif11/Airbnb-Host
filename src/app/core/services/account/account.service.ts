@@ -5,6 +5,7 @@ import { AuthUser } from '../../interfaces/account/auth-user';
 import { LoginUser } from '../../interfaces/account/login-user';
 import { clearAuthToken, getAuthToken, setAuthToken, getAuthEmail } from '../../utils/auth.utils';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,19 @@ export class AccountService {
 
   currentUserEmail(): string | null {
     return getAuthEmail();
+  }
+
+
+  getUserId(): string | null {
+    const token = getAuthToken();
+    if (!token) return null;
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded?.sub || null;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 }
 

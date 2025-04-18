@@ -75,8 +75,8 @@
       </div>
     </div>
     <div class="mt-16">
-        <app-reviews [reviews]="house?.reviews || []"></app-reviews>
-      </div>
+      <app-reviews [houseId]="house?.houseId" [reviews]="house?.reviews || []"></app-reviews>
+    </div>
   }
 </div>
 <div class="mt-4">
