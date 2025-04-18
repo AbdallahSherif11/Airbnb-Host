@@ -46,7 +46,7 @@
           </div>
           
           <!-- Slider Container -->
-          <div class="relative h-8" #sliderContainer>
+          <div class="relative h-8" #sliderContainer (pointerup)="onPriceChange()">
             <!-- Track Line -->
             <div class="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 rounded-full -translate-y-1/2"></div>
             

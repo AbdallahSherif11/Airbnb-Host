@@ -100,6 +100,13 @@ export class HouseService {
     catchError(this.handleError<House[]>('getMyHouses', []))
   );
 }
+
+getHousesByPriceRange(minPrice: number, maxPrice: number): Observable<House[]> {
+  return this.http.get<House[]>(`${this.apiUrl}/price?minPrice=${minPrice}&maxPrice=${maxPrice}`).pipe(
+    map(response => this.transformHouseData(response)),
+    catchError(this.handleError<House[]>('getHousesByPriceRange', []))
+  );
+}
 }
 
 
