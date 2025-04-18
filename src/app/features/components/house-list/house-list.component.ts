@@ -2,7 +2,7 @@ import { afterNextRender, Component, inject, Input, OnDestroy, OnInit, PLATFORM_
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HouseCardComponent } from '../house-card/house-card.component';
 import { HouseService } from '../../services/house-services/house.service';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { SharedFilterService } from '../../../shared/services/shared-filter/shared-filter.service';
 import { RouterLink } from '@angular/router';
 
@@ -49,7 +49,17 @@ export class HouseListComponent implements OnInit, OnDestroy {
       }
     }
     // this.loadHouses();
-  }
+    // Add price range subscription
+  this.sharedFilterService.priceRangeChanged$
+  .pipe(
+    debounceTime(300),
+    takeUntil(this.destroy$)
+  )
+  .subscribe(range => {
+    this.loadHousesByPriceRange(range.min, range.max);
+  });
+}
+  
 
   loadHouses(): void {
     this.houseService.getAllHouses().subscribe({
@@ -100,6 +110,25 @@ export class HouseListComponent implements OnInit, OnDestroy {
     return parseFloat((sum / reviews.length).toFixed(1));
   }
 
+  loadHousesByPriceRange(minPrice: number, maxPrice: number): void {
+    if (this.isMyHousesView) return;
+    
+    this.isLoading = true;
+    this.error = null;
+    
+    this.houseService.getHousesByPriceRange(minPrice, maxPrice).subscribe({
+      next: (houses) => {
+        this.houses = houses;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load houses. Please try again later.';
+        this.isLoading = false;
+        console.error('Error loading houses:', err);
+      }
+    });
+  }
+
   refresh(): void {
     if (this.isMyHousesView) {
       this.loadMyHouses();
@@ -107,4 +136,7 @@ export class HouseListComponent implements OnInit, OnDestroy {
       this.loadHouses();
     }
   }
+
+
+  
 }

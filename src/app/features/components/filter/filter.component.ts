@@ -2,6 +2,7 @@ import { SharedFilterService } from './../../../shared/services/shared-filter/sh
 import { Component, ElementRef, ViewChild, HostListener, AfterViewInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, fromEvent, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-filter',
@@ -55,7 +56,23 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
         this.checkScrollPosition();
       });
     });
+
+    this.ngZone.runOutsideAngular(() => {
+      fromEvent(this.sliderContainer.nativeElement, 'pointerup')
+        .pipe(
+          debounceTime(300),
+          takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
+          this.ngZone.run(() => {
+            this.SharedFilterService.updatePriceRange(this.minValue, this.maxValue);
+          });
+        });
+    });
   }
+
+  private destroy$ = new Subject<void>();
+
 
   // Category scroll methods
   scrollLeft() {
@@ -136,9 +153,14 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
       }
     });
   }
+  onPriceChange() {
+    this.SharedFilterService.updatePriceRange(this.minValue, this.maxValue);
+  }
 
   ngOnDestroy() {
     if (typeof document === 'undefined') return;
     // Cleanup is handled in the stopHandler
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
