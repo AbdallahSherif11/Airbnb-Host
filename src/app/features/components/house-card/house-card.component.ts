@@ -1,6 +1,7 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { WishlistService } from '../../services/wishlist-service/wishlist.service';
 
 @Component({
   selector: 'app-house-card',
@@ -9,10 +10,10 @@ import { Router } from '@angular/router';
   templateUrl: './house-card.component.html',
   styleUrls: ['./house-card.component.css']
 })
-export class HouseCardComponent {
+export class HouseCardComponent implements OnInit {
   private router = inject(Router);
+  private wishlistService = inject(WishlistService);
 
-  // Input Properties
   @Input() houseId: number = 0;
   @Input() images: string[] = [];
   @Input() title: string = '';
@@ -30,16 +31,17 @@ export class HouseCardComponent {
   @Input() longitude: number = 0;
   @Input() isGuestFavorite: boolean = false;
 
-
-
-
-  // Component State
   currentSlide = 0;
   isInWishlist = false;
   imageLoaded = false;
   defaultImage = 'https://via.placeholder.com/300x200?text=No+Image';
 
-  // Image Events
+  ngOnInit(): void {
+    this.wishlistService.wishlist$.subscribe(ids => {
+      this.isInWishlist = ids.includes(this.houseId);
+    });
+  }
+
   onImageLoad(): void {
     this.imageLoaded = true;
   }
@@ -49,7 +51,6 @@ export class HouseCardComponent {
     this.imageLoaded = true;
   }
 
-  // Carousel Navigation
   nextSlide(): void {
     this.currentSlide = (this.currentSlide + 1) % this.images.length;
   }
@@ -59,17 +60,14 @@ export class HouseCardComponent {
   }
 
   toggleWishlist(): void {
-    this.isInWishlist = !this.isInWishlist;
+    this.wishlistService.toggleWishlist(this.houseId);
   }
 
-  // Navigation
   navigateToDetails(): void {
     this.router.navigate(['/houses', this.houseId]);
   }
 
-  // Helpers
   getFirstThreeAmenities(): string[] {
     return this.amenities.slice(0, 3);
   }
 }
-

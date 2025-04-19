@@ -1,0 +1,87 @@
+<app-navbar></app-navbar>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="container mx-auto px-4 py-12">
+    <!-- Header Section -->
+    <div class="mb-10 text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-3">Your Wishlist</h1>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        @if (allHouseData.length > 0) {
+          Your saved properties ready for your next adventure
+        } @else {
+          Start building your dream getaway by saving properties
+        }
+      </p>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="flex flex-col items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-main"></div>
+        <p class="mt-4 text-gray-600">Loading your wishlist...</p>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @else if (allHouseData.length === 0) {
+      <div class="text-center py-16">
+        <div class="mx-auto w-48 h-48 text-gray-300 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-medium text-gray-900 mb-2">No properties saved yet</h3>
+        <p class="text-gray-500 mb-6">When you save properties, they'll appear here</p>
+
+        <!-- Explore Properties Button -->
+        <a
+          routerLink="/home"
+          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-main hover:bg-main-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
+        >
+          Explore Properties
+        </a>
+
+        <!-- Search Input + Button -->
+        
+      </div>
+    }
+
+    <!-- Properties Grid -->
+    @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <app-house-card
+          *ngFor="let house of allHouseData"
+            [houseId]="house.houseId"
+            [images]="house.images || []"
+            [title]="house.title"
+            [pricePerNight]="house.pricePerNight"
+            [rating]="house.rating"
+            [city]="house.city"
+            [country]="house.country"
+            [numberOfRooms]="house.numberOfRooms"
+            [numberOfBeds]="house.numberOfBeds"
+            [hostName]="house.host?.fullName || 'Host'"
+            [amenities]="house.amenities"
+            [dateRange]="''"
+            [hostType]="house.hostType"
+            [latitude]="house.latitude"
+            [longitude]="house.longitude"
+            [isGuestFavorite]="house.isGuestFavorite"
+        ></app-house-card>
+      </div>
+    }
+  </div>
+</div>
+
+<app-footer></app-footer>
+
+
+
+
+
+
+
+
+<!-- 
+[hostName]="house.host?.fullName || 'Host'"
+   [images]="house.images || []" -->
