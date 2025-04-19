@@ -30,8 +30,12 @@ export class AccountService {
     );
   }
 
+  registerUserWithConfirmation(userInfo: AuthUser): Observable<any> {
+    return this.httpClient.post('https://localhost:7015/api/Account/register-with-confirmation', userInfo);
+  }
+
   loginUser(userInfo: LoginUser): Observable<any> {
-    return this.httpClient.post('https://localhost:7015/api/Account/login', userInfo).pipe(
+    return this.httpClient.post('https://localhost:7015/api/Account/login-with-confirmation', userInfo).pipe(
       tap((response: any) => {
         if (response?.token) {
           setAuthToken(response.token, response.email);
