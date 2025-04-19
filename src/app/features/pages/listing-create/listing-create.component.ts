@@ -123,7 +123,7 @@ export class ListingCreateComponent {
     try {
       const formData = this.createFormData();
       await this.addHouseService.createHouse(formData).toPromise();
-      this.router.navigate(['/host/listings']);
+      this.router.navigate(['/myhouses']);
     } catch (error) {
       console.error('Error submitting listing:', error);
       this.errorMessage = 'Failed to create listing. Please try again.';
