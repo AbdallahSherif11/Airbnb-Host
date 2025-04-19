@@ -17,7 +17,7 @@
       </a>
   
       <!-- Centered Search - Takes available space -->
-      <div class="flex-1 flex justify-center px-2 order-1 md:order-none">
+    <div class="flex-1 flex justify-center px-2 order-1 md:order-none">
         <!-- Mobile search button -->
         <button
           type="button"
@@ -42,9 +42,20 @@
             type="text"
             [(ngModel)]="searchKeyword"
             (keyup.enter)="search()"
-            class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-main focus:border-main placeholder-gray-400"
+            class="block w-full p-2 ps-10 pe-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-main focus:border-main placeholder-gray-400"
             placeholder="Search title, Description, Country, City, Street, HouseView"
           >
+          <div class="absolute inset-y-0 end-0 flex items-center pe-3">
+            <button 
+              type="button" 
+              (click)="toggleSpeechRecognition()"
+              [class.text-main]="isListening"
+              [class.text-gray-500]="!isListening"
+              class="hover:text-mainHover focus:outline-none transition-colors duration-200"
+            >
+              <i class="fa-solid" [class.fa-microphone]="!isListening" [class.fa-microphone-slash]="isListening"></i>
+            </button>
+          </div>
         </div>
       </div>
   
