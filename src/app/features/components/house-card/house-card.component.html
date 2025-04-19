@@ -57,9 +57,11 @@
     }
 
     <!-- Guest favorite badge -->
-    <div class="absolute top-3 left-3 bg-white px-2 py-1 rounded-md text-xs font-semibold flex items-center h-[28px]">
-      Guest favorite
-    </div>
+    <div
+*ngIf="rating >= 4.5"
+class="absolute top-3 left-3 bg-white px-2 py-1 rounded-md text-xs font-semibold flex items-center h-[28px]">
+Guest favorite
+</div>
 
     <!-- Wishlist button -->
     <button
