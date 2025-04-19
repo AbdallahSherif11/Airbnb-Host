@@ -28,6 +28,10 @@ export const routes: Routes = [
         ]
     },
     {
+        path: "auth/confirm-email",
+        loadComponent: () => import('./core/pages/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent)
+    },
+    {
         path: "",
         loadComponent: () => import('./features/pages/home/home.component').then(c => c.HomeComponent)
     },

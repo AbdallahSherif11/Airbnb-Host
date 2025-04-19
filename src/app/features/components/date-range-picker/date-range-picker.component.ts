@@ -1,5 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { BookingService } from '../../services/booking.service';
 
 @Component({
   selector: 'app-date-range-picker',
@@ -8,15 +10,36 @@ import { CommonModule } from '@angular/common';
   templateUrl: './date-range-picker.component.html',
   styleUrls: ['./date-range-picker.component.css']
 })
-export class DateRangePickerComponent {
+export class DateRangePickerComponent implements OnInit, OnDestroy {
+  @Input() unavailableDates: Date[] = [];
+  @Output() datesSelected = new EventEmitter<{ checkIn: Date | null; checkOut: Date | null }>();
+
   @Input() checkInDate: Date | null = null;
   @Input() checkOutDate: Date | null = null;
-  @Output() datesSelected = new EventEmitter<{checkIn: Date | null, checkOut: Date | null}>();
 
   currentMonth = new Date().getMonth();
   currentYear = new Date().getFullYear();
   today = new Date();
   todayDate = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate());
+
+  private subscription: Subscription | null = null;
+
+  constructor(private bookingService: BookingService) {}
+
+  ngOnInit(): void {
+    // Subscribe to selected dates from the BookingService
+    this.subscription = this.bookingService.selectedDates$.subscribe((dates) => {
+      this.checkInDate = dates.checkIn;
+      this.checkOutDate = dates.checkOut;
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe to avoid memory leaks
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   prevMonth(): void {
     if (this.currentMonth === 0) {
@@ -39,28 +62,42 @@ export class DateRangePickerComponent {
   selectDate(date: Date): void {
     if (this.isDateDisabled(date)) return;
 
-    if (!this.checkInDate || this.checkInDate > date || 
-        (this.checkInDate && this.checkOutDate)) {
+    if (!this.checkInDate || this.checkInDate > date || (this.checkInDate && this.checkOutDate)) {
       this.checkInDate = date;
       this.checkOutDate = null;
     } else if (this.checkInDate && date > this.checkInDate) {
       this.checkOutDate = date;
     }
 
+    // Emit the selected dates
     this.datesSelected.emit({
       checkIn: this.checkInDate,
       checkOut: this.checkOutDate
     });
+
+    // Update the selected dates in the BookingService
+    this.bookingService.updateSelectedDates({ checkIn: this.checkInDate, checkOut: this.checkOutDate });
   }
 
   clearDates(): void {
     this.checkInDate = null;
     this.checkOutDate = null;
     this.datesSelected.emit({ checkIn: null, checkOut: null });
+
+    // Clear the selected dates in the BookingService
+    this.bookingService.updateSelectedDates({ checkIn: null, checkOut: null });
   }
 
   isDateDisabled(date: Date): boolean {
-    return date < this.todayDate;
+    return (
+      date < this.todayDate ||
+      this.unavailableDates.some(
+        (d) =>
+          d.getFullYear() === date.getFullYear() &&
+          d.getMonth() === date.getMonth() &&
+          d.getDate() === date.getDate()
+      )
+    );
   }
 
   isDateSelected(date: Date): boolean {
@@ -128,9 +165,9 @@ export class DateRangePickerComponent {
     let classes = 'h-10 w-10 rounded-full flex items-center justify-center text-sm font-medium';
     
     if (this.isDateDisabled(day)) {
-      classes += ' opacity-50 cursor-not-allowed';
+      classes += ' opacity-50 cursor-not-allowed line-through text-gray-400';
     } else {
-      classes += ' hover:bg-gray-100';
+      classes += ' hover:bg-gray-100 cursor-pointer';
     }
 
     if (this.isDateSelected(day)) {

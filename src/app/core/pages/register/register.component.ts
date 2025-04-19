@@ -96,11 +96,11 @@ export class RegisterComponent implements OnDestroy {
       isAgreed: formData.isAgreed ? "True" : "False"
     };
 
-    this.apiSubscription = this.authService.registerUser(requestBody)
+    this.apiSubscription = this.authService.registerUserWithConfirmation(requestBody)
       .subscribe({
         next: (res) => {
           console.log('Registration successful', res);
-          this.router.navigate(['/auth/login']);
+          this.router.navigate(['/auth/confirm-email']); // Redirect to confirmation page
         },
         error: (err: HttpErrorResponse) => {
           this.handleApiError(err);
@@ -114,11 +114,10 @@ export class RegisterComponent implements OnDestroy {
   private handleApiError(err: HttpErrorResponse) {
     console.error('Registration error', err);
     this.isLoading = false;
-
+  
     if (err.status === 0) {
       this.apiError = 'Network error. Please check your internet connection.';
     } else if (err.status === 400) {
-      // Handle validation errors from server
       if (err.error?.errors) {
         const validationErrors = [];
         for (const field in err.error.errors) {
@@ -130,10 +129,12 @@ export class RegisterComponent implements OnDestroy {
       }
     } else if (err.status === 409) {
       // Handle duplicate user case
-      if (err.error?.message?.includes('email')) {
+      if (err.error?.message?.includes('Email')) {
         this.apiError = 'Email address is already registered';
-      } else if (err.error?.message?.includes('username')) {
+      } else if (err.error?.message?.includes('Username')) {
         this.apiError = 'Username is already taken';
+      } else if (err.error?.message?.includes('National ID')) {
+        this.apiError = 'National ID is already registered';
       } else {
         this.apiError = 'User already exists with these details';
       }
