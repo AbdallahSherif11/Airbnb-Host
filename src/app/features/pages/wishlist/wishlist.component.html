@@ -1,0 +1,39 @@
+<app-navbar></app-navbar>
+
+<div class="wishlist-container max-w-6xl mx-auto px-4 py-8 min-h-screen">
+  <h2 class="text-2xl font-semibold mb-6 text-center">🧡 Your Wishlist</h2>
+
+  <ng-container *ngIf="allHouseData.length === 0; else hasData">
+    <div class="flex flex-col items-center justify-center py-20 text-center text-gray-500">
+      <img src="assets/empty-wishlist.svg" alt="Empty wishlist" class="w-32 mb-4 opacity-80">
+      <h3 class="text-lg font-semibold text-gray-700">Your wishlist is empty</h3>
+      <p class="mt-1 text-sm text-gray-500">Start exploring and tap the heart icon to save your favorite homes.</p>
+    </div>
+  </ng-container>
+
+  <ng-template #hasData>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <app-house-card
+        *ngFor="let house of allHouseData"
+        [houseId]="house.houseId"
+        [images]="house.images || []"
+        [title]="house.title"
+        [pricePerNight]="house.pricePerNight"
+        [rating]="house.rating"
+        [city]="house.city"
+        [country]="house.country"
+        [numberOfRooms]="house.numberOfRooms"
+        [numberOfBeds]="house.numberOfBeds"
+        [hostName]="house.host?.fullName || 'Host'"
+        [amenities]="house.amenities"
+        [dateRange]="''"
+        [hostType]="house.hostType"
+        [latitude]="house.latitude"
+        [longitude]="house.longitude"
+        [isGuestFavorite]="house.isGuestFavorite"
+      ></app-house-card>
+    </div>
+  </ng-template>
+</div>
+
+<app-footer></app-footer>
