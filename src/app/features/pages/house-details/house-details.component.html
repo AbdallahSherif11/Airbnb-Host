@@ -45,6 +45,7 @@
           <app-date-range-picker
             [checkInDate]="checkInDate"
             [checkOutDate]="checkOutDate"
+            [unavailableDates]="unavailableDates"
             (datesSelected)="onDatesSelected($event)">
           </app-date-range-picker>
         </div>
@@ -61,7 +62,6 @@
             [title]="house.title">
           </app-house-map>
         </div>
-        
       </div>
 
       <!-- Right sidebar (booking card) -->
@@ -69,7 +69,12 @@
         <div class="sticky top-24">
           <app-booking
             [houseId]="houseId"
-            [pricePerNight]="house?.pricePerNight">
+            [pricePerNight]="pricePerNight"
+            [checkInDate]="checkInDate"
+            [checkOutDate]="checkOutDate"
+            [unavailableDates]="unavailableDates"
+            [maxGuests]="maxGuests"
+            [maxDays]="maxDays">
           </app-booking>
         </div>
       </div>
@@ -80,11 +85,11 @@
   }
 </div>
 <div class="mt-4">
-    <button 
-      (click)="startConversation()"
-      class="w-full bg-main hover:bg-mainHover text-white py-2 px-4 rounded-lg transition"
-    >
-      <i class="fas fa-comment-dots mr-2"></i> Say Hello to Host
-    </button>
-  </div>
-<app-footer></app-footer>
+  <button 
+    (click)="startConversation()"
+    class="w-full bg-main hover:bg-mainHover text-white py-2 px-4 rounded-lg transition"
+  >
+    <i class="fas fa-comment-dots mr-2"></i> Say Hello to Host
+  </button>
+</div>
+<app-footer></app-footer>d
