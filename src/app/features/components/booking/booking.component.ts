@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { CommonModule } from '@angular/common';
@@ -8,38 +8,30 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-booking',
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css'],
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
-export class BookingComponent implements OnInit {
+export class BookingComponent implements OnChanges {
   @Input() houseId!: number;
-  @Input() set pricePerNight(value: number) {
-    this._pricePerNight = value;
-    this.calculatePrices();
-  }
-  get pricePerNight(): number {
-    return this._pricePerNight;
-  }
-  private _pricePerNight: number = 45214;
+  @Input() pricePerNight!: number;
+  @Input() checkInDate: Date | null = null;
+  @Input() checkOutDate: Date | null = null;
+  @Input() unavailableDates: Date[] = [];
+  @Input() maxGuests!: number;
+  @Input() maxDays!: number;
+  @Output() datesSelected = new EventEmitter<{checkIn: Date | null, checkOut: Date | null}>();
 
-  checkInDate: Date = new Date('2025-06-28');
-  checkOutDate: Date = new Date('2025-07-05');
-  nights: number = 7;
-
-  // Guest management
+  nights: number = 0;
   showGuestPopup: boolean = false;
   adults: number = 2;
   children: number = 0;
   infants: number = 0;
   hasServiceAnimal: boolean = false;
-
-  // Calendar management
   showCalendar: boolean = false;
   calendarMode: 'checkin' | 'checkout' = 'checkin';
   currentMonth: Date = new Date();
-
-  // Pricing
-  serviceFeePercentage: number = 0.14; // 14% service fee
-  taxPercentage: number = 0.03; // 3% tax
+  serviceFeePercentage: number = 0.14;
+  taxPercentage: number = 0.03;
   subtotal: number = 0;
   serviceFee: number = 0;
   taxes: number = 0;
@@ -50,8 +42,10 @@ export class BookingComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.calculateNights();
+  ngOnChanges(): void {
+    if (this.checkInDate && this.checkOutDate) {
+      this.calculateNights();
+    }
     this.calculatePrices();
   }
 
@@ -71,12 +65,30 @@ export class BookingComponent implements OnInit {
     this.showCalendar = !this.showCalendar;
     if (this.showCalendar) {
       this.showGuestPopup = false;
-      this.currentMonth = new Date(this.calendarMode === 'checkin' ? this.checkInDate : this.checkOutDate);
+      this.currentMonth = new Date(this.calendarMode === 'checkin' ? 
+        (this.checkInDate || new Date()) : 
+        (this.checkOutDate || new Date()));
     }
   }
 
   closeCalendar(): void {
     this.showCalendar = false;
+  }
+
+  prevMonth(): void {
+    this.currentMonth = new Date(
+      this.currentMonth.getFullYear(),
+      this.currentMonth.getMonth() - 1,
+      1
+    );
+  }
+
+  nextMonth(): void {
+    this.currentMonth = new Date(
+      this.currentMonth.getFullYear(),
+      this.currentMonth.getMonth() + 1,
+      1
+    );
   }
 
   generateCalendarDays(): (Date | null)[] {
@@ -87,12 +99,10 @@ export class BookingComponent implements OnInit {
 
     const days: (Date | null)[] = [];
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay.getDay(); i++) {
       days.push(null);
     }
 
-    // Add days of the month
     for (let i = 1; i <= lastDay.getDate(); i++) {
       days.push(new Date(year, month, i));
     }
@@ -102,54 +112,67 @@ export class BookingComponent implements OnInit {
 
   isSelectedDate(date: Date | null): boolean {
     if (!date) return false;
-    return (this.calendarMode === 'checkin' && this.isSameDate(date, this.checkInDate)) ||
-           (this.calendarMode === 'checkout' && this.isSameDate(date, this.checkOutDate));
-  }
-
-  private isSameDate(date1: Date, date2: Date): boolean {
-    return date1.getFullYear() === date2.getFullYear() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getDate() === date2.getDate();
-  }
-
-  selectDate(date: Date): void {
+    
+    // Check if date matches either check-in or check-out based on calendar mode
     if (this.calendarMode === 'checkin') {
-      this.checkInDate = date;
-      // Automatically set checkout date to 7 days later
-      const checkoutDate = new Date(date);
-      checkoutDate.setDate(date.getDate() + this.nights);
-      this.checkOutDate = checkoutDate;
+      return this.checkInDate ? this.isSameDate(date, this.checkInDate) : false;
     } else {
-      // Ensure checkout date is after checkin date
-      if (date > this.checkInDate) {
-        this.checkOutDate = date;
-      } else {
-        // If selected date is before checkin, swap them
-        this.checkOutDate = this.checkInDate;
-        this.checkInDate = date;
-      }
+      return this.checkOutDate ? this.isSameDate(date, this.checkOutDate) : false;
     }
-    this.calculateNights();
-    this.showCalendar = false;
+}
+
+  isDateUnavailable(date: Date | null): boolean {
+    if (!date) return true;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return date < today || this.unavailableDates.some(d => 
+      d.getFullYear() === date.getFullYear() &&
+      d.getMonth() === date.getMonth() &&
+      d.getDate() === date.getDate()
+    );
   }
+
+selectDate(date: Date): void {
+  if (this.isDateUnavailable(date)) return;
+
+  if (this.calendarMode === 'checkin') {
+    this.checkInDate = date;
+    if (!this.checkOutDate || date >= this.checkOutDate) {
+      const checkoutDate = new Date(date);
+      checkoutDate.setDate(date.getDate() + 1);
+      this.checkOutDate = checkoutDate;
+    }
+  } else {
+    if (date > (this.checkInDate || new Date(0))) {
+      this.checkOutDate = date;
+    } else {
+      this.checkOutDate = this.checkInDate;
+      this.checkInDate = date;
+    }
+  }
+
+  // Update the selected dates in the BookingService
+  this.bookingService.updateSelectedDates({ checkIn: this.checkInDate, checkOut: this.checkOutDate });
+
+  this.datesSelected.emit({ checkIn: this.checkInDate, checkOut: this.checkOutDate });
+  this.calculateNights();
+}
 
   clearDates(): void {
-    this.checkInDate = new Date();
-    this.checkOutDate = new Date();
-    this.nights = 0;
+    this.datesSelected.emit({ checkIn: null, checkOut: null });
     this.showCalendar = false;
-    this.calculatePrices();
   }
 
   changeGuests(type: 'adults' | 'children' | 'infants', change: number): void {
     if (type === 'adults') {
       const newValue = this.adults + change;
-      if (newValue >= 1 && newValue <= 15 && this.totalGuests + change <= 15) {
+      if (newValue >= 1 && newValue <= this.maxGuests && this.totalGuests + change <= this.maxGuests) {
         this.adults = newValue;
       }
     } else if (type === 'children') {
       const newValue = this.children + change;
-      if (newValue >= 0 && newValue <= 15 && this.totalGuests + change <= 15) {
+      if (newValue >= 0 && newValue <= this.maxGuests && this.totalGuests + change <= this.maxGuests) {
         this.children = newValue;
       }
     } else if (type === 'infants') {
@@ -161,9 +184,14 @@ export class BookingComponent implements OnInit {
   }
 
   calculateNights(): void {
-    const diffTime = Math.abs(this.checkOutDate.getTime() - this.checkInDate.getTime());
-    this.nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    this.calculatePrices();
+    if (this.checkInDate && this.checkOutDate) {
+      const diffTime = Math.abs(this.checkOutDate.getTime() - this.checkInDate.getTime());
+      this.nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      this.calculatePrices();
+    } else {
+      this.nights = 0;
+      this.calculatePrices();
+    }
   }
 
   calculatePrices(): void {
@@ -173,7 +201,29 @@ export class BookingComponent implements OnInit {
     this.total = this.subtotal + this.serviceFee + this.taxes;
   }
 
+  private isSameDate(date1: Date | null, date2: Date | null): boolean {
+    if (!date1 || !date2) return false;
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
+}
+
   reserve(): void {
+    if (!this.checkInDate || !this.checkOutDate) {
+      alert('Please select check-in and check-out dates');
+      return;
+    }
+
+    if (this.totalGuests > this.maxGuests) {
+      alert(`Maximum ${this.maxGuests} guests allowed`);
+      return;
+    }
+
+    if (this.nights > this.maxDays) {
+      alert(`Maximum stay is ${this.maxDays} nights`);
+      return;
+    }
+
     const bookingData = {
       houseId: this.houseId,
       checkInDate: this.checkInDate.toISOString().split('T')[0],
@@ -187,6 +237,7 @@ export class BookingComponent implements OnInit {
       },
       error: (error) => {
         console.error('Booking failed:', error);
+        alert('Booking failed. Please try again.');
       }
     });
   }

@@ -15,7 +15,6 @@ import { ReviewsComponent } from '../../components/reviews/reviews.component';
 @Component({
   selector: 'app-house-details',
   standalone: true,
-
   imports: [
     CommonModule, 
     HouseImagesComponent, 
@@ -27,7 +26,6 @@ import { ReviewsComponent } from '../../components/reviews/reviews.component';
     AmenitiesComponent, 
     ReviewsComponent
   ],
-
   templateUrl: './house-details.component.html',
   styleUrls: ['./house-details.component.css']
 })
@@ -45,6 +43,10 @@ export class HouseDetailsComponent {
   checkInDate: Date | null = null;
   checkOutDate: Date | null = null;
   pricePerNight: number = 0;
+  unavailableDates: Date[] = [];
+  maxGuests: number = 0;
+  maxDays: number = 0;
+
   ngOnInit(): void {
     if(isPlatformBrowser(this._PLATFORM_ID)){
       this.route.params.subscribe(params => {
@@ -58,6 +60,10 @@ export class HouseDetailsComponent {
     this.houseService.getHouseById(this.houseId).subscribe({
       next: (house) => {
         this.house = house;
+        this.pricePerNight = house?.pricePerNight ?? 0;
+        this.maxGuests = (house as any)?.maxGuests ?? 0;
+        this.maxDays = (house as any)?.maxDays ?? 0;
+        this.loadUnavailableDates();
         this.isLoading = false;
       },
       error: (err) => {
@@ -66,6 +72,25 @@ export class HouseDetailsComponent {
         console.error('Error loading house:', err);
       }
     });
+  }
+
+  loadUnavailableDates(): void {
+    if (this.house?.bookings) {
+      this.unavailableDates = this.house.bookings.flatMap((booking: any) => {
+        const dates = [];
+        const start = new Date(booking.checkIn);
+        const end = new Date(booking.checkOut);
+        for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+          dates.push(new Date(dt));
+        }
+        return dates;
+      });
+    }
+  }
+
+  onDatesSelected(event: {checkIn: Date | null, checkOut: Date | null}): void {
+    this.checkInDate = event.checkIn;
+    this.checkOutDate = event.checkOut;
   }
 
   startConversation(): void {
@@ -79,10 +104,5 @@ export class HouseDetailsComponent {
         console.error('Error starting conversation:', err);
       }
     });
-  }
-
-  onDatesSelected(event: {checkIn: Date | null, checkOut: Date | null}): void {
-    this.checkInDate = event.checkIn;
-    this.checkOutDate = event.checkOut;
   }
 }
