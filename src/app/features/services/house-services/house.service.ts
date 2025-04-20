@@ -110,6 +110,10 @@ getHousesByPriceRange(minPrice: number, maxPrice: number): Observable<House[]> {
     catchError(this.handleError<House[]>('getHousesByPriceRange', []))
   );
 }
+
+getSuggestions(query: string): Observable<any[]> {
+  return this.http.get<any[]>(`/api/houses/suggestions?q=${query}`);
+}
 }
 
 
