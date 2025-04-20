@@ -1,0 +1,112 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-gray-800 mb-8">Profile Settings</h1>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+  </div>
+
+  <!-- Profile form -->
+  <div *ngIf="!isLoading" class="bg-white rounded-lg shadow-md p-6">
+    <!-- Success/Error messages -->
+    <div *ngIf="updateSuccess" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+      Profile updated successfully!
+    </div>
+    <div *ngIf="updateError" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+      Error updating profile. Please try again.
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Profile picture section -->
+      <div class="flex flex-col items-center space-y-4">
+        <div class="relative">
+          <img [src]="previewUrl || 'https://via.placeholder.com/150'" 
+               alt="Profile Picture" 
+               class="w-32 h-32 rounded-full object-cover border-4 border-white shadow">
+          <label for="profilePicture" 
+                 class="absolute bottom-0 right-0 bg-main text-white rounded-full p-2 cursor-pointer hover:bg-mainHover transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+            </svg>
+            <input id="profilePicture" type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)">
+          </label>
+        </div>
+        <p class="text-sm text-gray-500">Click on the icon to change your profile picture</p>
+      </div>
+
+      <!-- Read-only fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Username</label>
+          <input type="text" [value]="userData?.userName" readonly 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Email</label>
+          <input type="email" [value]="userData?.email" readonly 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">National ID</label>
+          <input type="text" [value]="userData?.nationalId" readonly 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100">
+        </div>
+      </div>
+
+      <!-- Editable fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="firstName" class="block text-gray-700 font-medium mb-2">First Name</label>
+          <input id="firstName" type="text" formControlName="firstName" 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-main">
+          <div *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched" 
+               class="text-red-500 text-sm mt-1">
+            First name is required
+          </div>
+        </div>
+        <div>
+          <label for="lastName" class="block text-gray-700 font-medium mb-2">Last Name</label>
+          <input id="lastName" type="text" formControlName="lastName" 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-main focus:border-main">
+          <div *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched" 
+               class="text-red-500 text-sm mt-1">
+            Last name is required
+          </div>
+        </div>
+        <div class="md:col-span-2">
+          <label for="address" class="block text-gray-700 font-medium mb-2">Address</label>
+          <input id="address" type="text" formControlName="address" 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-main focus:border-main">
+          <div *ngIf="profileForm.get('address')?.invalid && profileForm.get('address')?.touched" 
+               class="text-red-500 text-sm mt-1">
+            Address is required
+          </div>
+        </div>
+        <div>
+          <label for="dateOfBirth" class="block text-gray-700 font-medium mb-2">Date of Birth</label>
+          <input id="dateOfBirth" type="date" formControlName="dateOfBirth" 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-main focus:border-main">
+          <div *ngIf="profileForm.get('dateOfBirth')?.invalid && profileForm.get('dateOfBirth')?.touched" 
+               class="text-red-500 text-sm mt-1">
+            Date of birth is required
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <div class="flex justify-end">
+        <button type="submit" [disabled]="profileForm.invalid || isUpdating" 
+                class="px-6 py-2 bg-main text-white rounded-md hover:bg-mainHover transition disabled:bg-pink-400">
+          <span *ngIf="!isUpdating">Save Changes</span>
+          <span *ngIf="isUpdating" class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Saving...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
