@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CreateBookingDto } from '../interfaces/booking-create-DTO/create-booking-dto';
+import { ReadBookingForPaymentDTO } from '../interfaces/booking-create-DTO/read-booking-for-payment-dto';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
@@ -27,8 +28,8 @@ export class BookingService {
     return this.selectedDatesSubject.getValue();
   }
 
-  createBooking(bookingData: CreateBookingDto): Observable<any> {
-    return this.http.post(this.apiUrl, bookingData).pipe(
+  createBooking(bookingData: CreateBookingDto): Observable<ReadBookingForPaymentDTO > {
+    return this.http.post<ReadBookingForPaymentDTO>(this.apiUrl, bookingData).pipe(
       catchError(this.handleError<any>('createBooking'))
     );
   }

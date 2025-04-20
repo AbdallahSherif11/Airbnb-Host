@@ -2,6 +2,7 @@ import { Component, Input, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WishlistService } from '../../services/wishlist-service/wishlist.service';
+import { AccountService } from '../../../core/services/account/account.service';
 
 @Component({
   selector: 'app-house-card',
@@ -13,6 +14,7 @@ import { WishlistService } from '../../services/wishlist-service/wishlist.servic
 export class HouseCardComponent implements OnInit {
   private router = inject(Router);
   private wishlistService = inject(WishlistService);
+  private accountService = inject(AccountService);
 
   @Input() houseId: number = 0;
   @Input() images: string[] = [];
@@ -30,6 +32,8 @@ export class HouseCardComponent implements OnInit {
   @Input() latitude: number = 0;
   @Input() longitude: number = 0;
   @Input() isGuestFavorite: boolean = false;
+  @Input() isMyHousesView: boolean = false; // Add this input
+
 
   currentSlide = 0;
   isInWishlist = false;
@@ -60,11 +64,22 @@ export class HouseCardComponent implements OnInit {
   }
 
   toggleWishlist(): void {
+    if (!this.accountService.isLoggedIn()) {
+      // Redirect to login page if the user is not logged in
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    // Toggle wishlist if the user is logged in
     this.wishlistService.toggleWishlist(this.houseId);
   }
 
   navigateToDetails(): void {
-    this.router.navigate(['/houses', this.houseId]);
+    if (this.isMyHousesView) {
+      this.router.navigate(['/updatehouse', this.houseId]);
+    } else {
+      this.router.navigate(['/houses', this.houseId]);
+    }
   }
 
   getFirstThreeAmenities(): string[] {

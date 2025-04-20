@@ -1,24 +1,50 @@
 <app-navbar></app-navbar>
 
 <div class="container mx-auto px-4 py-8">
-  <!-- Error Message -->
-  <p *ngIf="errorMessage" class="text-red-500 mb-6 text-center">{{ errorMessage }}</p>
-
-  <!-- Search Results -->
-  <div *ngIf="isLoading" class="flex justify-center py-12">
-    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+  <!-- Search Input -->
+  <div *ngIf="false" class="relative mb-6">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onInputChange(searchQuery)"
+      (keyup.enter)="performSearch(searchQuery)"
+      class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-main focus:border-main placeholder-gray-400"
+      placeholder="Search title, Description, Country, City, Street, HouseView"
+    >
+    <!-- Suggestions Dropdown -->
+    <ul *ngIf="suggestions.length > 0" class="absolute z-10 bg-white border border-gray-300 rounded-lg shadow-lg w-full mt-1">
+      <li
+        *ngFor="let suggestion of suggestions"
+        (click)="onSuggestionClick(suggestion)"
+        class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+      >
+        {{ suggestion.title }}
+      </li>
+    </ul>
   </div>
 
+  <!-- Error Message -->
+  <p *ngIf="errorMessage" class="text-red-500 mb-6 text-center text-lg font-semibold">
+    {{ errorMessage }}
+  </p>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="flex justify-center py-12">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+  </div>
+
+  <!-- Search Results -->
   <div *ngIf="!isLoading">
     <!-- Results Count -->
-    <div *ngIf="searchResults.length > 0" class="mb-6">
-      <h2 class="text-xl font-semibold">
+    <div *ngIf="searchResults.length > 0" class="mb-8 text-center">
+      <h2 class="text-2xl font-bold text-gray-800">
         {{ searchResults.length }} results for "{{ searchQuery }}"
       </h2>
+      <p class="text-gray-500 mt-2">Explore the best options for your stay!</p>
     </div>
 
     <!-- Houses Grid -->
-    <div *ngIf="searchResults.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div *ngIf="searchResults.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
       <app-house-card
         *ngFor="let house of searchResults; trackBy: trackByHouseId"
         [houseId]="house.houseId"
@@ -37,12 +63,18 @@
     </div>
 
     <!-- No Results -->
-    <div *ngIf="searchResults.length === 0 && searchQuery && !errorMessage" class="text-center py-12">
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>
-      <h3 class="mt-2 text-lg font-medium text-gray-900">No results found</h3>
-      <p class="mt-1 text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+    <div *ngIf="searchResults.length === 0 && searchQuery && !errorMessage" class="text-center py-16">
+      <div class="flex flex-col items-center space-y-4">
+        <svg class="h-20 w-20 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+        </svg>
+        <h3 class="text-2xl font-semibold text-gray-800">No results found</h3>
+        <p class="text-gray-500 max-w-md">
+          We couldn’t find any listings matching your search.
+          Try adjusting your filters or keywords to explore other options.
+        </p>
+      </div>
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { AccountService } from '../../../core/services/account/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class WishlistService {
@@ -9,15 +10,16 @@ export class WishlistService {
   private wishlistIdsSubject = new BehaviorSubject<number[]>([]);
   wishlist$ = this.wishlistIdsSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadInitialWishlist();
+  constructor(private http: HttpClient, private accountService: AccountService) {
+    if (this.accountService.isLoggedIn()) {
+      this.loadInitialWishlist();
+    }
   }
 
   private loadInitialWishlist() {
     this.getMyWishlist().subscribe({
       next: (houses) => {
-       
-        const ids = houses.map(house => house.houseId); 
+        const ids = houses.map(house => house.houseId);
         this.wishlistIdsSubject.next(ids);
       },
       error: (err) => {

@@ -45,6 +45,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
     },
     {
+        path: "updatehouse/:id",
+        loadComponent: () => import('./features/pages/listing-update/listing-update.component').then(c => c.ListingUpdateComponent),
+        canActivate: [authGuard],
+    },
+    {
         path: "wishlist",
         loadComponent: () => import('./features/pages/wishlist/wishlist.component').then(c => c.WishlistComponent),
         canActivate: [authGuard],
@@ -100,6 +105,16 @@ export const routes: Routes = [
             }
         ]
     },
+    {
+        path: 'payment/success',
+        loadComponent: () => import('./features/pages/payment/payment-success.component').then(c => c.PaymentSuccessComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'payment/cancel',
+        loadComponent: () => import('./features/pages/payment/payment-cancel.component').then(c => c.PaymentCancelComponent),
+        canActivate: [authGuard]
+      },
     {
         path: "**",
         loadComponent: () => import('./core/pages/not-found/not-found.component').then(c => c.NotFoundComponent)
