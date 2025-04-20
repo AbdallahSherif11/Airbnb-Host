@@ -96,6 +96,16 @@ export const routes: Routes = [
         ]
     },
     {
+        path: 'payment/success',
+        loadComponent: () => import('./features/pages/payment/payment-success.component').then(c => c.PaymentSuccessComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'payment/cancel',
+        loadComponent: () => import('./features/pages/payment/payment-cancel.component').then(c => c.PaymentCancelComponent),
+        canActivate: [authGuard]
+      },
+    {
         path: "**",
         loadComponent: () => import('./core/pages/not-found/not-found.component').then(c => c.NotFoundComponent)
     }

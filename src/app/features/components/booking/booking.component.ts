@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PaymentService } from '../../services/payment-services/payment.service';
+import { ReadBookingForPaymentDTO } from '../../interfaces/booking-create-DTO/read-booking-for-payment-dto';
 
 @Component({
   selector: 'app-booking',
@@ -39,7 +41,8 @@ export class BookingComponent implements OnChanges {
 
   constructor(
     private bookingService: BookingService,
-    private router: Router
+    private router: Router,
+    private paymentService: PaymentService
   ) {}
 
   ngOnChanges(): void {
@@ -208,32 +211,33 @@ selectDate(date: Date): void {
            date1.getDate() === date2.getDate();
 }
 
-  reserve(): void {
+reserve(): void {
     if (!this.checkInDate || !this.checkOutDate) {
       alert('Please select check-in and check-out dates');
       return;
     }
-
+  
     if (this.totalGuests > this.maxGuests) {
       alert(`Maximum ${this.maxGuests} guests allowed`);
       return;
     }
-
+  
     if (this.nights > this.maxDays) {
       alert(`Maximum stay is ${this.maxDays} nights`);
       return;
     }
-
+  
     const bookingData = {
       houseId: this.houseId,
       checkInDate: this.checkInDate.toISOString().split('T')[0],
       checkOutDate: this.checkOutDate.toISOString().split('T')[0],
       paymentMethod: 'Stripe'
     };
-
+  
     this.bookingService.createBooking(bookingData).subscribe({
-      next: () => {
-        this.router.navigate(['/payment']);
+      next: (response: ReadBookingForPaymentDTO) => {
+        // Assuming response contains bookingId and total price
+        this.paymentService.createCheckoutSession(response.bookingId, this.total);
       },
       error: (error) => {
         console.error('Booking failed:', error);
