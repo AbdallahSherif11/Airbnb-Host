@@ -60,6 +60,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
     },
     {
+        path: "profile",
+        loadComponent: () => import('./features/pages/user-profile/user-profile.component').then(c => c.UserProfileComponent),
+        canActivate: [authGuard],
+    },
+    {
         path: 'houses/:id',
         loadComponent: () => import('./features/pages/house-details/house-details.component').then(c => c.HouseDetailsComponent)
     },
