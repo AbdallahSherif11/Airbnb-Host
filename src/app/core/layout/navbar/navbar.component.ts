@@ -5,13 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { HouseService } from '../../../features/services/house-services/house.service';
 import { AccountService } from '../../services/account/account.service';
 import { MessageService } from '../../../features/services/message-services/message.service';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   private accountService = inject(AccountService);
@@ -26,6 +28,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   currentUserName: string | null = null;
   isListening = false;
   private recognition: any;
+  suggestions: any[] = [];
+  private searchSubject = new Subject<string>();
+  private subscriptions = new Subscription();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -39,12 +44,31 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeSpeechRecognition();
+
+    // Handle search suggestions
+    this.subscriptions.add(
+      this.searchSubject.pipe(
+        debounceTime(300), // Wait for 300ms after typing stops
+        distinctUntilChanged(), // Ignore if the query hasn't changed
+        switchMap(query => this.houseService.searchHouses(query)) // Fetch suggestions
+      ).subscribe({
+        next: (results) => {
+          this.suggestions = results.slice(0, 5); // Limit to 5 suggestions
+        },
+        error: (err) => {
+          console.error('Error fetching suggestions:', err);
+          this.suggestions = [];
+        }
+      })
+    );
+
     if (this.isLoggedIn) {
       this.fetchUserProfile();
     }
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
     if (this.recognition) {
       this.recognition.stop();
     }
@@ -65,7 +89,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // @ts-ignore - TypeScript doesn't know about webkitSpeechRecognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
-    
+
     this.recognition.continuous = false;
     this.recognition.interimResults = false;
     this.recognition.lang = 'en-US';
@@ -137,6 +161,20 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
+  onInputChange(query: string): void {
+    this.searchKeyword = query;
+    if (query.trim()) {
+      this.searchSubject.next(query); // Emit the query for suggestions
+    } else {
+      this.suggestions = [];
+    }
+  }
+
+  onSuggestionClick(suggestion: any): void {
+    this.searchKeyword = suggestion.title; // Set the clicked suggestion as the query
+    this.search(); // Perform the search
+  }
+
   search(): void {
     if (this.searchKeyword.trim()) {
       this.router.navigate(['search'], {
@@ -145,6 +183,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
       this.searchKeyword = '';
       this.showMobileSearch = false;
+      this.suggestions = [];
     }
   }
 

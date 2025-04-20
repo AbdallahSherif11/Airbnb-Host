@@ -1,57 +1,69 @@
-<div class="max-w-2xl mx-auto mt-10 border-t pt-8 border-gray-200">
+<div class="max-w-5xl mx-auto mt-10 border-t pt-8 border-gray-200">
   <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">Guest Reviews</h3>
 
   <!-- Average Rating -->
   <div class="flex flex-col items-center justify-center my-10 text-center">
     <div class="flex items-center gap-8">
       <!-- Left Wing -->
-      <img 
-        src="https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/78b7687c-5acf-4ef8-a5ea-eda732ae3b2f.png" 
-        alt="Left Wreath" 
+      <img
+        src="https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/78b7687c-5acf-4ef8-a5ea-eda732ae3b2f.png"
+        alt="Left Wreath"
         class="w-24 h-36"
       />
-  
+
       <!-- Rating Number -->
       <h1 class="text-7xl font-bold text-gray-900 leading-none transform -translate-y-6">{{ averageRating }}</h1>
-  
+
       <!-- Right Wing -->
-      <img 
-        src="https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/b4005b30-79ff-4287-860c-67829ecd7412.png" 
-        alt="Right Wreath" 
+      <img
+        src="https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/b4005b30-79ff-4287-860c-67829ecd7412.png"
+        alt="Right Wreath"
         class="w-24 h-36"
       />
     </div>
-  
-    <!-- Title -->
-    <p class="mt-4 text-lg font-semibold text-gray-800">Guest favorite</p>
-  
-    <!-- Description -->
-    <p class="mt-1 text-sm text-gray-500 max-w-xs">
-      This home is a guest favorite based on ratings, reviews, and reliability.
-    </p>
+
+    <!-- Conditional Title and Description -->
+    <div *ngIf="averageRating >= 4.5; else lowRating">
+      <p class="mt-4 text-lg font-semibold text-gray-800">Guest favorite</p>
+      <p class="mt-1 text-sm text-gray-500 max-w-xs">
+        This home is a guest favorite based on ratings, reviews, and reliability.
+      </p>
+    </div>
+    <ng-template #lowRating>
+      <p class="mt-4 text-lg font-semibold text-gray-800">Well-Loved by Guests</p>
+      <p class="mt-1 text-sm text-gray-500 max-w-xs">
+        Guests appreciate this home for its charm and comfort. Read recent reviews to learn more about their experiences.
+      </p>
+    </ng-template>
   </div>
 
-  <!-- Reviews List -->
-  <div *ngFor="let review of reviews; trackBy: trackByReviewId" class="bg-white p-6 rounded-xl shadow-sm mb-6">
-    <div class="flex justify-between items-center mb-3">
-      <div class="flex items-center space-x-1">
+  <!-- Reviews Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div
+      *ngFor="let review of reviews; trackBy: trackByReviewId"
+      class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm"
+    >
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-sm font-semibold text-gray-800">{{ review.reviewerName }}</p>
+        <span class="text-xs text-gray-400">{{ review.createdAt | date: 'mediumDate' }}</span>
+      </div>
+
+      <div class="flex items-center mb-3">
         <ng-container *ngFor="let star of getStars(review.rating)">
-          <span class="text-yellow-400 text-lg">★</span>
+          <span class="text-yellow-400 text-base">★</span>
         </ng-container>
         <ng-container *ngFor="let star of getEmptyStars(review.rating)">
-          <span class="text-gray-300 text-lg">★</span>
+          <span class="text-gray-300 text-base">★</span>
         </ng-container>
       </div>
-      <span class="text-sm text-gray-400">{{ review.createdAt | date:'mediumDate' }}</span>
+
+      <p class="text-sm text-gray-700 leading-relaxed">{{ review.comment }}</p>
     </div>
-    <p class="text-gray-700 mb-3 leading-relaxed">{{ review.comment }}</p>
-    <!-- Displaying guest name -->
-    <p class="text-sm text-gray-500 italic"> {{ review.reviewerName }}</p>
   </div>
 
   <!-- Add Review -->
   <div *ngIf="canAddReview" class="mt-10 text-center">
-    <button 
+    <button
       *ngIf="!showReviewForm"
       (click)="toggleReviewForm()"
       class="px-5 py-2.5 bg-black text-white rounded-lg hover:bg-gray-800 transition"
@@ -59,11 +71,11 @@
       Write a Review
     </button>
 
-    <div *ngIf="showReviewForm" class="bg-white p-6 rounded-xl shadow-md mt-6 text-left">
+    <div *ngIf="showReviewForm" class="bg-white p-6 rounded-xl shadow-md mt-6 text-left max-w-2xl mx-auto">
       <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="space-y-5">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-          <select 
+          <select
             formControlName="rating"
             class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none"
           >
@@ -73,8 +85,8 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Your Review</label>
-          <textarea 
-            formControlName="comment" 
+          <textarea
+            formControlName="comment"
             rows="5"
             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none resize-none"
           ></textarea>
@@ -84,15 +96,15 @@
         </div>
 
         <div class="flex gap-3 justify-center">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             [disabled]="!reviewForm.valid"
             class="px-5 py-2.5 bg-black text-white rounded-lg hover:bg-gray-800 disabled:bg-gray-300 transition"
           >
             Submit Review
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             (click)="toggleReviewForm()"
             class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
           >
@@ -104,7 +116,7 @@
   </div>
 
   <!-- Already Reviewed Message -->
-  <div  *ngIf="isLoggedIn && !canAddReview && showReviewForm" class="mt-6 bg-blue-50 text-blue-800 p-4 rounded-lg text-sm text-center">
+  <div *ngIf="isLoggedIn && !canAddReview && showReviewForm" class="mt-6 bg-blue-50 text-blue-800 p-4 rounded-lg text-sm text-center">
     You’ve already reviewed this place.
   </div>
 
