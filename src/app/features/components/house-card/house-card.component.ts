@@ -32,6 +32,8 @@ export class HouseCardComponent implements OnInit {
   @Input() latitude: number = 0;
   @Input() longitude: number = 0;
   @Input() isGuestFavorite: boolean = false;
+  @Input() isMyHousesView: boolean = false; // Add this input
+
 
   currentSlide = 0;
   isInWishlist = false;
@@ -73,7 +75,11 @@ export class HouseCardComponent implements OnInit {
   }
 
   navigateToDetails(): void {
-    this.router.navigate(['/houses', this.houseId]);
+    if (this.isMyHousesView) {
+      this.router.navigate(['/updatehouse', this.houseId]);
+    } else {
+      this.router.navigate(['/houses', this.houseId]);
+    }
   }
 
   getFirstThreeAmenities(): string[] {

@@ -45,6 +45,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
     },
     {
+        path: "updatehouse/:id",
+        loadComponent: () => import('./features/pages/listing-update/listing-update.component').then(c => c.ListingUpdateComponent),
+        canActivate: [authGuard],
+    },
+    {
         path: "wishlist",
         loadComponent: () => import('./features/pages/wishlist/wishlist.component').then(c => c.WishlistComponent),
         canActivate: [authGuard],

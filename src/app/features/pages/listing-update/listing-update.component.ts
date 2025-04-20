@@ -1,0 +1,210 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SafeUrlPipe } from '../../pipes/safe-url/safe-url.pipe';
+import { House } from '../../services/house-services/house.service';
+import { UpdateHouseService } from '../../services/update-house-services/update-house.service';
+
+@Component({
+  selector: 'app-listing-update',
+  standalone: true,
+  imports: [CommonModule, FormsModule, SafeUrlPipe],
+  templateUrl: './listing-update.component.html',
+  styleUrls: ['./listing-update.component.css']
+})
+export class ListingUpdateComponent implements OnInit {
+  currentStep = 1;
+  totalSteps = 3;
+  isLoading = false;
+  errorMessage = '';
+  houseId!: number;
+  originalHouse!: House;
+  
+  listing = {
+    title: '',
+    description: '',
+    pricePerNight: 0,
+    country: '',
+    city: '',
+    street: '',
+    latitude: 0,
+    longitude: 0,
+    isAvailable: true,
+    maxDays: 30,
+    maxGuests: 1,
+    houseView: '',
+    numberOfRooms: 1,
+    numberOfBeds: 1,
+    imagesList: [] as File[],
+    amenitiesList: [] as number[],
+    existingImages: [] as string[]
+  };
+
+  propertyTypes = [
+    'House', 'Apartment', 'Barn',
+    'Bed & breakfast', 'Boat', 'Cabin',
+    'Camper/RV', 'Casa particular', 'Castle'
+  ];
+
+  amenities = [
+    { id: 1, name: 'Wifi' },
+    { id: 2, name: 'TV' },
+    { id: 3, name: 'Kitchen' },
+    { id: 4, name: 'Washer' },
+    { id: 5, name: 'Free parking' },
+    { id: 6, name: 'Paid parking' },
+    { id: 7, name: 'Air conditioning' },
+    { id: 8, name: 'Pool' }
+  ];
+
+  constructor(
+    private updateHouseService: UpdateHouseService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.houseId = +params['id'];
+      // Here you would fetch the existing house data
+      // For example:
+      // this.houseService.getHouseById(this.houseId).subscribe(house => {
+      //   this.originalHouse = house;
+      //   this.populateForm(house);
+      // });
+    });
+  }
+
+  populateForm(house: House): void {
+    this.listing = {
+      title: house.title,
+      description: house.description,
+      pricePerNight: house.pricePerNight,
+      country: house.country,
+      city: house.city,
+      street: house.street,
+      latitude: 0, // You might need to get these from the house object
+      longitude: 0, // You might need to get these from the house object
+      isAvailable: true, // You might need to get this from the house object
+      maxDays: 30, // You might need to get this from the house object
+      maxGuests: 1, // You might need to get this from the house object
+      houseView: '', // You might need to get this from the house object
+      numberOfRooms: house.numberOfRooms,
+      numberOfBeds: house.numberOfBeds,
+      imagesList: [],
+      amenitiesList: [], // You might need to get these from the house object
+      existingImages: house.images
+    };
+  }
+
+  nextStep() {
+    if (this.currentStep < this.totalSteps && this.isStepValid(this.currentStep)) {
+      this.currentStep++;
+    }
+  }
+
+  prevStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
+  isStepValid(step: number): boolean {
+    switch(step) {
+      case 1:
+        return !!this.listing.houseView &&
+               !!this.listing.country &&
+               !!this.listing.city &&
+               !!this.listing.street &&
+               this.listing.maxGuests > 0 &&
+               this.listing.numberOfRooms > 0 &&
+               this.listing.numberOfBeds > 0;
+      case 2:
+        return (this.listing.imagesList.length >= 0 || this.listing.existingImages.length > 0) &&
+               !!this.listing.title &&
+               !!this.listing.description;
+      case 3:
+        return this.listing.pricePerNight > 0;
+      default:
+        return false;
+    }
+  }
+
+  toggleAmenity(amenityId: number) {
+    const index = this.listing.amenitiesList.indexOf(amenityId);
+    if (index === -1) {
+      this.listing.amenitiesList.push(amenityId);
+    } else {
+      this.listing.amenitiesList.splice(index, 1);
+    }
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.listing.imagesList = Array.from(input.files);
+    }
+  }
+
+  removePhoto(index: number) {
+    this.listing.imagesList.splice(index, 1);
+  }
+
+  removeExistingPhoto(index: number) {
+    this.listing.existingImages.splice(index, 1);
+    // Note: You might need to call an API to actually delete the image from storage
+  }
+
+  async submitUpdates() {
+    if (!this.isStepValid(3)) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    try {
+      // Update title
+      await this.updateHouseService.updateTitle(this.houseId, this.listing.title).toPromise();
+      
+      // Update description
+      await this.updateHouseService.updateDescription(this.houseId, this.listing.description).toPromise();
+      
+      // Update price
+      await this.updateHouseService.updatePrice(this.houseId, this.listing.pricePerNight).toPromise();
+      
+      // Update location
+      await this.updateHouseService.updateLocation(this.houseId, {
+        country: this.listing.country,
+        city: this.listing.city,
+        street: this.listing.street,
+        latitude: this.listing.latitude,
+        longitude: this.listing.longitude
+      }).toPromise();
+      
+      // Update availability and basic details
+      await this.updateHouseService.updateAvailability(this.houseId, {
+        isAvailable: this.listing.isAvailable,
+        maxDays: this.listing.maxDays,
+        maxGuests: this.listing.maxGuests,
+        houseView: this.listing.houseView,
+        numberOfRooms: this.listing.numberOfRooms,
+        numberOfBeds: this.listing.numberOfBeds
+      }).toPromise();
+      
+      // Update images if new ones were added
+      if (this.listing.imagesList.length > 0) {
+        await this.updateHouseService.updateImages(this.houseId, this.listing.imagesList).toPromise();
+      }
+      
+      // Update amenities
+      await this.updateHouseService.updateAmenities(this.houseId, this.listing.amenitiesList).toPromise();
+      
+      this.router.navigate(['/myhouses']);
+    } catch (error) {
+      console.error('Error updating listing:', error);
+      this.errorMessage = 'Failed to update listing. Please try again.';
+    } finally {
+      this.isLoading = false;
+    }
+  }
+}
