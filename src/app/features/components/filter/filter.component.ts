@@ -24,7 +24,7 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
     { name: 'Room', icon: 'fa-solid fa-bed' },
     { name: 'Towers', icon: 'fas fa-building' },
     { name: 'Barns', icon: 'fas fa-warehouse' },
-    { name: 'mansoura', icon: 'fas fa-tree' },
+    { name: 'forest', icon: 'fas fa-tree' },
   ];
   constructor(private SharedFilterService: SharedFilterService,private ngZone: NgZone) {}
 
@@ -93,10 +93,10 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
 
   checkScrollPosition() {
     if (!this.scrollContainer?.nativeElement) return;
-    
+
     const element = this.scrollContainer.nativeElement;
     const threshold = 5;
-    
+
     const newIsScrolledToStart = element.scrollLeft <= threshold;
     const newIsScrolledToEnd = element.scrollLeft + element.clientWidth >= element.scrollWidth - threshold;
 
@@ -115,7 +115,7 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
     this.activeHandle = handle;
     const sliderElement = this.sliderContainer.nativeElement;
     const sliderRect = sliderElement.getBoundingClientRect();
-    
+
     const moveHandler = (moveEvent: PointerEvent) => {
       const offsetX = moveEvent.clientX - sliderRect.left;
       const percentage = Math.min(Math.max(offsetX / sliderRect.width, 0), 1);
@@ -139,7 +139,7 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
 
     document.addEventListener('pointermove', moveHandler);
     document.addEventListener('pointerup', stopHandler);
-    
+
     event.preventDefault();
     event.stopPropagation();
   }

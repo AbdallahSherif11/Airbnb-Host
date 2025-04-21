@@ -40,10 +40,11 @@ export class ListingCreateComponent {
   };
 
   propertyTypes = [
-    'House', 'Apartment', 'Barn',
-    'Bed & breakfast', 'Boat', 'Cabin',
-    'Camper/RV', 'Casa particular', 'Castle'
+  'Desert', 'Camping', 'Mountain', 'City',
+    'Farms', 'Boats', 'Beach',
+    'Lake', 'Room', 'Towers','Barns', 'forest',
   ];
+
 
   amenities = [
     { id: 1, name: 'Wifi' },
