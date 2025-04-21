@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+
 export interface House {
 
 //   hostId: string;
@@ -36,11 +37,39 @@ export class HouseService {
     );
   }
 
-  getHouseById(id: number): Observable<House | undefined> {
+  // getHouseById(id: number): Observable<House | undefined> {
+  //   return this.http.get<House>(`${this.apiUrl}/${id}`).pipe(
+  //     catchError(this.handleError<House>('getHouseById'))
+  //   );
+  // }
+
+  getHouseById(id: number): Observable<House> {
     return this.http.get<House>(`${this.apiUrl}/${id}`).pipe(
-      catchError(this.handleError<House>('getHouseById'))
+      catchError(this.handleError<House>('getHouseById', this.getDefaultHouse()))
     );
   }
+
+  private getDefaultHouse(): House {
+    return {
+      houseId: 0,
+      title: 'Untitled Property',
+      description: '',
+      pricePerNight: 0,
+      country: 'Unknown Country',
+      city: 'Unknown City',
+      street: '',
+      images: ['assets/default-house.jpg'],
+      amenities: [],
+      numberOfRooms: 0,
+      numberOfBeds: 0,
+      rating: 0,
+      hostName: 'Host',
+      isGuestFavorite: false,
+      dateRange: ''
+    };
+  }
+
+
 
   searchHouses(keyword: string): Observable<House[]> {
     return this.http.get<any[]>(`${this.apiUrl}/search?keyword=${keyword}`).pipe(

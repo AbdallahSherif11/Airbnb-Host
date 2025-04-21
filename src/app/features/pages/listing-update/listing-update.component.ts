@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrlPipe } from '../../pipes/safe-url/safe-url.pipe';
 import { House } from '../../services/house-services/house.service';
 import { UpdateHouseService } from '../../services/update-house-services/update-house.service';
+import { HouseService } from '../../services/house-services/house.service'; // Add this import
+
 
 @Component({
   selector: 'app-listing-update',
@@ -20,7 +22,7 @@ export class ListingUpdateComponent implements OnInit {
   errorMessage = '';
   houseId!: number;
   originalHouse!: House;
-  
+
   listing = {
     title: '',
     description: '',
@@ -42,10 +44,10 @@ export class ListingUpdateComponent implements OnInit {
   };
 
   propertyTypes = [
-    'House', 'Apartment', 'Barn',
-    'Bed & breakfast', 'Boat', 'Cabin',
-    'Camper/RV', 'Casa particular', 'Castle'
-  ];
+    'Desert', 'Camping', 'Mountain', 'City',
+      'Farms', 'Boats', 'Beach',
+      'Lake', 'Room', 'Towers','Barns', 'forest',
+    ];
 
   amenities = [
     { id: 1, name: 'Wifi' },
@@ -60,23 +62,55 @@ export class ListingUpdateComponent implements OnInit {
 
   constructor(
     private updateHouseService: UpdateHouseService,
+    private houseService: HouseService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
+  // ngOnInit(): void {
+  //   this.route.params.subscribe(params => {
+  //     this.houseId = +params['id'];
+  //     // Here you would fetch the existing house data
+  //     // For example:
+  //     // this.houseService.getHouseById(this.houseId).subscribe(house => {
+  //     //   this.originalHouse = house;
+  //     //   this.populateForm(house);
+  //     // });
+  //   });
+  // }
+
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.houseId = +params['id'];
-      // Here you would fetch the existing house data
-      // For example:
-      // this.houseService.getHouseById(this.houseId).subscribe(house => {
-      //   this.originalHouse = house;
-      //   this.populateForm(house);
-      // });
+      this.loadHouseData();
+    });
+  }
+
+
+  loadHouseData(): void {
+    this.isLoading = true;
+    this.houseService.getHouseById(this.houseId).subscribe({
+      next: (house) => {
+        this.originalHouse = house;
+        this.populateForm(house);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading house data:', err);
+        this.errorMessage = 'Failed to load house data. Please try again.';
+        this.isLoading = false;
+      }
     });
   }
 
   populateForm(house: House): void {
+        // Convert amenities from string[] to number[] based on our amenity list
+        const amenityIds = house.amenities
+        .map(amenityName => {
+          const found = this.amenities.find(a => a.name === amenityName);
+          return found ? found.id : null;
+        })
+        .filter(id => id !== null) as number[];
     this.listing = {
       title: house.title,
       description: house.description,
@@ -165,13 +199,13 @@ export class ListingUpdateComponent implements OnInit {
     try {
       // Update title
       await this.updateHouseService.updateTitle(this.houseId, this.listing.title).toPromise();
-      
+
       // Update description
       await this.updateHouseService.updateDescription(this.houseId, this.listing.description).toPromise();
-      
+
       // Update price
       await this.updateHouseService.updatePrice(this.houseId, this.listing.pricePerNight).toPromise();
-      
+
       // Update location
       await this.updateHouseService.updateLocation(this.houseId, {
         country: this.listing.country,
@@ -180,7 +214,7 @@ export class ListingUpdateComponent implements OnInit {
         latitude: this.listing.latitude,
         longitude: this.listing.longitude
       }).toPromise();
-      
+
       // Update availability and basic details
       await this.updateHouseService.updateAvailability(this.houseId, {
         isAvailable: this.listing.isAvailable,
@@ -190,15 +224,15 @@ export class ListingUpdateComponent implements OnInit {
         numberOfRooms: this.listing.numberOfRooms,
         numberOfBeds: this.listing.numberOfBeds
       }).toPromise();
-      
+
       // Update images if new ones were added
       if (this.listing.imagesList.length > 0) {
         await this.updateHouseService.updateImages(this.houseId, this.listing.imagesList).toPromise();
       }
-      
+
       // Update amenities
       await this.updateHouseService.updateAmenities(this.houseId, this.listing.amenitiesList).toPromise();
-      
+
       this.router.navigate(['/myhouses']);
     } catch (error) {
       console.error('Error updating listing:', error);
