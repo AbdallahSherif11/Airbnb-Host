@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CreateBookingDto } from '../interfaces/booking-create-DTO/create-booking-dto';
 import { ReadBookingForPaymentDTO } from '../interfaces/booking-create-DTO/read-booking-for-payment-dto';
+import { AccountService } from '../../core/services/account/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
@@ -16,7 +17,10 @@ export class BookingService {
   });
   selectedDates$ = this.selectedDatesSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private accountService: AccountService
+  ) { }
 
   // Update selected dates
   updateSelectedDates(dates: { checkIn: Date | null; checkOut: Date | null }): void {
@@ -28,7 +32,7 @@ export class BookingService {
     return this.selectedDatesSubject.getValue();
   }
 
-  createBooking(bookingData: CreateBookingDto): Observable<ReadBookingForPaymentDTO > {
+  createBooking(bookingData: CreateBookingDto): Observable<ReadBookingForPaymentDTO> {
     return this.http.post<ReadBookingForPaymentDTO>(this.apiUrl, bookingData).pipe(
       catchError(this.handleError<any>('createBooking'))
     );
@@ -42,16 +46,27 @@ export class BookingService {
   }
 
   getBookingsAsGuest(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/AsGuest`)
+    const token = this.accountService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    
+    return this.http.get<any[]>(`${this.apiUrl}/AsGuest`, { headers })
       .pipe(catchError(this.handleError<any[]>('getBookingsAsGuest', [])));
   }
 
-
   getBookingsAsHost(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/AsHost`)
+    const token = this.accountService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    
+    return this.http.get<any[]>(`${this.apiUrl}/AsHost`, { headers })
       .pipe(catchError(this.handleError<any[]>('getBookingsAsHost', [])));
   }
 
- 
-  
+  // New method to calculate total earnings
+  calculateTotalEarnings(bookings: any[]): number {
+    return bookings.reduce((total, booking) => total + booking.totalPrice, 0);
+  }
 }
