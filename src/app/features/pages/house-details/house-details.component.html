@@ -29,6 +29,12 @@
         <!-- Images gallery component -->
         <app-house-images [images]="house.images"></app-house-images>
 
+        <!-- House description -->
+        <div class="mt-6">
+          <h2 class="text-xl font-semibold mb-2">Description</h2>
+          <p class="text-gray-700 leading-relaxed">{{ house.description }}</p>
+        </div>
+
         <!-- Horizontal divider -->
         <div class="border-t border-gray-200 my-8"></div>
 
@@ -90,12 +96,4 @@
     </div>
   }
 </div>
-<!-- <div class="mt-4">
-  <button 
-    (click)="startConversation()"
-    class="w-full bg-main hover:bg-mainHover text-white py-2 px-4 rounded-lg transition"
-  >
-    <i class="fas fa-comment-dots mr-2"></i> Say Hello to Host
-  </button>
-</div> -->
 <app-footer></app-footer>

@@ -217,10 +217,15 @@
     <!-- Reserve Button -->
     <button
       class="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium py-3 px-4 rounded-lg transition duration-150"
+      [disabled]="!isLoggedIn" 
       (click)="reserve()"
     >
       Reserve
     </button>
+
+    <div *ngIf="!isLoggedIn" class="text-center text-gray-500 text-sm mt-2">
+      Please <a routerLink="/auth/login" class="text-rose-500 underline">sign in</a> to reserve.
+    </div>
   
     <div class="text-center text-gray-500 text-sm mt-2">You won't be charged yet</div>
   
