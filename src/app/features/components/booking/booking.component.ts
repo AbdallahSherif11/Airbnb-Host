@@ -1,17 +1,18 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaymentService } from '../../services/payment-services/payment.service';
 import { ReadBookingForPaymentDTO } from '../../interfaces/booking-create-DTO/read-booking-for-payment-dto';
+import { AccountService } from '../../../core/services/account/account.service';
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, RouterLink]
 })
 export class BookingComponent implements OnChanges {
   @Input() houseId!: number;
@@ -21,7 +22,7 @@ export class BookingComponent implements OnChanges {
   @Input() unavailableDates: Date[] = [];
   @Input() maxGuests!: number;
   @Input() maxDays!: number;
-  @Output() datesSelected = new EventEmitter<{checkIn: Date | null, checkOut: Date | null}>();
+  @Output() datesSelected = new EventEmitter<{ checkIn: Date | null, checkOut: Date | null }>();
 
   nights: number = 0;
   showGuestPopup: boolean = false;
@@ -38,12 +39,18 @@ export class BookingComponent implements OnChanges {
   serviceFee: number = 0;
   taxes: number = 0;
   total: number = 0;
+  isLoggedIn: boolean = false; // Track login status
 
   constructor(
     private bookingService: BookingService,
     private router: Router,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private accountService: AccountService // Inject AccountService
   ) {}
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.accountService.isLoggedIn(); // Check if the user is logged in
+  }
 
   ngOnChanges(): void {
     if (this.checkInDate && this.checkOutDate) {
