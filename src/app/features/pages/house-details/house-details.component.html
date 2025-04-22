@@ -32,6 +32,12 @@
         <!-- Horizontal divider -->
         <div class="border-t border-gray-200 my-8"></div>
 
+        <!-- Add this new component - pass houseId instead of hostId -->
+        <app-host-details [houseId]="house.houseId"></app-host-details>
+
+        <!-- Horizontal divider -->
+        <div class="border-t border-gray-200 my-8"></div>
+
         <!-- Amenities section - stretches full width -->
         <div class="w-full">
           <app-amenities [houseId]="houseId"></app-amenities>
@@ -84,12 +90,12 @@
     </div>
   }
 </div>
-<div class="mt-4">
+<!-- <div class="mt-4">
   <button 
     (click)="startConversation()"
     class="w-full bg-main hover:bg-mainHover text-white py-2 px-4 rounded-lg transition"
   >
     <i class="fas fa-comment-dots mr-2"></i> Say Hello to Host
   </button>
-</div>
+</div> -->
 <app-footer></app-footer>
