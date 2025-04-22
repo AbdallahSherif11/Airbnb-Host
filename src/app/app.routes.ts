@@ -120,6 +120,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/components/my-bookings/my-bookings.component').then(m => m.MyBookingsComponent),
         canActivate: [authGuard]
       },
+      {
+        path: 'my-trips',
+        loadComponent: () => import('./features/components/my-trips/my-trips.component').then(m => m.MyTripsComponent),
+        canActivate: [authGuard]
+      },
     {
         path: "**",
         loadComponent: () => import('./core/pages/not-found/not-found.component').then(c => c.NotFoundComponent)

@@ -1,0 +1,88 @@
+<app-navbar></app-navbar>
+
+<div class="mx-auto w-full max-w-screen-xl px-4 sm:px-6 py-8">
+  <h1 class="text-2xl md:text-3xl font-bold mb-6">My Trips</h1>
+
+  @if (isLoading) {
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+    </div>
+  }
+  @else if (error) {
+    <div class="text-center py-8">
+      <div class="inline-flex items-center justify-center bg-red-50 px-4 py-2 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+        <span class="text-red-600 font-medium">{{ error }}</span>
+      </div>
+    </div>
+  }
+  @else {
+    <!-- Summary Card -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div>
+          <h2 class="text-xl font-semibold">Trips Summary</h2>
+          <p class="text-gray-600">{{ bookings.length }} trip{{ bookings.length !== 1 ? 's' : '' }}</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <p class="text-2xl font-bold text-main">${{ totalSpent.toFixed(2) }}</p>
+          <p class="text-gray-600 text-sm">Total spent</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trips List -->
+    <div class="space-y-4">
+      @for (booking of bookings; track booking.bookingId) {
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="p-6">
+            <div class="flex flex-col md:flex-row justify-between">
+              <div class="mb-4 md:mb-0">
+                <h3 class="text-lg font-semibold">{{ booking.houseTitle }}</h3>
+                <p class="text-gray-600">{{ booking.houseAddress }}</p>
+                <p class="text-gray-600 mt-2">
+                  <span class="font-medium">Hosted by:</span> {{ booking.guestName }}
+                </p>
+              </div>
+              
+              <div class="flex flex-col items-end">
+                <p class="text-lg font-semibold">${{ booking.totalPrice.toFixed(2) }}</p>
+                <p class="text-gray-600 text-sm">{{ getDuration(booking.checkInDate, booking.checkOutDate) }} night{{ getDuration(booking.checkInDate, booking.checkOutDate) !== 1 ? 's' : '' }}</p>
+                <p class="text-gray-600 text-sm">{{ formatDate(booking.checkInDate) }} - {{ formatDate(booking.checkOutDate) }}</p>
+                <p class="text-gray-500 text-xs mt-1">Booked on {{ formatDate(booking.createdAt) }}</p>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+              <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                {{ booking.paymentMethod }}
+              </span>
+              <a 
+                [routerLink]="['/houses', booking.houseId]" 
+                class="text-sm text-main hover:text-mainHover hover:underline"
+              >
+                View property
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (bookings.length === 0) {
+        <div class="text-center py-12">
+          <div class="mx-auto max-w-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">No trips booked yet</h3>
+            <p class="mt-2 text-gray-500">Your upcoming adventures will appear here.</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<app-footer></app-footer>

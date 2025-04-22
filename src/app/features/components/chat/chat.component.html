@@ -14,8 +14,8 @@
       <div class="ml-3">
         <h2 class="font-semibold text-gray-900">{{ receiverName || 'Host' }}</h2>
         <p class="text-xs text-gray-500">
-          <span [class.text-green-500]="isConnected" [class.text-red-500]="!isConnected">•</span>
-          {{ isConnected ? 'Online' : 'Offline' }}
+          <span [class.text-green-500]="isConnected" [class.text-red-500]="!isConnected"></span>
+          {{ isConnected ? '' : '' }}
         </p>
       </div>
     </div>
