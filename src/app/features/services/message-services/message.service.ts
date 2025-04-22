@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { HostDetails } from '../../interfaces/host-read-DTO/HostDetails';
 
 export interface Message {
     messageId: number;
@@ -73,5 +74,9 @@ export class MessageService {
 
   getUserById(userId: string): Observable<any> {
     return this.http.get<any>(`https://localhost:7015/api/Account/${userId}`);
+  }
+
+  getHostByHouseId(houseId: number): Observable<HostDetails> {
+    return this.http.get<HostDetails>(`https://localhost:7015/api/Account/getHost/${houseId}`);
   }
 }

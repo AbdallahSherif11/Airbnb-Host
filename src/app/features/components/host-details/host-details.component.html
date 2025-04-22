@@ -1,0 +1,78 @@
+<div class="border border-gray-200 rounded-lg p-6 mb-8 bg-white shadow-sm">
+    @if (isLoading) {
+      <div class="flex justify-center items-center py-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500"></div>
+      </div>
+    }
+    @else if (error) {
+      <div class="text-center text-red-500 py-4">{{ error }}</div>
+    }
+    @else if (hostDetails) {
+      <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+        <!-- Host Image -->
+        <div class="flex-shrink-0">
+          <img 
+            [src]="hostDetails.profilePictureUrl" 
+            alt="Host profile"
+            class="w-24 h-24 rounded-full object-cover border border-gray-200"
+            onerror="this.src='assets/default-profile.png'"
+          >
+        </div>
+        
+        <!-- Host Info -->
+        <div class="flex-1">
+          <h2 class="text-xl font-semibold mb-1">
+            Hosted by {{ hostDetails.firstName }} {{ hostDetails.lastName }}
+            @if (hostDetails.userName) {
+              <span class="text-gray-500 text-sm block sm:inline sm:ml-2">{{ hostDetails.userName }}</span>
+            }
+          </h2>
+          
+          <!-- Hosting Since -->
+          <p class="text-gray-600 mb-3">
+            <i class="fas fa-calendar-alt mr-1"></i>
+            Hosting since {{ formatDate(hostDetails.createdAt) }}
+          </p>
+          
+          <!-- Location -->
+          @if (hostDetails.address) {
+            <p class="text-gray-600 mb-3">
+              <i class="fas fa-map-marker-alt mr-1"></i>
+              Lives in {{ hostDetails.address }}
+            </p>
+          }
+          
+          <!-- Age -->
+          @if (hostDetails.dateOfBirth) {
+            <p class="text-gray-600 mb-4">
+              <i class="fas fa-birthday-cake mr-1"></i>
+              {{ calculateAge(hostDetails.dateOfBirth) }} years old
+            </p>
+          }
+          
+          <!-- Verified Status -->
+          <div class="flex items-center gap-2 mb-4">
+            <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs flex items-center">
+              <i class="fas fa-check-circle mr-1"></i>
+              Verified host
+            </div>
+            
+            @if (hostDetails.nationalId) {
+              <div class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs flex items-center">
+                <i class="fas fa-id-card mr-1"></i>
+                ID verified
+              </div>
+            }
+          </div>
+          
+          <!-- Contact Button -->
+          <button 
+            (click)="startConversation()"
+            class="bg-main hover:bg-mainHover text-white py-2 px-4 rounded-lg transition flex items-center justify-center sm:justify-start w-full sm:w-auto"
+          >
+            <i class="fas fa-comment-dots mr-2"></i> Contact Host
+          </button>
+        </div>
+      </div>
+    }
+  </div>

@@ -11,6 +11,7 @@ import { HouseMapComponent } from '../../components/house-map/house-map.componen
 import { DateRangePickerComponent } from '../../components/date-range-picker/date-range-picker.component';
 import { AmenitiesComponent } from '../../components/amenities/amenities.component';
 import { ReviewsComponent } from '../../components/reviews/reviews.component';
+import { HostDetailsComponent } from '../../components/host-details/host-details.component';
 
 @Component({
   selector: 'app-house-details',
@@ -24,7 +25,8 @@ import { ReviewsComponent } from '../../components/reviews/reviews.component';
     HouseMapComponent, 
     DateRangePickerComponent, 
     AmenitiesComponent, 
-    ReviewsComponent
+    ReviewsComponent,
+    HostDetailsComponent
   ],
   templateUrl: './house-details.component.html',
   styleUrls: ['./house-details.component.css']
