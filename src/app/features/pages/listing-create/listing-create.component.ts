@@ -48,13 +48,18 @@ export class ListingCreateComponent {
 
   amenities = [
     { id: 1, name: 'Wifi' },
-    { id: 2, name: 'TV' },
-    { id: 3, name: 'Kitchen' },
-    { id: 4, name: 'Washer' },
-    { id: 5, name: 'Free parking' },
-    { id: 6, name: 'Paid parking' },
-    { id: 7, name: 'Air conditioning' },
-    { id: 8, name: 'Pool' }
+    { id: 2, name: 'Hair Dryer' },
+    { id: 3, name: 'Dryer' },
+    { id: 4, name: 'Kitchen' },
+    { id: 5, name: 'Parking' },
+    { id: 6, name: 'TV' },
+    { id: 7, name: 'Pool' },
+    { id: 8, name: 'Washer' },
+    { id: 9, name: 'Air Conditioning' },
+    { id: 10, name: 'Lake access' },
+    { id: 11, name: 'Bathtub' },
+    { id: 12, name: 'Gym' }
+    
   ];
 
   constructor(

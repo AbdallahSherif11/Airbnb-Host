@@ -49,16 +49,21 @@ export class ListingUpdateComponent implements OnInit {
       'Lake', 'Room', 'Towers','Barns', 'forest',
     ];
 
-  amenities = [
-    { id: 1, name: 'Wifi' },
-    { id: 2, name: 'TV' },
-    { id: 3, name: 'Kitchen' },
-    { id: 4, name: 'Washer' },
-    { id: 5, name: 'Free parking' },
-    { id: 6, name: 'Paid parking' },
-    { id: 7, name: 'Air conditioning' },
-    { id: 8, name: 'Pool' }
-  ];
+    amenities = [
+        { id: 1, name: 'Wifi' },
+        { id: 2, name: 'Hair Dryer' },
+        { id: 3, name: 'Dryer' },
+        { id: 4, name: 'Kitchen' },
+        { id: 5, name: 'Parking' },
+        { id: 6, name: 'TV' },
+        { id: 7, name: 'Pool' },
+        { id: 8, name: 'Washer' },
+        { id: 9, name: 'Air Conditioning' },
+        { id: 10, name: 'Lake access' },
+        { id: 11, name: 'Bathtub' },
+        { id: 12, name: 'Gym' }
+        
+      ];
 
   constructor(
     private updateHouseService: UpdateHouseService,
@@ -104,13 +109,13 @@ export class ListingUpdateComponent implements OnInit {
   }
 
   populateForm(house: House): void {
-        // Convert amenities from string[] to number[] based on our amenity list
-        const amenityIds = house.amenities
-        .map(amenityName => {
-          const found = this.amenities.find(a => a.name === amenityName);
-          return found ? found.id : null;
-        })
-        .filter(id => id !== null) as number[];
+    const amenityIds = house.amenities
+      .map(amenityName => {
+        const found = this.amenities.find(a => a.name === amenityName);
+        return found ? found.id : null;
+      })
+      .filter(id => id !== null) as number[];
+  
     this.listing = {
       title: house.title,
       description: house.description,
@@ -118,16 +123,16 @@ export class ListingUpdateComponent implements OnInit {
       country: house.country,
       city: house.city,
       street: house.street,
-      latitude: 0, // You might need to get these from the house object
-      longitude: 0, // You might need to get these from the house object
-      isAvailable: true, // You might need to get this from the house object
-      maxDays: 30, // You might need to get this from the house object
-      maxGuests: 1, // You might need to get this from the house object
-      houseView: '', // You might need to get this from the house object
+      latitude: house.latitude || 0,
+      longitude: house.longitude || 0,
+      isAvailable: house.isAvailable !== undefined ? house.isAvailable : true,
+      maxDays: house.maxDays || 30, 
+      maxGuests: house.maxGuests || 1,  
+      houseView: house.houseView || '',
       numberOfRooms: house.numberOfRooms,
       numberOfBeds: house.numberOfBeds,
       imagesList: [],
-      amenitiesList: [], // You might need to get these from the house object
+      amenitiesList: amenityIds,
       existingImages: house.images
     };
   }

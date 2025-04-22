@@ -6,24 +6,30 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 export interface House {
 
-//   hostId: string;
-  houseId: number;
-  title: string;
-  description: string;
-  pricePerNight: number;
-  country: string;
-  city: string;
-  street: string;
-  images: string[];
-  amenities: string[];
-  numberOfRooms: number;
-  numberOfBeds: number;
-  rating: number;
-  hostName: string;
-  isGuestFavorite: boolean;
-  dateRange: string;
-
-}
+    //   hostId: string;
+      houseId: number;
+      title: string;
+      description: string;
+      pricePerNight: number;
+      country: string;
+      city: string;
+      street: string;
+      latitude: number;  
+      longitude: number; 
+      isAvailable: boolean; 
+      maxDays: number; 
+      maxGuests: number; 
+      houseView: string; 
+      images: string[];
+      amenities: string[];
+      numberOfRooms: number;
+      numberOfBeds: number;
+      rating: number;
+      hostName: string;
+      isGuestFavorite: boolean;
+      dateRange: string;
+    
+    }
 
 @Injectable({ providedIn: 'root' })
 export class HouseService {
@@ -58,6 +64,12 @@ export class HouseService {
       country: 'Unknown Country',
       city: 'Unknown City',
       street: '',
+      latitude: 0,
+      longitude: 0,
+      isAvailable: false,
+      maxDays: 0,
+      maxGuests: 0,
+      houseView: 'Unknown View',
       images: ['assets/default-house.jpg'],
       amenities: [],
       numberOfRooms: 0,
@@ -89,30 +101,35 @@ export class HouseService {
         rating = reviews.reduce((sum: number, review: any) => sum + (review.rating || 0), 0) / reviews.length;
       }
 
-      // تحديد isGuestFavorite بناءً على الـ Rating المحسوب أو القيمة اللي جاية من الـ API
       const isGuestFavorite = item.isGuestFavorite !== undefined
         ? item.isGuestFavorite
         : rating > 4.5;
 
-      return {
-        houseId: item.houseId || 0,
-        title: item.title || 'Untitled Property',
-        description: item.description || '',
-        pricePerNight: item.pricePerNight || 0,
-        country: item.country || 'Unknown Country',
-        city: item.city || 'Unknown City',
-        street: item.street || '',
-        images: item.images || ['assets/default-house.jpg'],
-        amenities: item.amenities || [],
-        numberOfRooms: item.numberOfRooms || 0,
-        numberOfBeds: item.numberOfBeds || 0,
-        rating: rating,
-        hostName: item.hostName || 'Host',
-        isGuestFavorite: isGuestFavorite,
-        dateRange: item.createdAt ? `Added ${new Date(item.createdAt).toLocaleDateString()}` : ''
-      };
-    });
-  }
+        return {
+            houseId: item.houseId || 0,
+            title: item.title || 'Untitled Property',
+            description: item.description || '',
+            pricePerNight: item.pricePerNight || 0,
+            country: item.country || 'Unknown Country',
+            city: item.city || 'Unknown City',
+            street: item.street || '',
+            latitude: item.latitude || 0,
+            longitude: item.longitude || 0,
+            isAvailable: item.isAvailable !== undefined ? item.isAvailable : false,
+            maxDays: item.maxDays || 0,
+            maxGuests: item.maxGuests || 0,
+            houseView: item.houseView || 'Unknown View',
+            images: item.images || ['assets/default-house.jpg'],
+            amenities: item.amenities || [],
+            numberOfRooms: item.numberOfRooms || 0,
+            numberOfBeds: item.numberOfBeds || 0,
+            rating: rating,
+            hostName: item.hostName || 'Host',
+            isGuestFavorite: isGuestFavorite,
+            dateRange: item.createdAt ? `Added ${new Date(item.createdAt).toLocaleDateString()}` : ''
+          };
+        });
+      }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
