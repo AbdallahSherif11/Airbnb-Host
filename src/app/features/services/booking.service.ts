@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { CreateBookingDto } from '../interfaces/booking-create-DTO/create-booking-dto';
 import { ReadBookingForPaymentDTO } from '../interfaces/booking-create-DTO/read-booking-for-payment-dto';
 import { AccountService } from '../../core/services/account/account.service';
+import { HostDetails } from '../interfaces/host-read-DTO/HostDetails';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
@@ -69,4 +70,9 @@ export class BookingService {
   calculateTotalEarnings(bookings: any[]): number {
     return bookings.reduce((total, booking) => total + booking.totalPrice, 0);
   }
+
+  getHostByHouseId(houseId: number): Observable<HostDetails> {
+      return this.http.get<HostDetails>(`https://myairbnb.runasp.net/api/Account/getHost/${houseId}`);
+    }
+  
 }

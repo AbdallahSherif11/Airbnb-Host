@@ -32,6 +32,20 @@ export class MyTripsComponent implements OnInit {
       next: (bookings) => {
         this.bookings = bookings;
         this.totalSpent = this.bookingService.calculateTotalEarnings(bookings);
+
+        // Fetch host names for each booking
+        this.bookings.forEach((booking) => {
+          this.bookingService.getHostByHouseId(booking.houseId).subscribe({
+            next: (host) => {
+              booking.hostName = `${host.firstName} ${host.lastName}`;
+            },
+            error: (err) => {
+              console.error(`Failed to fetch host for house ID ${booking.houseId}:`, err);
+              booking.hostName = 'Unknown Host';
+            }
+          });
+        });
+
         this.isLoading = false;
       },
       error: (err) => {
