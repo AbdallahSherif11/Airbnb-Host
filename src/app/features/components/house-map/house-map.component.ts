@@ -32,7 +32,8 @@ export class HouseMapComponent implements AfterViewInit, OnDestroy {
   }
 
   private async loadLeaflet(): Promise<void> {
-    this.L = await import('leaflet');
+    const Leaflet = await import('leaflet');
+    this.L = Leaflet.default || Leaflet; // Ensure compatibility with different module formats
 
     // Fix for default marker icons
     const iconRetinaUrl = 'assets/images/map-icons/marker-icon-2x.png';
