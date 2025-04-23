@@ -68,7 +68,7 @@ export class PaymentSuccessComponent {
   loadLatestBooking() {
     this.bookingService.getBookingsAsGuest().subscribe(bookings => {
       if (bookings && bookings.length > 0) {
-        this.booking = bookings[0]; // Get most recent booking
+        this.booking = bookings[bookings.length-1]; // Get most recent booking
       }
     });
   }
