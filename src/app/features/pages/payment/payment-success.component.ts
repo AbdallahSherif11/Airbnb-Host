@@ -32,7 +32,7 @@ import { BookingService } from '../../services/booking.service';
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Total:</span>
-              <span class="font-medium">{{ (booking.totalPrice * 1.14) | currency:'USD' }}</span>
+              <span class="font-medium">{{ (booking.totalPrice * 1.17) | currency:'USD' }}</span>
             </div>
           </div>
         </div>
