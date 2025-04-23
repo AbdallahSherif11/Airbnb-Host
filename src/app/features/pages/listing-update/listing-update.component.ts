@@ -155,7 +155,7 @@ export class ListingUpdateComponent implements OnInit, OnDestroy {
   }
 
   loadHouseData(): void {
-    this.houseService.getHouseById(this.houseId).subscribe({
+    this.houseService.getHouseByIdForUpdate(this.houseId).subscribe({
       next: (house) => {
         this.originalHouse = house;
         this.populateForm(house);

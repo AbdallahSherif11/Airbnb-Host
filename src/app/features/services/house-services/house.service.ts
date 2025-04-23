@@ -55,6 +55,12 @@ export class HouseService {
     );
   }
 
+  getHouseByIdForUpdate(id: number): Observable<House> {
+    return this.http.get<House>(`${this.apiUrl}/updateHouse/${id}`).pipe(
+      catchError(this.handleError<House>('getHouseByIdForUpdate', this.getDefaultHouse()))
+    );
+  }
+
   private getDefaultHouse(): House {
     return {
       houseId: 0,
