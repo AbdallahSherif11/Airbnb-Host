@@ -5,8 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrlPipe } from '../../pipes/safe-url/safe-url.pipe';
 import { House } from '../../services/house-services/house.service';
 import { UpdateHouseService } from '../../services/update-house-services/update-house.service';
-import { HouseService } from '../../services/house-services/house.service'; // Add this import
-
+import { HouseService } from '../../services/house-services/house.service';
 
 @Component({
   selector: 'app-listing-update',
@@ -16,9 +15,13 @@ import { HouseService } from '../../services/house-services/house.service'; // A
   styleUrls: ['./listing-update.component.css']
 })
 export class ListingUpdateComponent implements OnInit {
-  currentStep = 1;
-  totalSteps = 3;
-  isLoading = false;
+  isLoadingPropertyDetails = false;
+  isLoadingTitleDescription = false;
+  isLoadingPricing = false;
+  isLoadingAmenities = false;
+  isLoadingPhotos = false;
+  isLoadingAvailability = false;
+
   errorMessage = '';
   houseId!: number;
   originalHouse!: House;
@@ -45,25 +48,24 @@ export class ListingUpdateComponent implements OnInit {
 
   propertyTypes = [
     'Desert', 'Camping', 'Mountain', 'City',
-      'Farms', 'Boats', 'Beach',
-      'Lake', 'Room', 'Towers','Barns', 'forest',
-    ];
+    'Farms', 'Boats', 'Beach',
+    'Lake', 'Room', 'Towers','Barns', 'forest',
+  ];
 
-    amenities = [
-        { id: 1, name: 'Wifi' },
-        { id: 2, name: 'Hair Dryer' },
-        { id: 3, name: 'Dryer' },
-        { id: 4, name: 'Kitchen' },
-        { id: 5, name: 'Parking' },
-        { id: 6, name: 'TV' },
-        { id: 7, name: 'Pool' },
-        { id: 8, name: 'Washer' },
-        { id: 9, name: 'Air Conditioning' },
-        { id: 10, name: 'Lake access' },
-        { id: 11, name: 'Bathtub' },
-        { id: 12, name: 'Gym' }
-        
-      ];
+  amenities = [
+    { id: 1, name: 'Wifi' },
+    { id: 2, name: 'Hair Dryer' },
+    { id: 3, name: 'Dryer' },
+    { id: 4, name: 'Kitchen' },
+    { id: 5, name: 'Parking' },
+    { id: 6, name: 'TV' },
+    { id: 7, name: 'Pool' },
+    { id: 8, name: 'Washer' },
+    { id: 9, name: 'Air Conditioning' },
+    { id: 10, name: 'Lake access' },
+    { id: 11, name: 'Bathtub' },
+    { id: 12, name: 'Gym' }
+  ];
 
   constructor(
     private updateHouseService: UpdateHouseService,
@@ -72,43 +74,26 @@ export class ListingUpdateComponent implements OnInit {
     private router: Router
   ) {}
 
-  // ngOnInit(): void {
-  //   this.route.params.subscribe(params => {
-  //     this.houseId = +params['id'];
-  //     // Here you would fetch the existing house data
-  //     // For example:
-  //     // this.houseService.getHouseById(this.houseId).subscribe(house => {
-  //     //   this.originalHouse = house;
-  //     //   this.populateForm(house);
-  //     // });
-  //   });
-  // }
   _PLATFORM_ID = inject(PLATFORM_ID);
 
   ngOnInit(): void {
     if(isPlatformBrowser(this._PLATFORM_ID)){
-
-        this.route.params.subscribe(params => {
-          this.houseId = +params['id'];
-          this.loadHouseData();
-        });
+      this.route.params.subscribe(params => {
+        this.houseId = +params['id'];
+        this.loadHouseData();
+      });
     }
   }
 
-  
-
   loadHouseData(): void {
-    this.isLoading = true;
     this.houseService.getHouseById(this.houseId).subscribe({
       next: (house) => {
         this.originalHouse = house;
         this.populateForm(house);
-        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading house data:', err);
         this.errorMessage = 'Failed to load house data. Please try again.';
-        this.isLoading = false;
       }
     });
   }
@@ -120,7 +105,7 @@ export class ListingUpdateComponent implements OnInit {
         return found ? found.id : null;
       })
       .filter(id => id !== null) as number[];
-  
+
     this.listing = {
       title: house.title,
       description: house.description,
@@ -131,8 +116,8 @@ export class ListingUpdateComponent implements OnInit {
       latitude: house.latitude || 0,
       longitude: house.longitude || 0,
       isAvailable: house.isAvailable !== undefined ? house.isAvailable : true,
-      maxDays: house.maxDays || 30, 
-      maxGuests: house.maxGuests || 1,  
+      maxDays: house.maxDays || 30,
+      maxGuests: house.maxGuests || 1,
       houseView: house.houseView || '',
       numberOfRooms: house.numberOfRooms,
       numberOfBeds: house.numberOfBeds,
@@ -142,39 +127,159 @@ export class ListingUpdateComponent implements OnInit {
     };
   }
 
-  nextStep() {
-    if (this.currentStep < this.totalSteps && this.isStepValid(this.currentStep)) {
-      this.currentStep++;
+  // Validation methods
+  isPropertyDetailsValid(): boolean {
+    return !!this.listing.houseView &&
+           !!this.listing.country &&
+           !!this.listing.city &&
+           !!this.listing.street &&
+           this.listing.maxGuests > 0 &&
+           this.listing.numberOfRooms > 0 &&
+           this.listing.numberOfBeds > 0;
+  }
+
+  isTitleDescriptionValid(): boolean {
+    return !!this.listing.title && !!this.listing.description;
+  }
+
+  isPricingValid(): boolean {
+    return this.listing.pricePerNight > 0;
+  }
+
+  // Save methods
+  async savePropertyDetails() {
+    if (!this.isPropertyDetailsValid()) return;
+
+    this.isLoadingPropertyDetails = true;
+    this.errorMessage = '';
+
+    try {
+      // Update location
+      await this.updateHouseService.updateLocation(this.houseId, {
+        country: this.listing.country,
+        city: this.listing.city,
+        street: this.listing.street,
+        latitude: this.listing.latitude,
+        longitude: this.listing.longitude
+      }).toPromise();
+
+      // Update availability and basic details
+      await this.updateHouseService.updateAvailability(this.houseId, {
+        isAvailable: this.listing.isAvailable,
+        maxDays: this.listing.maxDays,
+        maxGuests: this.listing.maxGuests,
+        houseView: this.listing.houseView,
+        numberOfRooms: this.listing.numberOfRooms,
+        numberOfBeds: this.listing.numberOfBeds
+      }).toPromise();
+
+    } catch (error) {
+      console.error('Error updating property details:', error);
+      this.errorMessage = 'Failed to update property details. Please try again.';
+    } finally {
+      this.isLoadingPropertyDetails = false;
     }
   }
 
-  prevStep() {
-    if (this.currentStep > 1) {
-      this.currentStep--;
+  async saveTitleDescription() {
+    if (!this.isTitleDescriptionValid()) return;
+
+    this.isLoadingTitleDescription = true;
+    this.errorMessage = '';
+
+    try {
+      // Update title
+      await this.updateHouseService.updateTitle(this.houseId, this.listing.title).toPromise();
+
+      // Update description
+      await this.updateHouseService.updateDescription(this.houseId, this.listing.description).toPromise();
+
+    } catch (error) {
+      console.error('Error updating title & description:', error);
+      this.errorMessage = 'Failed to update title & description. Please try again.';
+    } finally {
+      this.isLoadingTitleDescription = false;
     }
   }
 
-  isStepValid(step: number): boolean {
-    switch(step) {
-      case 1:
-        return !!this.listing.houseView &&
-               !!this.listing.country &&
-               !!this.listing.city &&
-               !!this.listing.street &&
-               this.listing.maxGuests > 0 &&
-               this.listing.numberOfRooms > 0 &&
-               this.listing.numberOfBeds > 0;
-      case 2:
-        return (this.listing.imagesList.length >= 0 || this.listing.existingImages.length > 0) &&
-               !!this.listing.title &&
-               !!this.listing.description;
-      case 3:
-        return this.listing.pricePerNight > 0;
-      default:
-        return false;
+  async savePricing() {
+    if (!this.isPricingValid()) return;
+
+    this.isLoadingPricing = true;
+    this.errorMessage = '';
+
+    try {
+      // Update price
+      await this.updateHouseService.updatePrice(this.houseId, this.listing.pricePerNight).toPromise();
+
+    } catch (error) {
+      console.error('Error updating pricing:', error);
+      this.errorMessage = 'Failed to update pricing. Please try again.';
+    } finally {
+      this.isLoadingPricing = false;
     }
   }
 
+  async saveAmenities() {
+    this.isLoadingAmenities = true;
+    this.errorMessage = '';
+
+    try {
+      // Update amenities
+      await this.updateHouseService.updateAmenities(this.houseId, this.listing.amenitiesList).toPromise();
+
+    } catch (error) {
+      console.error('Error updating amenities:', error);
+      this.errorMessage = 'Failed to update amenities. Please try again.';
+    } finally {
+      this.isLoadingAmenities = false;
+    }
+  }
+
+  async savePhotos() {
+    if (this.listing.imagesList.length === 0 && this.listing.existingImages.length === 0) return;
+
+    this.isLoadingPhotos = true;
+    this.errorMessage = '';
+
+    try {
+      // Update images if new ones were added
+      if (this.listing.imagesList.length > 0) {
+        await this.updateHouseService.updateImages(this.houseId, this.listing.imagesList).toPromise();
+      }
+
+    } catch (error) {
+      console.error('Error updating photos:', error);
+      this.errorMessage = 'Failed to update photos. Please try again.';
+    } finally {
+      this.isLoadingPhotos = false;
+    }
+  }
+
+  async saveAvailability() {
+    this.isLoadingAvailability = true;
+    this.errorMessage = '';
+
+    try {
+      // Update availability
+      await this.updateHouseService.updateAvailability(this.houseId, {
+        isAvailable: this.listing.isAvailable,
+        maxDays: this.listing.maxDays,
+        maxGuests: this.listing.maxGuests,
+        houseView: this.listing.houseView,
+        numberOfRooms: this.listing.numberOfRooms,
+        numberOfBeds: this.listing.numberOfBeds
+      }).toPromise();
+
+    } catch (error) {
+      console.error('Error updating availability:', error);
+      this.errorMessage = 'Failed to update availability. Please try again.';
+    } finally {
+      this.isLoadingAvailability = false;
+    }
+  }
+
+  // Existing methods
   toggleAmenity(amenityId: number) {
     const index = this.listing.amenitiesList.indexOf(amenityId);
     if (index === -1) {
@@ -198,57 +303,5 @@ export class ListingUpdateComponent implements OnInit {
   removeExistingPhoto(index: number) {
     this.listing.existingImages.splice(index, 1);
     // Note: You might need to call an API to actually delete the image from storage
-  }
-
-  async submitUpdates() {
-    if (!this.isStepValid(3)) return;
-
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    try {
-      // Update title
-      await this.updateHouseService.updateTitle(this.houseId, this.listing.title).toPromise();
-
-      // Update description
-      await this.updateHouseService.updateDescription(this.houseId, this.listing.description).toPromise();
-
-      // Update price
-      await this.updateHouseService.updatePrice(this.houseId, this.listing.pricePerNight).toPromise();
-
-      // Update location
-      await this.updateHouseService.updateLocation(this.houseId, {
-        country: this.listing.country,
-        city: this.listing.city,
-        street: this.listing.street,
-        latitude: this.listing.latitude,
-        longitude: this.listing.longitude
-      }).toPromise();
-
-      // Update availability and basic details
-      await this.updateHouseService.updateAvailability(this.houseId, {
-        isAvailable: this.listing.isAvailable,
-        maxDays: this.listing.maxDays,
-        maxGuests: this.listing.maxGuests,
-        houseView: this.listing.houseView,
-        numberOfRooms: this.listing.numberOfRooms,
-        numberOfBeds: this.listing.numberOfBeds
-      }).toPromise();
-
-      // Update images if new ones were added
-      if (this.listing.imagesList.length > 0) {
-        await this.updateHouseService.updateImages(this.houseId, this.listing.imagesList).toPromise();
-      }
-
-      // Update amenities
-      await this.updateHouseService.updateAmenities(this.houseId, this.listing.amenitiesList).toPromise();
-
-      this.router.navigate(['/myhouses']);
-    } catch (error) {
-      console.error('Error updating listing:', error);
-      this.errorMessage = 'Failed to update listing. Please try again.';
-    } finally {
-      this.isLoading = false;
-    }
   }
 }

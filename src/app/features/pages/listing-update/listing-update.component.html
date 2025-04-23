@@ -7,257 +7,253 @@
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-        <span *ngIf="currentStep === 1">Update your listing</span>
-        <span *ngIf="currentStep !== 1">Step {{currentStep}}</span>
+        Update your listing
       </h1>
-  
-      <!-- Progress bar -->
-      <div class="flex gap-1 mb-6">
-        <div *ngFor="let step of [1,2,3]"
-             class="h-1 flex-1 rounded-full"
-             [class.bg-rose-500]="currentStep >= step"
-             [class.bg-gray-200]="currentStep < step"></div>
-      </div>
     </div>
   
-    <!-- Step 1: Property Basics -->
-    <div *ngIf="currentStep === 1" class="space-y-8">
-      <div>
-        <h2 class="text-xl font-semibold text-gray-900 mb-2">Update your place details</h2>
+    <!-- Property Basics Section -->
+    <div class="mb-8 p-4 border border-gray-200 rounded-lg">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Property Details</h2>
   
-        <!-- Property Type -->
-        <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Which of these best describes your place?</h3>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <button *ngFor="let type of propertyTypes"
-                    class="p-4 border rounded-lg text-center transition-colors"
-                    [class.border-rose-500]="listing.houseView === type"
-                    [class.bg-rose-50]="listing.houseView === type"
-                    [class.border-gray-200]="listing.houseView !== type"
-                    (click)="listing.houseView = type">
-              {{type}}
-            </button>
+      <!-- Property Type -->
+      <div class="mb-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-3">Property Type</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <button *ngFor="let type of propertyTypes"
+                  class="p-4 border rounded-lg text-center transition-colors"
+                  [class.border-rose-500]="listing.houseView === type"
+                  [class.bg-rose-50]="listing.houseView === type"
+                  [class.border-gray-200]="listing.houseView !== type"
+                  (click)="listing.houseView = type">
+            {{type}}
+          </button>
+        </div>
+      </div>
+  
+      <!-- Location -->
+      <div class="mb-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-3">Location</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Country*</label>
+            <input type="text" [(ngModel)]="listing.country" required
+                  class="w-full p-3 border border-gray-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">City*</label>
+            <input type="text" [(ngModel)]="listing.city" required
+                  class="w-full p-3 border border-gray-300 rounded-lg">
           </div>
         </div>
   
-        <!-- Location -->
-        <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-3">Update your place location</h3>
-  
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Country*</label>
-              <input type="text" [(ngModel)]="listing.country" required
-                     class="w-full p-3 border border-gray-300 rounded-lg">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">City*</label>
-              <input type="text" [(ngModel)]="listing.city" required
-                     class="w-full p-3 border border-gray-300 rounded-lg">
-            </div>
-          </div>
-  
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Street Address*</label>
-            <input type="text" [(ngModel)]="listing.street" required
-                   class="w-full p-3 border border-gray-300 rounded-lg">
-          </div>
-  
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Latitude*</label>
-              <input type="number" [(ngModel)]="listing.latitude" step="0.000001" required
-                     class="w-full p-3 border border-gray-300 rounded-lg">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Longitude*</label>
-              <input type="number" [(ngModel)]="listing.longitude" step="0.000001" required
-                     class="w-full p-3 border border-gray-300 rounded-lg">
-            </div>
-          </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Street Address*</label>
+          <input type="text" [(ngModel)]="listing.street" required
+                class="w-full p-3 border border-gray-300 rounded-lg">
         </div>
   
-        <!-- Basic Details -->
-        <div>
-          <h3 class="text-lg font-medium text-gray-900 mb-3">Update basic details about your place</h3>
-  
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Max Guests*</label>
-              <input type="number" [(ngModel)]="listing.maxGuests" min="1" required
-                     class="w-full p-2 border border-gray-300 rounded-md">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Rooms*</label>
-              <input type="number" [(ngModel)]="listing.numberOfRooms" min="1" required
-                     class="w-full p-2 border border-gray-300 rounded-md">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Beds*</label>
-              <input type="number" [(ngModel)]="listing.numberOfBeds" min="1" required
-                     class="w-full p-2 border border-gray-300 rounded-md">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Max Stay (days)*</label>
-              <input type="number" [(ngModel)]="listing.maxDays" min="1" required
-                     class="w-full p-2 border border-gray-300 rounded-md">
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Latitude*</label>
+            <input type="number" [(ngModel)]="listing.latitude" step="0.000001" required
+                  class="w-full p-3 border border-gray-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Longitude*</label>
+            <input type="number" [(ngModel)]="listing.longitude" step="0.000001" required
+                  class="w-full p-3 border border-gray-300 rounded-lg">
           </div>
         </div>
       </div>
-    </div>
   
-    <!-- Step 2: Amenities & Photos -->
-    <div *ngIf="currentStep === 2" class="space-y-8">
-      <div>
-        <h2 class="text-xl font-semibold text-gray-900 mb-2">Update amenities and photos</h2>
-  
-        <!-- Amenities -->
-        <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-3">Update what your place has to offer</h3>
-  
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label *ngFor="let amenity of amenities" class="flex items-center space-x-3">
-              <input type="checkbox"
-                     [checked]="listing.amenitiesList.includes(amenity.id)"
-                     (change)="toggleAmenity(amenity.id)"
-                     class="h-5 w-5 rounded border-gray-300 text-rose-500">
-              <span class="text-gray-700">{{amenity.name}}</span>
-            </label>
+      <!-- Basic Details -->
+      <div class="mb-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-3">Basic Details</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Max Guests*</label>
+            <input type="number" [(ngModel)]="listing.maxGuests" min="1" required
+                  class="w-full p-2 border border-gray-300 rounded-md">
           </div>
-        </div>
-  
-        <!-- Photos -->
-        <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-3">Update photos of your place</h3>
-          <p class="text-gray-600 mb-4 text-sm">Add new photos ({{listing.imagesList.length}} added)</p>
-  
-          <label class="block w-full p-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer text-center">
-            <input type="file" multiple accept="image/*" class="hidden" (change)="onFileSelected($event)">
-            <span class="text-rose-500 font-medium">Click to upload</span> or drag and drop
-            <p class="text-gray-500 text-sm mt-1">PNG, JPG up to 10MB</p>
-          </label>
-  
-          <!-- Existing Photos -->
-          <div *ngIf="listing.existingImages.length > 0" class="mt-4">
-            <h4 class="text-md font-medium text-gray-900 mb-2">Current Photos</h4>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-              <div *ngFor="let photo of listing.existingImages; let i = index" class="relative group">
-                <img [src]="photo" alt="Listing photo"
-                     class="w-full h-24 object-cover rounded-lg">
-                <button (click)="removeExistingPhoto(i)"
-                        class="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Rooms*</label>
+            <input type="number" [(ngModel)]="listing.numberOfRooms" min="1" required
+                  class="w-full p-2 border border-gray-300 rounded-md">
           </div>
-  
-          <!-- New Photo Previews -->
-          <div *ngIf="listing.imagesList.length > 0" class="mt-4">
-            <h4 class="text-md font-medium text-gray-900 mb-2">New Photos</h4>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-              <div *ngFor="let photo of listing.imagesList; let i = index" class="relative group">
-                <img [src]="photo | safeUrl" alt="Listing photo"
-                     class="w-full h-24 object-cover rounded-lg">
-                <button (click)="removePhoto(i)"
-                        class="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Beds*</label>
+            <input type="number" [(ngModel)]="listing.numberOfBeds" min="1" required
+                  class="w-full p-2 border border-gray-300 rounded-md">
           </div>
-        </div>
-  
-        <!-- Title -->
-        <div class="mb-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Update your listing title*</h3>
-          <input type="text" [(ngModel)]="listing.title" required
-                 placeholder="E.g., 'Cozy apartment in city center'"
-                 class="w-full p-3 border border-gray-300 rounded-lg">
-        </div>
-  
-        <!-- Description -->
-        <div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Update your description*</h3>
-          <textarea [(ngModel)]="listing.description" rows="4" required
-                    placeholder="Tell guests what makes your place special..."
-                    class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Step 3: Pricing & Review -->
-    <div *ngIf="currentStep === 3" class="space-y-8">
-      <div>
-        <h2 class="text-xl font-semibold text-gray-900 mb-2">Review and save changes</h2>
-  
-        <!-- Pricing -->
-        <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-3">Update your price per night*</h3>
-          <div class="flex items-center">
-            <span class="text-gray-900 mr-2">$</span>
-            <input type="number" [(ngModel)]="listing.pricePerNight" min="1" required
-                   class="w-32 p-2 border border-gray-300 rounded-md">
-          </div>
-        </div>
-  
-        <!-- Availability -->
-        <div class="mb-8">
-          <h3 class="text-lg font-medium text-gray-900 mb-3">Availability</h3>
-          <label class="flex items-center space-x-3">
-            <input type="checkbox" [(ngModel)]="listing.isAvailable"
-                   class="h-5 w-5 rounded border-gray-300 text-rose-500">
-            <span class="text-gray-700">Make this listing available for booking</span>
-          </label>
-        </div>
-  
-        <!-- Review -->
-        <div>
-          <h3 class="text-lg font-medium text-gray-900 mb-3">Review your changes</h3>
-          <div class="border border-gray-200 rounded-lg p-6">
-            <h4 class="font-semibold text-lg mb-2">{{listing.title || 'Your listing title'}}</h4>
-            <p class="text-gray-600 mb-4">{{listing.description || 'Your listing description'}}</p>
-            <div class="flex flex-wrap gap-4 text-sm text-gray-600">
-              <span>{{listing.maxGuests}} guests</span>
-              <span>{{listing.numberOfRooms}} rooms</span>
-              <span>{{listing.numberOfBeds}} beds</span>
-              <span>${{listing.pricePerNight || 0}} per night</span>
-              <span>{{listing.isAvailable ? 'Available' : 'Not available'}}</span>
-            </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Max Stay (days)*</label>
+            <input type="number" [(ngModel)]="listing.maxDays" min="1" required
+                  class="w-full p-2 border border-gray-300 rounded-md">
           </div>
         </div>
       </div>
-    </div>
   
-    <!-- Footer Navigation -->
-    <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
-      <div class="flex items-center space-x-4">
-        <!-- <a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Questions?</a> -->
-      </div>
-  
-      <div class="flex space-x-3">
-        <button *ngIf="currentStep > 1"
-                (click)="prevStep()"
-                class="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-          Back
-        </button>
-        <button *ngIf="currentStep < totalSteps"
-                (click)="nextStep()"
-                [disabled]="!isStepValid(currentStep)"
+      <div class="flex justify-end">
+        <button (click)="savePropertyDetails()"
+                [disabled]="!isPropertyDetailsValid() || isLoadingPropertyDetails"
                 class="px-5 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 disabled:bg-rose-300">
-          Next
+          <span *ngIf="!isLoadingPropertyDetails">Save Property Details</span>
+          <span *ngIf="isLoadingPropertyDetails">Saving...</span>
         </button>
-        <button *ngIf="currentStep === totalSteps"
-                (click)="submitUpdates()"
-                [disabled]="isLoading || !isStepValid(currentStep)"
+      </div>
+    </div>
+  
+    <!-- Title & Description Section -->
+    <div class="mb-8 p-4 border border-gray-200 rounded-lg">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Title & Description</h2>
+  
+      <div class="mb-6">
+        <label class="block text-lg font-medium text-gray-900 mb-2">Title*</label>
+        <input type="text" [(ngModel)]="listing.title" required
+              placeholder="E.g., 'Cozy apartment in city center'"
+              class="w-full p-3 border border-gray-300 rounded-lg">
+      </div>
+  
+      <div class="mb-6">
+        <label class="block text-lg font-medium text-gray-900 mb-2">Description*</label>
+        <textarea [(ngModel)]="listing.description" rows="4" required
+                placeholder="Tell guests what makes your place special..."
+                class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
+      </div>
+  
+      <div class="flex justify-end">
+        <button (click)="saveTitleDescription()"
+                [disabled]="!isTitleDescriptionValid() || isLoadingTitleDescription"
                 class="px-5 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 disabled:bg-rose-300">
-          <span *ngIf="!isLoading">Save Changes</span>
-          <span *ngIf="isLoading">Saving...</span>
+          <span *ngIf="!isLoadingTitleDescription">Save Title & Description</span>
+          <span *ngIf="isLoadingTitleDescription">Saving...</span>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Pricing Section -->
+    <div class="mb-8 p-4 border border-gray-200 rounded-lg">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Pricing</h2>
+  
+      <div class="mb-6">
+        <label class="block text-lg font-medium text-gray-900 mb-2">Price per night*</label>
+        <div class="flex items-center">
+          <span class="text-gray-900 mr-2">$</span>
+          <input type="number" [(ngModel)]="listing.pricePerNight" min="1" required
+                class="w-32 p-2 border border-gray-300 rounded-md">
+        </div>
+      </div>
+  
+      <div class="flex justify-end">
+        <button (click)="savePricing()"
+                [disabled]="!isPricingValid() || isLoadingPricing"
+                class="px-5 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 disabled:bg-rose-300">
+          <span *ngIf="!isLoadingPricing">Save Pricing</span>
+          <span *ngIf="isLoadingPricing">Saving...</span>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Amenities Section -->
+    <div class="mb-8 p-4 border border-gray-200 rounded-lg">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Amenities</h2>
+  
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <label *ngFor="let amenity of amenities" class="flex items-center space-x-3">
+          <input type="checkbox"
+                [checked]="listing.amenitiesList.includes(amenity.id)"
+                (change)="toggleAmenity(amenity.id)"
+                class="h-5 w-5 rounded border-gray-300 text-rose-500">
+          <span class="text-gray-700">{{amenity.name}}</span>
+        </label>
+      </div>
+  
+      <div class="flex justify-end">
+        <button (click)="saveAmenities()"
+                [disabled]="isLoadingAmenities"
+                class="px-5 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 disabled:bg-rose-300">
+          <span *ngIf="!isLoadingAmenities">Save Amenities</span>
+          <span *ngIf="isLoadingAmenities">Saving...</span>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Photos Section -->
+    <div class="mb-8 p-4 border border-gray-200 rounded-lg">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Photos</h2>
+  
+      <div class="mb-6">
+        <p class="text-gray-600 mb-4 text-sm">Add new photos ({{listing.imagesList.length}} added)</p>
+  
+        <label class="block w-full p-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer text-center">
+          <input type="file" multiple accept="image/*" class="hidden" (change)="onFileSelected($event)">
+          <span class="text-rose-500 font-medium">Click to upload</span> or drag and drop
+          <p class="text-gray-500 text-sm mt-1">PNG, JPG up to 10MB</p>
+        </label>
+  
+        <!-- Existing Photos -->
+        <div *ngIf="listing.existingImages.length > 0" class="mt-4">
+          <h4 class="text-md font-medium text-gray-900 mb-2">Current Photos</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            <div *ngFor="let photo of listing.existingImages; let i = index" class="relative group">
+              <img [src]="photo" alt="Listing photo"
+                  class="w-full h-24 object-cover rounded-lg">
+              <button (click)="removeExistingPhoto(i)"
+                      class="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <!-- New Photo Previews -->
+        <div *ngIf="listing.imagesList.length > 0" class="mt-4">
+          <h4 class="text-md font-medium text-gray-900 mb-2">New Photos</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            <div *ngFor="let photo of listing.imagesList; let i = index" class="relative group">
+              <img [src]="photo | safeUrl" alt="Listing photo"
+                  class="w-full h-24 object-cover rounded-lg">
+              <button (click)="removePhoto(i)"
+                      class="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="flex justify-end">
+        <button (click)="savePhotos()"
+                [disabled]="(listing.imagesList.length === 0 && listing.existingImages.length === 0) || isLoadingPhotos"
+                class="px-5 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 disabled:bg-rose-300">
+          <span *ngIf="!isLoadingPhotos">Save Photos</span>
+          <span *ngIf="isLoadingPhotos">Saving...</span>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Availability Section -->
+    <div class="mb-8 p-4 border border-gray-200 rounded-lg">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Availability</h2>
+  
+      <div class="mb-6">
+        <label class="flex items-center space-x-3">
+          <input type="checkbox" [(ngModel)]="listing.isAvailable"
+                class="h-5 w-5 rounded border-gray-300 text-rose-500">
+          <span class="text-gray-700">Make this listing available for booking</span>
+        </label>
+      </div>
+  
+      <div class="flex justify-end">
+        <button (click)="saveAvailability()"
+                [disabled]="isLoadingAvailability"
+                class="px-5 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 disabled:bg-rose-300">
+          <span *ngIf="!isLoadingAvailability">Save Availability</span>
+          <span *ngIf="isLoadingAvailability">Saving...</span>
         </button>
       </div>
     </div>
