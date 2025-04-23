@@ -66,6 +66,31 @@
         </div>
       </div>
   
+      <!-- Update Location on Map -->
+      <div class="mb-8">
+        <h3 class="text-lg font-medium text-gray-900 mb-3">Update your location on the map</h3>
+        <div class="w-full h-96 rounded-lg overflow-hidden">
+          <div id="location-map" class="w-full h-full"></div>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">
+          Click on the map to select a new location. The latitude and longitude will be updated automatically.
+        </p>
+      </div>
+  
+      <!-- Latitude and Longitude Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Latitude*</label>
+          <input type="number" [(ngModel)]="listing.latitude" step="0.000001" required
+                class="w-full p-3 border border-gray-300 rounded-lg" readonly>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Longitude*</label>
+          <input type="number" [(ngModel)]="listing.longitude" step="0.000001" required
+                class="w-full p-3 border border-gray-300 rounded-lg" readonly>
+        </div>
+      </div>
+  
       <!-- Basic Details -->
       <div class="mb-6">
         <h3 class="text-lg font-medium text-gray-900 mb-3">Basic Details</h3>

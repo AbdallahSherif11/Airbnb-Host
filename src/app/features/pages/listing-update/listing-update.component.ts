@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url/safe-url.pipe';
 import { House } from '../../services/house-services/house.service';
 import { UpdateHouseService } from '../../services/update-house-services/update-house.service';
 import { HouseService } from '../../services/house-services/house.service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-listing-update',
@@ -14,7 +15,7 @@ import { HouseService } from '../../services/house-services/house.service';
   templateUrl: './listing-update.component.html',
   styleUrls: ['./listing-update.component.css']
 })
-export class ListingUpdateComponent implements OnInit {
+export class ListingUpdateComponent implements OnInit, OnDestroy {
   isLoadingPropertyDetails = false;
   isLoadingTitleDescription = false;
   isLoadingPricing = false;
@@ -67,6 +68,9 @@ export class ListingUpdateComponent implements OnInit {
     { id: 12, name: 'Gym' }
   ];
 
+  private map: L.Map | null = null;
+  private marker: L.Marker | null = null;
+
   constructor(
     private updateHouseService: UpdateHouseService,
     private houseService: HouseService,
@@ -85,11 +89,77 @@ export class ListingUpdateComponent implements OnInit {
     }
   }
 
+  private initializeMap(): void {
+    if (!this.listing.latitude || !this.listing.longitude) {
+      console.error('Latitude and Longitude are required to initialize the map.');
+      return;
+    }
+
+    this.map = L.map('location-map').setView([this.listing.latitude, this.listing.longitude], 15);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(this.map);
+
+    // Define custom marker icon
+    const iconRetinaUrl = 'assets/images/map-icons/marker-icon-2x.png';
+    const iconUrl = 'assets/images/map-icons/marker-icon.png';
+    const shadowUrl = 'assets/images/map-icons/marker-shadow.png';
+
+    const customIcon = L.icon({
+      iconRetinaUrl,
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41], // Default size for Leaflet markers
+      iconAnchor: [12, 41], // Anchor point of the icon
+      popupAnchor: [1, -34], // Anchor point for popups
+      shadowSize: [41, 41] // Size of the shadow
+    });
+
+    // Add marker at the current location
+    this.marker = L.marker([this.listing.latitude, this.listing.longitude], {
+      icon: customIcon,
+      draggable: true
+    }).addTo(this.map);
+
+    // Allow dragging the marker to update location
+    this.marker.on('dragend', () => {
+      const position = this.marker?.getLatLng();
+      if (position) {
+        this.updateLocation(position.lat, position.lng);
+      }
+    });
+
+    // Handle map click to set marker and update latitude/longitude
+    this.map.on('click', (event: L.LeafletMouseEvent) => {
+      const { lat, lng } = event.latlng;
+
+      // Update marker position
+      if (this.marker) {
+        this.marker.setLatLng([lat, lng]);
+      } else {
+        if (this.map) {
+          this.marker = L.marker([lat, lng], { icon: customIcon, draggable: true }).addTo(this.map);
+        }
+      }
+
+      // Update form fields
+      this.updateLocation(lat, lng);
+    });
+  }
+
+  private updateLocation(lat: number, lng: number): void {
+    this.listing.latitude = lat;
+    this.listing.longitude = lng;
+  }
+
   loadHouseData(): void {
     this.houseService.getHouseById(this.houseId).subscribe({
       next: (house) => {
         this.originalHouse = house;
         this.populateForm(house);
+        this.initializeMap(); // Initialize the map after loading house data
       },
       error: (err) => {
         console.error('Error loading house data:', err);
@@ -303,5 +373,11 @@ export class ListingUpdateComponent implements OnInit {
   removeExistingPhoto(index: number) {
     this.listing.existingImages.splice(index, 1);
     // Note: You might need to call an API to actually delete the image from storage
+  }
+
+  ngOnDestroy(): void {
+    if (this.map) {
+      this.map.remove();
+    }
   }
 }
