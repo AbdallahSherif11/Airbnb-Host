@@ -23,16 +23,24 @@
     </div>
 
     <!-- Conditional Title and Description -->
-    <div *ngIf="averageRating >= 4.5; else lowRating">
+    <div *ngIf="averageRating >= 4.5; else mediumRating">
       <p class="mt-4 text-lg font-semibold text-gray-800">Guest favorite</p>
       <p class="mt-1 text-sm text-gray-500 max-w-xs">
         This home is a guest favorite based on ratings, reviews, and reliability.
       </p>
     </div>
+    <ng-template #mediumRating>
+      <div *ngIf="averageRating >= 3; else lowRating">
+        <p class="mt-4 text-lg font-semibold text-gray-800">Well-Loved by Guests</p>
+        <p class="mt-1 text-sm text-gray-500 max-w-xs">
+          Guests appreciate this home for its charm and comfort. Read recent reviews to learn more about their experiences.
+        </p>
+      </div>
+    </ng-template>
     <ng-template #lowRating>
-      <p class="mt-4 text-lg font-semibold text-gray-800">Well-Loved by Guests</p>
+      <p class="mt-4 text-lg font-semibold text-gray-800">Needs Improvement</p>
       <p class="mt-1 text-sm text-gray-500 max-w-xs">
-        Guests appreciate this home for its charm and comfort. Read recent reviews to learn more about their experiences.
+        This home has received mixed reviews. Check out the feedback to see what guests have experienced.
       </p>
     </ng-template>
   </div>
