@@ -33,7 +33,7 @@ export interface House {
 
 @Injectable({ providedIn: 'root' })
 export class HouseService {
-  private apiUrl = 'https://localhost:7015/api/House';
+  private apiUrl = 'https://myairbnb.runasp.net/api/House';
 
   constructor(private http: HttpClient) {}
 

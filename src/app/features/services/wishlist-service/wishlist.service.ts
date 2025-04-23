@@ -5,7 +5,7 @@ import { AccountService } from '../../../core/services/account/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class WishlistService {
-  private baseUrl = 'https://localhost:7015/api/WishList';
+  private baseUrl = 'https://myairbnb.runasp.net/api/WishList';
 
   private wishlistIdsSubject = new BehaviorSubject<number[]>([]);
   wishlist$ = this.wishlistIdsSubject.asObservable();

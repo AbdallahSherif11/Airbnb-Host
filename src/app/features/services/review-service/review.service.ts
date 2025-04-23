@@ -8,7 +8,7 @@ import { AccountService } from '../../../core/services/account/account.service';
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'https://localhost:7015/api/Review';
+  private apiUrl = 'https://myairbnb.runasp.net/api/Review';
 
   constructor(
     private http: HttpClient,

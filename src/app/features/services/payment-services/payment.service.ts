@@ -8,7 +8,7 @@ import { loadStripe, Stripe } from '@stripe/stripe-js';
 })
 export class PaymentService {
   private stripePromise: Promise<Stripe | null>;
-  private apiUrl = 'https://localhost:7015/api/Payment';
+  private apiUrl = 'https://myairbnb.runasp.net/api/Payment';
 
   constructor(private http: HttpClient) {
     this.stripePromise = loadStripe("pk_test_51RBF7PFLZXyLNUqbULRx99zTsJp1gjd2pwiAATxOcSTitBffKlCiLnQpguzKV43uKPXB9XwiVfN7KYppluPHU1nw0038Lswuhe");

@@ -6,7 +6,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ProfileService {
-  private baseUrl = 'https://localhost:7015/api/Account';
+  private baseUrl = 'https://myairbnb.runasp.net/api/Account';
 
   constructor(private http: HttpClient) { }
 

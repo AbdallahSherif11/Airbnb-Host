@@ -18,7 +18,7 @@ export class SignalRService {
     if (this.hubConnection) return;
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7015/chathub', {
+      .withUrl('https://myairbnb.runasp.net/chathub', {
         accessTokenFactory: () => this.accountService.getToken() || '',
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets

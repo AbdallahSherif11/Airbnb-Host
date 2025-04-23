@@ -44,7 +44,7 @@ interface StartConversationResponse {
   providedIn: 'root'
 })
 export class MessageService {
-  private baseUrl = 'https://localhost:7015/api/Message';
+  private baseUrl = 'https://myairbnb.runasp.net/api/Message';
 
   constructor(private http: HttpClient) { }
 
@@ -73,10 +73,10 @@ export class MessageService {
   }
 
   getUserById(userId: string): Observable<any> {
-    return this.http.get<any>(`https://localhost:7015/api/Account/${userId}`);
+    return this.http.get<any>(`https://myairbnb.runasp.net/api/Account/${userId}`);
   }
 
   getHostByHouseId(houseId: number): Observable<HostDetails> {
-    return this.http.get<HostDetails>(`https://localhost:7015/api/Account/getHost/${houseId}`);
+    return this.http.get<HostDetails>(`https://myairbnb.runasp.net/api/Account/getHost/${houseId}`);
   }
 }

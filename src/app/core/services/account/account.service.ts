@@ -20,7 +20,7 @@ export class AccountService {
   ) { }
 
   registerUser(userInfo: AuthUser): Observable<any> {
-    return this.httpClient.post('https://localhost:7015/api/Account/register', userInfo).pipe(
+    return this.httpClient.post('https://myairbnb.runasp.net/api/Account/register', userInfo).pipe(
       tap((response: any) => {
         if (response?.token) {
           setAuthToken(response.token);
@@ -31,11 +31,11 @@ export class AccountService {
   }
 
   registerUserWithConfirmation(userInfo: AuthUser): Observable<any> {
-    return this.httpClient.post('https://localhost:7015/api/Account/register-with-confirmation', userInfo);
+    return this.httpClient.post('https://myairbnb.runasp.net/api/Account/register-with-confirmation', userInfo);
   }
 
   loginUser(userInfo: LoginUser): Observable<any> {
-    return this.httpClient.post('https://localhost:7015/api/Account/login-with-confirmation', userInfo).pipe(
+    return this.httpClient.post('https://myairbnb.runasp.net/api/Account/login-with-confirmation', userInfo).pipe(
       tap((response: any) => {
         if (response?.token) {
           setAuthToken(response.token, response.email);

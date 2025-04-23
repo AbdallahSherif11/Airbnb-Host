@@ -8,7 +8,7 @@ import { AccountService } from '../../core/services/account/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
-  private apiUrl = 'https://localhost:7015/api/Booking';
+  private apiUrl = 'https://myairbnb.runasp.net/api/Booking';
 
   // State for selected dates
   private selectedDatesSubject = new BehaviorSubject<{ checkIn: Date | null; checkOut: Date | null }>({
