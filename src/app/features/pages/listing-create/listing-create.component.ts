@@ -83,6 +83,21 @@ export class ListingCreateComponent implements AfterViewInit, OnDestroy {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
 
+    // Define custom marker icon
+    const iconRetinaUrl = 'assets/images/map-icons/marker-icon-2x.png';
+    const iconUrl = 'assets/images/map-icons/marker-icon.png';
+    const shadowUrl = 'assets/images/map-icons/marker-shadow.png';
+
+    const customIcon = L.icon({
+      iconRetinaUrl,
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41], // Default size for Leaflet markers
+      iconAnchor: [12, 41], // Anchor point of the icon
+      popupAnchor: [1, -34], // Anchor point for popups
+      shadowSize: [41, 41] // Size of the shadow
+    });
+
     // Handle map click to set marker and update latitude/longitude
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
@@ -92,7 +107,7 @@ export class ListingCreateComponent implements AfterViewInit, OnDestroy {
         this.marker.setLatLng([lat, lng]);
       } else {
         if (this.map) {
-          this.marker = L.marker([lat, lng], { draggable: true }).addTo(this.map);
+          this.marker = L.marker([lat, lng], { icon: customIcon, draggable: true }).addTo(this.map);
         }
 
         // Allow dragging the marker to update location
