@@ -32,15 +32,14 @@ export class HouseMapComponent implements AfterViewInit, OnDestroy {
   }
 
   private async loadLeaflet(): Promise<void> {
-    // Import Leaflet and store the reference
     this.L = await import('leaflet');
-    
+
     // Fix for default marker icons
-    const iconRetinaUrl = 'images/map-icons/marker-icon-2x.png';
-    const iconUrl = 'images/map-icons/marker-icon.png';
-    const shadowUrl = 'images/map-icons/marker-shadow.png';
-    
-    // Check if icons exist
+    const iconRetinaUrl = 'assets/images/map-icons/marker-icon-2x.png';
+    const iconUrl = 'assets/images/map-icons/marker-icon.png';
+    const shadowUrl = 'assets/images/map-icons/marker-shadow.png';
+
+    // Ensure the paths are correct and accessible
     if (typeof this.L.Icon.Default !== 'undefined') {
       delete (this.L.Icon.Default.prototype as any)._getIconUrl;
       this.L.Icon.Default.mergeOptions({
