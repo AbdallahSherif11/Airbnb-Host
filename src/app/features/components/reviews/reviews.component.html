@@ -23,30 +23,38 @@
     </div>
 
     <!-- Conditional Title and Description -->
-    <div *ngIf="averageRating >= 4.5; else mediumRating">
-      <p class="mt-4 text-lg font-semibold text-gray-800">Guest favorite</p>
-      <p class="mt-1 text-sm text-gray-500 max-w-xs">
-        This home is a guest favorite based on ratings, reviews, and reliability.
-      </p>
-    </div>
-    <ng-template #mediumRating>
-      <div *ngIf="averageRating >= 3; else lowRating">
-        <p class="mt-4 text-lg font-semibold text-gray-800">Well-Loved by Guests</p>
+    <div *ngIf="averageRating > 0; else noReviews">
+      <div *ngIf="averageRating >= 4.5; else mediumRating">
+        <p class="mt-4 text-lg font-semibold text-gray-800">Guest favorite</p>
         <p class="mt-1 text-sm text-gray-500 max-w-xs">
-          Guests appreciate this home for its charm and comfort. Read recent reviews to learn more about their experiences.
+          This home is a guest favorite based on ratings, reviews, and reliability.
         </p>
       </div>
-    </ng-template>
-    <ng-template #lowRating>
-      <p class="mt-4 text-lg font-semibold text-gray-800">Needs Improvement</p>
+      <ng-template #mediumRating>
+        <div *ngIf="averageRating >= 3; else lowRating">
+          <p class="mt-4 text-lg font-semibold text-gray-800">Well-Loved by Guests</p>
+          <p class="mt-1 text-sm text-gray-500 max-w-xs">
+            Guests appreciate this home for its charm and comfort. Read recent reviews to learn more about their experiences.
+          </p>
+        </div>
+      </ng-template>
+      <ng-template #lowRating>
+        <p class="mt-4 text-lg font-semibold text-gray-800">Needs Improvement</p>
+        <p class="mt-1 text-sm text-gray-500 max-w-xs">
+          This home has received mixed reviews. Check out the feedback to see what guests have experienced.
+        </p>
+      </ng-template>
+    </div>
+    <ng-template #noReviews>
+      <p class="mt-4 text-lg font-semibold text-gray-800">No Reviews Yet</p>
       <p class="mt-1 text-sm text-gray-500 max-w-xs">
-        This home has received mixed reviews. Check out the feedback to see what guests have experienced.
+        This home hasn't received any reviews yet. Be the first to leave a review!
       </p>
     </ng-template>
   </div>
 
   <!-- Reviews Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div *ngIf="averageRating > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div
       *ngFor="let review of reviews; trackBy: trackByReviewId"
       class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm"
