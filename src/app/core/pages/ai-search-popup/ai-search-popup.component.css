@@ -1,0 +1,96 @@
+/* Spinner animation */
+.fa-circle-notch.animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-fade-in-scale {
+    animation: fadeInScale 0.4s ease-out;
+  }
+  
+  /* Customization of Popup */
+  div.fixed {
+    background-color: rgba(0, 0, 0, 0.5); /* Darker background */
+  }
+  
+  div.bg-white {
+    border-radius: 16px;  /* Soft rounded corners */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);  /* Soft shadow */
+    padding: 16px;
+  }
+  
+  textarea {
+    border-radius: 12px;  /* Soft rounded corners */
+    width: 100%;
+    padding: 12px;  /* Increased padding for better spacing */
+    font-size: 1rem;
+    border: 1px solid #ccc;  /* Light border for better visibility */
+    box-sizing: border-box;
+  }
+  
+  /* Button Container Styling */
+  .button-container {
+    display: flex;
+    justify-content: center;  /* Centering the buttons */
+    gap: 15px;  /* Space between buttons */
+    margin-top: 16px;  /* Vertical margin */
+  }
+  
+  /* Button Styling */
+  button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-size: 1rem;  /* Font size */
+    padding: 10px 20px;  /* Padding for buttons */
+    border-radius: 8px;  /* Rounded corners */
+    border: none;
+    outline: none;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+  
+  /* Spinner */
+  div.animate-spin {
+    border-width: 4px;
+    border-color: transparent;
+    border-top-color: #ff385c;  /* Custom color */
+  }
+  
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    div.bg-white {
+      width: 100%;
+      max-width: 100%;
+    }
+  
+    textarea {
+      font-size: 0.875rem;  /* Smaller font size on smaller screens */
+    }
+  
+    button {
+      font-size: 0.875rem;  /* Adjusting button text size for smaller screens */
+    }
+  
+    .button-container {
+      gap: 8px;  /* Reduced gap for mobile screens */
+    }
+  }
+  

@@ -7,11 +7,13 @@ import { AccountService } from '../../services/account/account.service';
 import { MessageService } from '../../../features/services/message-services/message.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import {AISearchPopupComponent } from '../../pages/ai-search-popup/ai-search-popup.component';
+
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, AISearchPopupComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -21,6 +23,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private houseService = inject(HouseService);
 
+
+  showAISearch = false;
   searchKeyword = '';
   showMobileSearch = false;
   showDropdown = false;
@@ -96,9 +100,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      this.searchKeyword = transcript;
-      this.search();
-      this.isListening = false;
+      this.searchKeyword = transcript; // Update the search bar with the spoken text
+      this.isListening = false; // Stop listening
     };
 
     this.recognition.onerror = (event: any) => {
@@ -202,4 +205,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return null;
     }
   }
+
+
+
+
+  onAISearchClose(searchQuery: string | null): void {
+    this.showAISearch = false;
+    if (searchQuery) {
+      this.router.navigate(['search'], {
+        queryParams: { q: searchQuery },
+        queryParamsHandling: 'merge'
+      });
+    }
+  }
+  
+
+
+
 }
