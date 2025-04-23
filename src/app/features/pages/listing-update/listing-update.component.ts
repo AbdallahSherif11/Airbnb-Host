@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrlPipe } from '../../pipes/safe-url/safe-url.pipe';
@@ -83,14 +83,19 @@ export class ListingUpdateComponent implements OnInit {
   //     // });
   //   });
   // }
+  _PLATFORM_ID = inject(PLATFORM_ID);
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.houseId = +params['id'];
-      this.loadHouseData();
-    });
+    if(isPlatformBrowser(this._PLATFORM_ID)){
+
+        this.route.params.subscribe(params => {
+          this.houseId = +params['id'];
+          this.loadHouseData();
+        });
+    }
   }
 
+  
 
   loadHouseData(): void {
     this.isLoading = true;
