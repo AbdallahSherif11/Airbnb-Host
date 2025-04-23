@@ -15,63 +15,69 @@ export class HouseMapComponent implements AfterViewInit, OnDestroy {
   @Input() latitude!: number;
   @Input() longitude!: number;
   @Input() title!: string;
-  private map: L.Map | null = null;
+  private map: any;
+  private L: any; // Store Leaflet reference
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   async ngAfterViewInit(): Promise<void> {
     if (isPlatformBrowser(this.platformId)) {
       try {
-        await this.initMap();
+        await this.loadLeaflet();
+        this.initMap();
       } catch (error) {
         console.error('Error initializing map:', error);
       }
     }
   }
 
-  private async initMap(): Promise<void> {
-    // Dynamically import Leaflet
-    const L = await import('leaflet');
-    // await import('leaflet/dist/leaflet.css');
-
-    // Fix marker icons - use correct paths
-    const iconRetinaUrl = '/images/map-icons/marker-icon-2x.png';
-    const iconUrl = '/images/map-icons/marker-icon.png';
-    const shadowUrl = '/images/map-icons/marker-shadow.png';
-
-    // Type-safe icon fix
-    const iconDefault = L.Icon.Default.prototype as any;
-    if (iconDefault._getIconUrl) {
-      delete iconDefault._getIconUrl;
-    }
+  private async loadLeaflet(): Promise<void> {
+    // Import Leaflet and store the reference
+    this.L = await import('leaflet');
     
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl,
-      iconUrl,
-      shadowUrl
-    });
+    // Fix for default marker icons
+    const iconRetinaUrl = 'images/map-icons/marker-icon-2x.png';
+    const iconUrl = 'images/map-icons/marker-icon.png';
+    const shadowUrl = 'images/map-icons/marker-shadow.png';
+    
+    // Check if icons exist
+    if (typeof this.L.Icon.Default !== 'undefined') {
+      delete (this.L.Icon.Default.prototype as any)._getIconUrl;
+      this.L.Icon.Default.mergeOptions({
+        iconRetinaUrl,
+        iconUrl,
+        shadowUrl
+      });
+    } else {
+      console.error('Leaflet Icon.Default is undefined');
+    }
+  }
 
-    // Create map
-    this.map = L.map('house-map').setView([this.latitude, this.longitude], 15);
+  private initMap(): void {
+    if (!this.L) {
+      console.error('Leaflet not loaded');
+      return;
+    }
 
-    // Add tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 18,
-      minZoom: 3
-    }).addTo(this.map);
+    try {
+      this.map = this.L.map('house-map').setView([this.latitude, this.longitude], 15);
 
-    // Add marker
-    L.marker([this.latitude, this.longitude])
-      .addTo(this.map)
-      .bindPopup(this.title)
-      .openPopup();
+      this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(this.map);
+
+      this.L.marker([this.latitude, this.longitude])
+        .addTo(this.map)
+        .bindPopup(this.title)
+        .openPopup();
+    } catch (error) {
+      console.error('Map initialization error:', error);
+    }
   }
 
   ngOnDestroy(): void {
     if (this.map) {
       this.map.remove();
-      this.map = null;
     }
   }
 }
