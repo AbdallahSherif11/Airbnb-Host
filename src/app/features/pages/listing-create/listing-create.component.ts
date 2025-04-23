@@ -1,11 +1,12 @@
 // listing-create.component.ts
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CreateHouseDTO } from '../../interfaces/house-create-DTO/create-house-dto';
 import { AddHouseService } from '../../services/add-house-services/add-house.service';
 import { SafeUrlPipe } from '../../pipes/safe-url/safe-url.pipe';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-listing-create',
@@ -14,7 +15,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url/safe-url.pipe';
   templateUrl: './listing-create.component.html',
   styleUrls: ['./listing-create.component.css']
 })
-export class ListingCreateComponent {
+export class ListingCreateComponent implements AfterViewInit, OnDestroy {
   currentStep = 1;
   totalSteps = 3;
   isLoading = false;
@@ -62,10 +63,62 @@ export class ListingCreateComponent {
     
   ];
 
+  private map: L.Map | null = null;
+  private marker: L.Marker | null = null;
+
   constructor(
     private addHouseService: AddHouseService,
     private router: Router
   ) {}
+
+  ngAfterViewInit(): void {
+    this.initializeMap();
+  }
+
+  private initializeMap(): void {
+    this.map = L.map('location-map').setView([0, 0], 2); // Default view (world map)
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(this.map);
+
+    // Handle map click to set marker and update latitude/longitude
+    this.map.on('click', (event: L.LeafletMouseEvent) => {
+      const { lat, lng } = event.latlng;
+
+      // Update marker position
+      if (this.marker) {
+        this.marker.setLatLng([lat, lng]);
+      } else {
+        if (this.map) {
+          this.marker = L.marker([lat, lng], { draggable: true }).addTo(this.map);
+        }
+
+        // Allow dragging the marker to update location
+        this.marker?.on('dragend', () => {
+          const position = this.marker?.getLatLng();
+          if (position) {
+            this.updateLocation(position.lat, position.lng);
+          }
+        });
+      }
+
+      // Update form fields
+      this.updateLocation(lat, lng);
+    });
+  }
+
+  private updateLocation(lat: number, lng: number): void {
+    this.listing.latitude = lat;
+    this.listing.longitude = lng;
+  }
+
+  ngOnDestroy(): void {
+    if (this.map) {
+      this.map.remove();
+    }
+  }
 
   nextStep() {
     if (this.currentStep < this.totalSteps && this.isStepValid(this.currentStep)) {

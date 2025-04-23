@@ -297,4 +297,8 @@
     cursor: pointer;
     font-weight: 500;
   }
-  
+
+  #location-map {
+    width: 100%;
+    height: 100%;
+  }
