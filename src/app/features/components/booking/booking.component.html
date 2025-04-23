@@ -2,7 +2,7 @@
     <!-- Price per night -->
     <div class="flex justify-between items-center mb-6">
       <div>
-        <span class="text-2xl font-semibold">{{ pricePerNight | number }}$.Θ</span>
+        <span class="text-2xl font-semibold">{{ pricePerNight | number }}$</span>
         <span class="text-gray-600 ml-1">night</span>
       </div>
     </div>
@@ -232,22 +232,22 @@
     <!-- Price Breakdown -->
     <div class="mt-6 space-y-3">
       <div class="flex justify-between">
-        <span class="text-gray-600 underline">{{ pricePerNight | number }}$.Θ x {{ nights }} nights</span>
-        <span class="font-medium">{{ subtotal | number }}$.Θ</span>
+        <span class="text-gray-600 underline">{{ pricePerNight | number }}$ x {{ nights }} nights</span>
+        <span class="font-medium">{{ subtotal | number }}$</span>
       </div>
       <div class="flex justify-between">
         <span class="text-gray-600 underline">Airbnb service fee</span>
-        <span class="font-medium">{{ serviceFee | number }}$.Θ</span>
+        <span class="font-medium">{{ serviceFee | number }}$</span>
       </div>
       <div class="flex justify-between">
         <span class="text-gray-600 underline">Taxes</span>
-        <span class="font-medium">{{ taxes | number }}$.Θ</span>
+        <span class="font-medium">{{ taxes | number }}$</span>
       </div>
     </div>
   
     <!-- Total -->
     <div class="flex justify-between border-t border-gray-300 mt-4 pt-4">
       <span class="font-semibold">Total</span>
-      <span class="font-semibold">{{ total | number }}$.Θ</span>
+      <span class="font-semibold">{{ total | number }}$</span>
     </div>
   </div>
