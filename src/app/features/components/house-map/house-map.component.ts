@@ -39,21 +39,19 @@ export class HouseMapComponent implements AfterViewInit, OnDestroy {
     const iconUrl = 'assets/images/map-icons/marker-icon.png';
     const shadowUrl = 'assets/images/map-icons/marker-shadow.png';
 
-    // Ensure the paths are correct and accessible
-    if (this.L?.Icon?.Default) {
-      delete (this.L.Icon.Default.prototype as any)._getIconUrl;
-      this.L.Icon.Default.mergeOptions({
-        iconRetinaUrl,
-        iconUrl,
-        shadowUrl
-      });
-    } else {
-      console.error('Leaflet Icon.Default is undefined. Ensure Leaflet is properly loaded.');
-    }
+    // Create a custom icon instance
+    const customIcon = this.L.icon({
+      iconRetinaUrl,
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41], // Default size for Leaflet markers
+      iconAnchor: [12, 41], // Anchor point of the icon
+      popupAnchor: [1, -34], // Anchor point for popups
+      shadowSize: [41, 41] // Size of the shadow
+    });
 
-    if (!this.L?.Icon?.Default) {
-      this.L.Icon = this.L.icon || {}; // Fallback to ensure Icon is defined
-    }
+    // Use the custom icon for markers
+    this.L.Marker.prototype.options.icon = customIcon;
   }
 
   private initMap(): void {
