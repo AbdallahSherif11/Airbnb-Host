@@ -14,9 +14,11 @@ import { Subscription } from 'rxjs';
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <!-- Logo -->
         <a routerLink="/home" class="flex items-center space-x-3 rtl:space-x-reverse flex-shrink-0 cursor-pointer">
-          <div class="flex gap-2 items-center text-3xl text-main hover:text-mainHover transition duration-200">
-            <i class="fa-brands fa-airbnb"></i>
-            <p class="font-bold tracking-tight hidden md:block">Stayin'</p>
+          <div class="flex align-items-center gap-2 items-center text-3xl text-main hover:text-mainHover transition duration-200">
+            <!-- <i class="fa-brands fa-airbnb"></i> -->
+            <!-- <p class="font-bold tracking-tight hidden md:block">Stayin'</p> -->
+            <img class="h-10 pr-2" src="assets/images/logo/logo9.png" alt=""/>
+            <img class="h-8 hidden md:block" src="assets/images/logo/logo8.png" alt=""/>
           </div>
         </a>
 
