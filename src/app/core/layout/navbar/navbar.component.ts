@@ -206,9 +206,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
-
   onAISearchClose(searchQuery: string | null): void {
     this.showAISearch = false;
     if (searchQuery) {
@@ -218,8 +215,4 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
-
-
-
 }
