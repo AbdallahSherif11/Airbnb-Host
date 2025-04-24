@@ -14,7 +14,7 @@ export class TermsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.titleService.setTitle('Terms of Service - Airbnb Clone');
+    this.titleService.setTitle('Terms of Service - Stayin');
     this.smoothScrollToAnchor();
   }
 

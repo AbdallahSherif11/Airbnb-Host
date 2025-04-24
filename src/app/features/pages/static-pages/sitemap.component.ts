@@ -11,6 +11,6 @@ export class SitemapComponent implements OnInit {
   constructor(private titleService: Title) {}
 
   ngOnInit(): void {
-    this.titleService.setTitle('Sitemap - Airbnb Clone');
+    this.titleService.setTitle('Sitemap - Stayin ');
   }
 }

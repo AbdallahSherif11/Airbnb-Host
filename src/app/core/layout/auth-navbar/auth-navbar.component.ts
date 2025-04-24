@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
             <!-- <i class="fa-brands fa-airbnb"></i> -->
             <!-- <p class="font-bold tracking-tight hidden md:block">Stayin'</p> -->
             <img class="h-10 pr-2" src="assets/images/logo/logo9.png" alt=""/>
-            <img class="h-8 hidden md:block" src="assets/images/logo/logo8.png" alt=""/>
+            <img class="h-9 pt-1 hidden md:block" src="assets/images/logo/logo8.png" alt=""/>
           </div>
         </a>
 

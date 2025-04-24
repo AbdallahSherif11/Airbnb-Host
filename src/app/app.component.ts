@@ -11,7 +11,7 @@ import { NavbarComponent } from "./core/layout/navbar/navbar.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
-  title = 'Airbnb';
+  title = "Stayin'";
   _flowbiteService=inject(FlowbiteService);
   
   ngOnInit(): void {

@@ -43,27 +43,27 @@ export const routes: Routes = [
             {
                 path: "search",
                 loadComponent: () => import('./core/pages/search/search.component').then(c => c.SearchComponent),
-                title: "Search Results - Airbnb"
+                title: "Search Results - Stayin'"
             },
             {
                 path: "terms",
                 loadComponent: () => import('./features/pages/static-pages/terms.component').then(c => c.TermsComponent),
-                title: "Terms - Airbnb"
+                title: "Terms - Stayin'"
             },
             {
                 path: "sitemap",
                 loadComponent: () => import('./features/pages/static-pages/sitemap.component').then(c => c.SitemapComponent),
-                title: "Sitemap - Airbnb"
+                title: "Sitemap - Stayin'"
             },
             {
                 path: "privacy",
                 loadComponent: () => import('./features/pages/static-pages/privacy.component').then(c => c.PrivacyComponent),
-                title: "Privacy Policy - Airbnb"
+                title: "Privacy Policy - Stayin'"
             },
             {
                 path: "privacy-choices",
                 loadComponent: () => import('./features/pages/static-pages/privacy-choices.component').then(c => c.PrivacyChoicesComponent),
-                title: "Privacy Choices - Airbnb"
+                title: "Privacy Choices - Stayin'"
             }
         ]
     },
