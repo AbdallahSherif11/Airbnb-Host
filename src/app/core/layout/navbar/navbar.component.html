@@ -82,31 +82,35 @@
   
       <!-- Right: User Dropdown -->
       <div class="flex items-center order-2 flex-shrink-0 dropdown-container relative">
-        <button
-          *ngIf="isLoggedIn"
-          type="button"
-          class="flex items-center gap-2 text-sm bg-gray-100 rounded-full p-1 pr-3 hover:bg-gray-200 shadow-lg transition-all duration-200"
-          (click)="toggleDropdown()"
-        >
-          <img
-            *ngIf="userProfilePicture"
-            [src]="userProfilePicture"
-            class="w-8 h-8 rounded-full object-cover"
-            alt="Profile picture"
-            onerror="this.src='assets/default-profile.png'"
+        <!-- Single button that changes based on auth state -->
+        <ng-container *ngIf="authChecked">
+          <button
+            *ngIf="isLoggedIn; else loggedOutButton"
+            type="button"
+            class="flex items-center gap-2 text-sm bg-gray-100 rounded-full p-1 pr-3 hover:bg-gray-200 shadow-lg transition-all duration-200"
+            (click)="toggleDropdown()"
           >
-          <i class="fa-solid fa-bars text-main text-sm"></i>
-        </button>
+            <img
+              *ngIf="userProfilePicture"
+              [src]="userProfilePicture"
+              class="w-8 h-8 rounded-full object-cover"
+              alt="Profile picture"
+              onerror="this.src='assets/default-profile.png'"
+            >
+            <i class="fa-solid fa-bars text-main text-sm"></i>
+          </button>
   
-        <button
-          *ngIf="!isLoggedIn"
-          type="button"
-          class="flex text-sm bg-gray-100 rounded-full p-3 hover:bg-gray-200 shadow-lg transition-all duration-200"
-          (click)="toggleDropdown()"
-        >
-          <i class="fa-solid fa-user text-main pr-2"></i>
-          <i class="fa-solid fa-bars text-main"></i>
-        </button>
+          <ng-template #loggedOutButton>
+            <button
+              type="button"
+              class="flex text-sm bg-gray-100 rounded-full p-3 hover:bg-gray-200 shadow-lg transition-all duration-200"
+              (click)="toggleDropdown()"
+            >
+              <i class="fa-solid fa-user text-main pr-2"></i>
+              <i class="fa-solid fa-bars text-main"></i>
+            </button>
+          </ng-template>
+        </ng-container>
   
         <!-- Dropdown menu -->
         <div
@@ -166,7 +170,7 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
           </div>
-          <div class="absolute inset-y-0 right-10 flex items-center pr-3">
+          <div class="absolute inset-y-0 right-4 flex items-center ">
             <button
               type="button"
               (click)="toggleSpeechRecognition()"

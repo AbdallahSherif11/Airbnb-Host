@@ -7,8 +7,7 @@ import { AccountService } from '../../services/account/account.service';
 import { MessageService } from '../../../features/services/message-services/message.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import {AISearchPopupComponent } from '../../pages/ai-search-popup/ai-search-popup.component';
-
+import { AISearchPopupComponent } from '../../pages/ai-search-popup/ai-search-popup.component';
 
 @Component({
   selector: 'app-navbar',
@@ -23,7 +22,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private houseService = inject(HouseService);
 
-
   showAISearch = false;
   searchKeyword = '';
   showMobileSearch = false;
@@ -35,6 +33,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   suggestions: any[] = [];
   private searchSubject = new Subject<string>();
   private subscriptions = new Subscription();
+  authChecked = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -47,51 +46,65 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Check auth status first before doing anything else
+    this.checkAuthStatus();
     this.initializeSpeechRecognition();
 
     // Handle search suggestions
     this.subscriptions.add(
-      this.searchSubject.pipe(
-        debounceTime(300), // Wait for 300ms after typing stops
-        distinctUntilChanged(), // Ignore if the query hasn't changed
-        switchMap(query => this.houseService.searchHouses(query)) // Fetch suggestions
-      ).subscribe({
-        next: (results) => {
-          this.suggestions = results.slice(0, 5); // Limit to 5 suggestions
-        },
-        error: (err) => {
-          console.error('Error fetching suggestions:', err);
-          this.suggestions = [];
-        }
-      })
-    );
+        this.searchSubject.pipe(
+          debounceTime(300), // Wait for 300ms after typing stops
+          distinctUntilChanged(), // Ignore if the query hasn't changed
+          switchMap(query => this.houseService.searchHouses(query)) // Fetch suggestions
+        ).subscribe({
+          next: (results) => {
+            this.suggestions = results.slice(0, 5); // Limit to 5 suggestions
+          },
+          error: (err) => {
+            console.error('Error fetching suggestions:', err);
+            this.suggestions = [];
+          }
+        })
+      );
+  }
 
+  private checkAuthStatus(): void {
+    // Immediately set authChecked to true to prevent flickering
+    this.authChecked = true;
+    
     if (this.isLoggedIn) {
       this.fetchUserProfile();
     }
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-    if (this.recognition) {
-      this.recognition.stop();
+  private fetchUserProfile(): void {
+    const token = this.accountService.getToken();
+    if (token) {
+      const userId = this.decodeToken(token).sub;
+      this.messageService.getUserById(userId).subscribe({
+        next: (user) => {
+          this.userProfilePicture = user.profilePictureUrl || 'assets/default-profile.png';
+          this.currentUserName = `${user.firstName} ${user.lastName}`;
+        },
+        error: (err) => {
+          console.error('Failed to fetch user profile:', err);
+          this.userProfilePicture = 'assets/default-profile.png';
+        }
+      });
     }
   }
 
   private initializeSpeechRecognition(): void {
-    // Only run in browser environment
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
-    // Check for browser support
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       console.warn('Speech recognition not supported in this browser');
       return;
     }
 
-    // @ts-ignore - TypeScript doesn't know about webkitSpeechRecognition
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
 
     this.recognition.continuous = false;
@@ -100,8 +113,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      this.searchKeyword = transcript; // Update the search bar with the spoken text
-      this.isListening = false; // Stop listening
+      this.searchKeyword = transcript;
+      this.isListening = false;
     };
 
     this.recognition.onerror = (event: any) => {
@@ -131,23 +144,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  private fetchUserProfile(): void {
-    const token = this.accountService.getToken();
-    if (token) {
-      const userId = this.decodeToken(token).sub;
-      this.messageService.getUserById(userId).subscribe({
-        next: (user) => {
-          this.userProfilePicture = user.profilePictureUrl || 'assets/default-profile.png';
-          this.currentUserName = `${user.firstName} ${user.lastName}`;
-        },
-        error: (err) => {
-          console.error('Failed to fetch user profile:', err);
-          this.userProfilePicture = 'assets/default-profile.png';
-        }
-      });
-    }
-  }
-
   toggleMobileSearch(): void {
     this.showMobileSearch = !this.showMobileSearch;
   }
@@ -167,15 +163,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   onInputChange(query: string): void {
     this.searchKeyword = query;
     if (query.trim()) {
-      this.searchSubject.next(query); // Emit the query for suggestions
+      this.searchSubject.next(query);
     } else {
       this.suggestions = [];
     }
   }
 
   onSuggestionClick(suggestion: any): void {
-    this.searchKeyword = suggestion.title; // Set the clicked suggestion as the query
-    this.search(); // Perform the search
+    this.searchKeyword = suggestion.title;
+    this.search();
   }
 
   search(): void {
@@ -213,6 +209,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
         queryParams: { q: searchQuery },
         queryParamsHandling: 'merge'
       });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    if (this.recognition) {
+      this.recognition.stop();
     }
   }
 }
