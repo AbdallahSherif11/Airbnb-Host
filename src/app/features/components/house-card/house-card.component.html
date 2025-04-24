@@ -1,5 +1,5 @@
 <div  class=" w-full h-full rounded-xl overflow-hidden shadow-lg relative flex flex-col">
-  <!-- Responsive Carousel Section -->
+    <!-- Responsive Carousel Section -->
   <div class="relative aspect-[4/3] bg-gray-100 group"> <!-- Added group class here -->
     <div class="absolute inset-0 overflow-hidden">
       <div class="flex h-full transition-transform duration-300 ease-in-out" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
@@ -95,12 +95,14 @@ Guest favorite
       </div>
     </div>
 
-    <p (click)="navigateToDetails()" class="text-gray-500 text-sm mt-1 truncate">{{ hostType }}</p>
-    <p (click)="navigateToDetails()" class="text-gray-500 text-sm mb-3">{{ dateRange }}</p>
+    <!-- Add country information here -->
+    <p (click)="navigateToDetails()" class="text-gray-500 text-sm mt-1 truncate">{{ city }}, {{ country }}</p>
+
+    <p (click)="navigateToDetails()" class="text-gray-500 text-sm mb-3">{{ hostType }}</p>
 
     <div (click)="navigateToDetails()" class="mt-auto">
-      <span (click)="navigateToDetails()"  class="font-semibold">${{ pricePerNight }}</span>
-      <span (click)="navigateToDetails()" class="text-gray-500"> night</span>
+      <span class="font-semibold">${{ pricePerNight }}</span>
+      <span class="text-gray-500"> night</span>
     </div>
   </div>
 </div>

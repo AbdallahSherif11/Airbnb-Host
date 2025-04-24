@@ -21,8 +21,8 @@ export class HouseCardComponent implements OnInit {
   @Input() title: string = '';
   @Input() pricePerNight: number = 0;
   @Input() rating: number = 0;
-  @Input() city: string = 'Unknown City';
-  @Input() country: string = 'Unknown Country';
+  @Input() city: string = '';
+  @Input() country: string = '';
   @Input() numberOfRooms: number = 0;
   @Input() numberOfBeds: number = 0;
   @Input() hostName: string = 'Host';
