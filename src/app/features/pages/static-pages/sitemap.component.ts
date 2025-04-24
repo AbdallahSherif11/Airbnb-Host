@@ -1,11 +1,9 @@
 import { Component,OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
-import { FooterComponent } from '../../../core/layout/footer/footer.component';
 
 @Component({
   selector: 'app-sitemap',
-  imports: [NavbarComponent,FooterComponent],
+  imports: [ ],
   templateUrl: './sitemap.component.html',
   styleUrl: './sitemap.component.css'
 })

@@ -3,13 +3,11 @@ import { MessageService } from '../../services/message-services/message.service'
 import { AccountService } from '../../../core/services/account/account.service';
 import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { NavbarComponent } from "../../../core/layout/navbar/navbar.component";
-import { FooterComponent } from "../../../core/layout/footer/footer.component";
 
 @Component({
   selector: 'app-chat-list',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, RouterOutlet],
+  imports: [CommonModule,  RouterOutlet],
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.css']
 })

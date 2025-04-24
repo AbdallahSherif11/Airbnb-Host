@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './my-trips.component.html',
   styleUrls: ['./my-trips.component.css'],
   providers: [DatePipe],
-  imports: [NavbarComponent, FooterComponent, RouterLink]
+  imports: [ FooterComponent, RouterLink]
 })
 export class MyTripsComponent implements OnInit {
   bookings: any[] = [];

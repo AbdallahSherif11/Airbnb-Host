@@ -11,7 +11,7 @@ import { AccountService } from '../../../core/services/account/account.service';
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [CommonModule, HouseCardComponent, NavbarComponent, FooterComponent, FormsModule, RouterLink],
+  imports: [CommonModule, HouseCardComponent, FooterComponent, FormsModule, RouterLink],
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.css']
 })

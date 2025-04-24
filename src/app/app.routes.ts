@@ -2,18 +2,13 @@ import { Routes } from '@angular/router';
 import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.component';
 import { noAuthGuard } from './core/guards/no-auth-guard/no-auth.guard';
 import { authGuard } from './core/guards/auth-guard/auth.guard';
-
-import { HouseDetailsComponent } from './features/pages/house-details/house-details.component';
 import { ChatListComponent } from './features/components/chat-list/chat-list.component';
 import { ChatComponent } from './features/components/chat/chat.component';
-import { NotFoundComponent } from './core/pages/not-found/not-found.component'; // Import NotFoundComponent
-
+import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
 
 export const routes: Routes = [
     {
         path: "auth",
-        component: AuthLayoutComponent,
-        canActivate: [noAuthGuard],
         children: [
             {
                 path: "register",
@@ -27,104 +22,115 @@ export const routes: Routes = [
             },
         ]
     },
-    {
-        path: "auth/confirm-email",
-        loadComponent: () => import('./core/pages/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent)
-    },
+
+    // Pages with AppLayout (app-navbar)
     {
         path: "",
-        loadComponent: () => import('./features/pages/home/home.component').then(c => c.HomeComponent)
-    },
-    {
-        path: "home",
-        loadComponent: () => import('./features/pages/home/home.component').then(c => c.HomeComponent)
-    },
-    {
-        path: "addhouse",
-        loadComponent: () => import('./features/pages/listing-create/listing-create.component').then(c => c.ListingCreateComponent),
-        canActivate: [authGuard],
-    },
-    {
-        path: "updatehouse/:id",
-        loadComponent: () => import('./features/pages/listing-update/listing-update.component').then(c => c.ListingUpdateComponent),
-        canActivate: [authGuard],
-    },
-    {
-        path: "wishlist",
-        loadComponent: () => import('./features/pages/wishlist/wishlist.component').then(c => c.WishlistComponent),
-        canActivate: [authGuard],
-    },
-    {
-        path: "myhouses",
-        loadComponent: () => import('./features/pages/my-houses/my-houses.component').then(c => c.MyHousesComponent),
-        canActivate: [authGuard],
-    },
-    {
-        path: "profile",
-        loadComponent: () => import('./features/pages/user-profile/user-profile.component').then(c => c.UserProfileComponent),
-        canActivate: [authGuard],
-    },
-    {
-        path: 'houses/:id',
-        loadComponent: () => import('./features/pages/house-details/house-details.component').then(c => c.HouseDetailsComponent)
-    },
-    {
-        path: 'search',
-        loadComponent: () => import('./core/pages/search/search.component').then(c => c.SearchComponent),
-        title: 'Search Results - Airbnb'
-    },
-    {
-        path: 'terms',
-        loadComponent: () => import('./features/pages/static-pages/terms.component').then(c => c.TermsComponent),
-        title: 'Terms - Airbnb'
-    },
-    {
-        path: 'sitemap',
-        loadComponent: () => import('./features/pages/static-pages/sitemap.component').then(c => c.SitemapComponent),
-        title: 'Sitemap - Airbnb'
-    },
-    {
-        path: 'privacy',
-        loadComponent: () => import('./features/pages/static-pages/privacy.component').then(c => c.PrivacyComponent),
-        title: 'Privacy Policy - Airbnb'
-    },
-    {
-        path: 'privacy-choices',
-        loadComponent: () => import('./features/pages/static-pages/privacy-choices.component').then(c => c.PrivacyChoicesComponent),
-        title: 'Privacy Choices - Airbnb'
-    },
-    { 
-        path: 'chat', 
-        component: ChatListComponent,
-        canActivate: [authGuard], 
+        component: MainLayoutComponent,
         children: [
             {
-                path: ':userId',
-                component: ChatComponent,
-                canActivate: [authGuard] 
+                path: "",
+                loadComponent: () => import('./features/pages/home/home.component').then(c => c.HomeComponent)
+            },
+            {
+                path: "home",
+                loadComponent: () => import('./features/pages/home/home.component').then(c => c.HomeComponent)
+            },
+            {
+                path: "houses/:id",
+                loadComponent: () => import('./features/pages/house-details/house-details.component').then(c => c.HouseDetailsComponent)
+            },
+            {
+                path: "search",
+                loadComponent: () => import('./core/pages/search/search.component').then(c => c.SearchComponent),
+                title: "Search Results - Airbnb"
+            },
+            {
+                path: "terms",
+                loadComponent: () => import('./features/pages/static-pages/terms.component').then(c => c.TermsComponent),
+                title: "Terms - Airbnb"
+            },
+            {
+                path: "sitemap",
+                loadComponent: () => import('./features/pages/static-pages/sitemap.component').then(c => c.SitemapComponent),
+                title: "Sitemap - Airbnb"
+            },
+            {
+                path: "privacy",
+                loadComponent: () => import('./features/pages/static-pages/privacy.component').then(c => c.PrivacyComponent),
+                title: "Privacy Policy - Airbnb"
+            },
+            {
+                path: "privacy-choices",
+                loadComponent: () => import('./features/pages/static-pages/privacy-choices.component').then(c => c.PrivacyChoicesComponent),
+                title: "Privacy Choices - Airbnb"
             }
         ]
     },
+
+    // Pages with AuthLayout (auth-navbar)
     {
-        path: 'payment/success',
+        path: "",
+        component: AuthLayoutComponent,
+        canActivate: [authGuard],
+        children: [
+            {
+                path: "wishlist",
+                loadComponent: () => import('./features/pages/wishlist/wishlist.component').then(c => c.WishlistComponent)
+            },
+            {
+                path: "myhouses",
+                loadComponent: () => import('./features/pages/my-houses/my-houses.component').then(c => c.MyHousesComponent)
+            },
+            {
+                path: "my-trips",
+                loadComponent: () => import('./features/components/my-trips/my-trips.component').then(m => m.MyTripsComponent)
+            },
+            {
+                path: "wallet",
+                loadComponent: () => import('./features/components/my-bookings/my-bookings.component').then(m => m.MyBookingsComponent)
+            },
+            {
+                path: "profile",
+                loadComponent: () => import('./features/pages/user-profile/user-profile.component').then(c => c.UserProfileComponent),
+                canActivate: [authGuard]
+            },
+            {
+                path: "addhouse",
+                loadComponent: () => import('./features/pages/listing-create/listing-create.component').then(c => c.ListingCreateComponent)
+            },
+            {
+                path: "updatehouse/:id",
+                loadComponent: () => import('./features/pages/listing-update/listing-update.component').then(c => c.ListingUpdateComponent)
+            },
+            {
+                path: "chat",
+                component: ChatListComponent,
+                children: [
+                    {
+                        path: ":userId",
+                        component: ChatComponent
+                    }
+                ]
+            }
+        ]
+    },
+
+    // Other Pages (No Layout)
+    
+    
+    {
+        path: "payment/success",
         loadComponent: () => import('./features/pages/payment/payment-success.component').then(c => c.PaymentSuccessComponent),
         canActivate: [authGuard]
-      },
-      {
-        path: 'payment/cancel',
+    },
+    {
+        path: "payment/cancel",
         loadComponent: () => import('./features/pages/payment/payment-cancel.component').then(c => c.PaymentCancelComponent),
         canActivate: [authGuard]
-      },
-      {
-        path: 'wallet',
-        loadComponent: () => import('./features/components/my-bookings/my-bookings.component').then(m => m.MyBookingsComponent),
-        canActivate: [authGuard]
-      },
-      {
-        path: 'my-trips',
-        loadComponent: () => import('./features/components/my-trips/my-trips.component').then(m => m.MyTripsComponent),
-        canActivate: [authGuard]
-      },
+    },
+
+    // Wildcard Route (Not Found)
     {
         path: "**",
         loadComponent: () => import('./core/pages/not-found/not-found.component').then(c => c.NotFoundComponent)

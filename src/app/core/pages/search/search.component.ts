@@ -3,8 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HouseService } from '../../../features/services/house-services/house.service';
 import { HouseCardComponent } from '../../../features/components/house-card/house-card.component';
 import { CommonModule } from '@angular/common';
-import { FooterComponent } from "../../layout/footer/footer.component";
-import { NavbarComponent } from "../../layout/navbar/navbar.component";
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -12,7 +10,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, HouseCardComponent, FooterComponent, NavbarComponent, FormsModule],
+  imports: [CommonModule, HouseCardComponent, FormsModule],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })

@@ -5,7 +5,7 @@ import { HouseListComponent } from "../../components/house-list/house-list.compo
 
 @Component({
   selector: 'app-my-houses',
-  imports: [FooterComponent, NavbarComponent, HouseListComponent],
+  imports: [FooterComponent,  HouseListComponent],
   templateUrl: './my-houses.component.html',
   styleUrl: './my-houses.component.css'
 })

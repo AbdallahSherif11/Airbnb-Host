@@ -19,8 +19,8 @@ import { HostDetailsComponent } from '../../components/host-details/host-details
   imports: [
     CommonModule, 
     HouseImagesComponent, 
-    NavbarComponent, 
-    FooterComponent, 
+     
+     
     BookingComponent, 
     HouseMapComponent, 
     DateRangePickerComponent, 

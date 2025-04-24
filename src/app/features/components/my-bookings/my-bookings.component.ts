@@ -9,7 +9,7 @@ import { FooterComponent } from '../../../core/layout/footer/footer.component';
   templateUrl: './my-bookings.component.html',
   styleUrls: ['./my-bookings.component.css'],
   providers: [DatePipe, NavbarComponent, FooterComponent],
-  imports: [FooterComponent, NavbarComponent]
+  imports: [FooterComponent]
 })
 export class MyBookingsComponent implements OnInit {
   bookings: any[] = [];

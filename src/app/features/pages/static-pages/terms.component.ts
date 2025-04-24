@@ -1,11 +1,9 @@
 import { Component,OnInit } from '@angular/core';
-import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
-import { FooterComponent } from '../../../core/layout/footer/footer.component';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-terms',
-  imports: [NavbarComponent,FooterComponent],
+  imports: [],
   templateUrl: './terms.component.html',
   styleUrl: './terms.component.css'
 })
