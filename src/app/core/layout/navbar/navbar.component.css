@@ -1,5 +1,5 @@
 /* Add microphone animation when listening */
-@keyframes pulse {
+/* @keyframes pulse {
     0%, 100% {
       opacity: 1;
     }
@@ -10,7 +10,7 @@
   
   .fa-microphone {
     animation: pulse 1.5s infinite;
-  }
+  } */
   
   /* Ensure the search input has enough padding for the microphone icon */
   input[type="text"] {
