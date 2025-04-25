@@ -171,3 +171,22 @@
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 3px;
   }
+
+  /* Responsive layout for small screens */
+  @media (max-width: 767px) {
+    .chat-app-wrapper {
+      flex-direction: column; /* Stack the chat list and chat view vertically */
+      height: calc(130vh ) /* Use full height */
+    }
+  
+    .chat-list-container {
+      width: 100%; /* Take full width */
+      border-right: none; /* Remove the right border */
+      border-bottom: 1px solid #e9edef; /* Add a bottom border */
+    }
+  
+    .chat-view-container {
+      flex: 1;
+      width: 100%; /* Take full width */
+    }
+  }
