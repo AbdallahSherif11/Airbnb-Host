@@ -81,7 +81,7 @@ import { Subscription } from 'rxjs';
 
     a:hover img {
   filter: brightness(0) saturate(100%) invert(24%) sepia(83%) saturate(746%) hue-rotate(320deg) brightness(91%) contrast(90%);
-  transition: filter 0.1s ease;
+  transition: filter  0.00000001s ease;
 }
     
     /* Ensure the dropdown has proper z-index */
