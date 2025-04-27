@@ -129,6 +129,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/pages/payment/payment-cancel.component').then(c => c.PaymentCancelComponent),
         canActivate: [authGuard]
     },
+    {
+        path: "auth/confirm-email",
+        loadComponent: () => import('./core/pages/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent)
+    },
 
     // Wildcard Route (Not Found)
     {
