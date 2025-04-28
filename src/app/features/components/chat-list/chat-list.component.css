@@ -176,7 +176,7 @@
   @media (max-width: 767px) {
     .chat-app-wrapper {
       flex-direction: column; /* Stack the chat list and chat view vertically */
-      height: calc(130vh ) /* Use full height */
+      height: fit-content  /* Use full height */
     }
   
     .chat-list-container {

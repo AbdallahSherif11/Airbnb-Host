@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from "@angular/core";
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AccountService } from "../../services/account/account.service";
 import { Router, RouterLink } from "@angular/router";
 import { Subscription } from 'rxjs';
@@ -14,6 +14,19 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnDestroy {
+
+    private passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+        const password = control.get('password');
+        const confirmPassword = control.get('confirmPassword');
+    
+        if (!password || !confirmPassword || password.value === confirmPassword.value) {
+          return null;
+        }
+    
+        confirmPassword.setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true };
+      };
+
   registerForm = new FormGroup({
     userName: new FormControl('', [
       Validators.required,
@@ -21,7 +34,11 @@ export class RegisterComponent implements OnDestroy {
     ]),
     password: new FormControl('', [
       Validators.required,
-      Validators.minLength(8)
+      Validators.minLength(8),
+      this.createPasswordStrengthValidator()
+    ]),
+    confirmPassword: new FormControl('', [
+      Validators.required
     ]),
     email: new FormControl('', [
       Validators.required,
@@ -54,16 +71,57 @@ export class RegisterComponent implements OnDestroy {
     isAgreed: new FormControl(false, [
       Validators.requiredTrue
     ])
-  });
+  }, { validators: this.passwordMatchValidator });
 
   apiError: string = '';
   isLoading: boolean = false;
+  passwordStrength: number = 0;
   private apiSubscription: Subscription | null = null;
 
   constructor(
     private authService: AccountService,
     private router: Router
   ) {}
+
+ 
+
+  private createPasswordStrengthValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) {
+        return null;
+      }
+
+      const hasUpperCase = /[A-Z]/.test(value);
+      const hasLowerCase = /[a-z]/.test(value);
+      const hasNumeric = /[0-9]/.test(value);
+      const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
+      const hasMinLength = value.length >= 8;
+
+      const passwordValid = hasUpperCase && hasLowerCase && hasNumeric && hasSpecialChar && hasMinLength;
+
+      return !passwordValid ? { passwordStrength: true } : null;
+    };
+  }
+
+  updatePasswordStrength() {
+    const password = this.registerForm.get('password')?.value || '';
+    let strength = 0;
+
+    // Length check
+    if (password.length >= 8) strength++;
+
+    // Lowercase check
+    if (/[a-z]/.test(password)) strength++;
+
+    // Uppercase check
+    if (/[A-Z]/.test(password)) strength++;
+
+    // Number/special char check
+    if (/[0-9]/.test(password) || /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) strength++;
+
+    this.passwordStrength = strength;
+  }
 
   register() {
     if (this.registerForm.invalid) {

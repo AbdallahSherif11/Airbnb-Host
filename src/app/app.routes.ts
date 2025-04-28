@@ -131,7 +131,8 @@ export const routes: Routes = [
     },
     {
         path: "auth/confirm-email",
-        loadComponent: () => import('./core/pages/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent)
+        loadComponent: () => import('./core/pages/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent),
+        canActivate: [noAuthGuard]
     },
 
     // Wildcard Route (Not Found)
